@@ -104,6 +104,9 @@ class Combine():
                 desfav, fav = CV[el['describe']][modo]
                 if el['describe'] == 'Ação do vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
+                elif self.caracteristicas['Local'] in FATORES_DE_REDUCAO['Cargas acidentais de edifícios'].keys():
+                    coef_auxi = FATORES_DE_REDUCAO['Cargas acidentais de edifícios'][self.caracteristicas['Local']][0]
+                
                 var.append([key, [desfav, fav, coef_auxi]])
 
         #Combinção permanente 
@@ -115,7 +118,7 @@ class Combine():
             else:
                 for comb in s: 
                     for i in item[1]:
-                        temp.append(comb + f"{i}*{item[0]}")
+                        temp.append(comb + f"+ {i}*{item[0]}")
                 
             s = temp.copy()
             temp.clear()
@@ -151,26 +154,26 @@ class Combine():
 
 
 car = {
-    "Peso da viga":{
+    "Peso da tesoura":{
         "index": "01",
         "patter": "CP",
         "describe":"Peso próprio de estruturas metálicas",
-        "tipo": "pontual",
+        "tipo": "Distruibuida",
         "mag": 15,
         "pos":(15,90)
     },
     "Vento":{
-        "index": "01",
+        "index": "02",
         "patter": "CV",
         "describe":"Ação do vento",
         "tipo": "Distruibuido",
         "mag": 15,
         "pos":(15,90)
     },
-    "bolinha":{
-        "index": "01",
+    "Sobrecarga":{
+        "index": "03",
         "patter": "CV",
-        "describe":"Ação do vento",
+        "describe":"Ações veriáveis em geral",
         "tipo": "Distruibuido",
         "mag": 15,
         "pos":(15,90)
@@ -178,8 +181,11 @@ car = {
 }
 
 ed= {
-    "Local":"Passarelas de pedestres"
+    "Local":"Bibliotecas, arquivos, depósitos, oficinas e garagens"
 }
 
 
 test = Combine(car, ed).ELU('Normal')
+
+[print(f'combinacao {j}: {i}') for j,i in enumerate(test)]
+
