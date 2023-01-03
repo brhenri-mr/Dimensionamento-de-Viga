@@ -154,10 +154,18 @@ class Combine():
 
 
 car = {
-    "Peso da tesoura":{
+    "Peso da aco":{
         "index": "01",
         "patter": "CP",
         "describe":"Peso próprio de estruturas metálicas",
+        "tipo": "Distruibuida",
+        "mag": 15,
+        "pos":(15,90)
+    },
+    "Peso da Telha":{
+        "index": "01",
+        "patter": "CP",
+        "describe":"Elementos construtivos industrializados",
         "tipo": "Distruibuida",
         "mag": 15,
         "pos":(15,90)
@@ -187,5 +195,5 @@ ed= {
 
 test = Combine(car, ed).ELU('Normal')
 
-[print(f'combinacao {j}: {i}') for j,i in enumerate(test)]
+[print(f'combinacao {j+1}: {i}') for j,i in enumerate(test)]
 
