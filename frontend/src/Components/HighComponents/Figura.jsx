@@ -1,7 +1,7 @@
 import React from "react";
 // componentes
-import Apoio from "./SVG/Apoios";
-import Viga from "./SVG/Viga";
+import Apoio from "../SVG/Apoios";
+import Viga from "../SVG/Viga";
 
 const Figura = (props) =>{
 

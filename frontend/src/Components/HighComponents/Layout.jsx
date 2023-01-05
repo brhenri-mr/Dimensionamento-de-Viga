@@ -8,25 +8,25 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 //compoments
 import Figura from "./Figura";
-import Inputs_a from "./Inputs/Inputs_a";
-import TabPanel from "./Inputs/Tabpanel";
+import Inputs_a from "../Inputs/Inputs_a";
+import TabPanel from "../Inputs/Tabpanel";
 import { Paper } from "@mui/material";
-
+import LayoutCadastro from "./LayoutCadastro";
 
 const Layout = () => {
 
     const APOIOS = useSelector(state => state.apoiosReducers.APOIOS)
-    const [value, setValue] = useState('')
-
+    const [value, setValue] = useState(0)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
 
+    console.log(APOIOS)
 
     const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
         ...theme.typography.body2,
+        borderStyle: 'none',
         padding: theme.spacing(1),
         textAlign: 'center',
         color: theme.palette.text.secondary,
@@ -41,15 +41,18 @@ const Layout = () => {
                     <Tab label="Carregamento"  />
                     <Tab label="Material"  />
                 </Tabs>
+                </Box>
             </Box>
+            <Box>
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2}>
-                    <Grid item xs={8}>
+                    <Grid item xs={4}>
                         <Item>
                             <Inputs_a></Inputs_a>
+                            {APOIOS.map((el,index)=>{return  <LayoutCadastro key={index} value={el} index={index}></LayoutCadastro>})}
                         </Item>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={8}>
                         <Item>
                             <Figura apoios={APOIOS}></Figura>
                         </Item>

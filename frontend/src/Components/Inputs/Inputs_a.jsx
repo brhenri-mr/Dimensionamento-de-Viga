@@ -20,7 +20,7 @@ const Inputs_a = (props) => {
         event.preventDefault()
 
         const apoio ={
-            id: new Date(),
+            id: new Date().toString(),
             tipo: tipo,
             value: parseInt(pos),
         }

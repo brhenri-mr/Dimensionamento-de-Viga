@@ -1,8 +1,7 @@
 import actionType from "../Constants";
 
 const INITIAL_STATE = {
-    APOIOS: [
-    ]
+    APOIOS: []
 }
 
 const reducers  =(state = INITIAL_STATE, action) => {
@@ -10,7 +9,7 @@ const reducers  =(state = INITIAL_STATE, action) => {
         case actionType.ADD_APOIO:
             return {APOIOS: [...state.APOIOS, {...action.payload}]}
         case actionType.REMOVER_APOIO:
-            return {APOIOs: state.APOIOS.filter(x => x.id !== action.payload.id)}
+            return {APOIOS: state.APOIOS.filter(x => x.id !== action.payload.id)}
         default:
             return state
     }
