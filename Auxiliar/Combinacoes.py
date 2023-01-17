@@ -151,6 +151,39 @@ class Combine():
     
     def ELS(self):
         pass
+    
+    def json(self, combinacoes):
+        '''
+            Devolve um Json com os parametros dividos
+        '''
+        
+        #Dados
+        
+        rotulos = self.car.keys()
+        carregamentos_corr = self.car.copy()
+        temp = combinacoes.split('+')
+        
+        #tratando as combinacoes
+        for i in combinacoes:
+            temp.append(i.replace('*','').split('+'))
+        
+        
+        for chave in rotulos:
+            for item in temp:
+                if chave in item:
+                    s = item.replace(chave,'')[:-1] #assim o ultimo asteristico some e resolve tudo comb1: 1.25*0.85*
+                    try:
+                        carregamentos_corr[chave]['comb'].append(eval(s)) #tem que criar primeiro
+                    except:
+                        print('o valor adicionado não corresponde a numeros')
+                    
+                        
+                    
+                    
+            
+
+#----------------------------------------------------------------------------------------
+
 
 
 car = {

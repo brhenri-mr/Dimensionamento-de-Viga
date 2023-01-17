@@ -6,25 +6,52 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 //compoments
 import Figura from "./Figura";
 import Inputs_a from "../Inputs/Inputs_a";
 import TabPanel from "../Inputs/Tabpanel";
-import { Paper } from "@mui/material";
 import LayoutCadastro from "./LayoutCadastro";
+import InputCar from "../Inputs/InputCar";
+import InputBarra from "../Inputs/InputBarra";
 
 const Layout = () => {
 
-    const APOIOS = useSelector(state => state.apoiosReducers.APOIOS)
+    //useSelector
+    const APOIOS = useSelector(state => state.botoesReducers.APOIOS)
+    const BARRA = useSelector(state => state.barraReducers.BARRA)
+    const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
+
+
+    //useState
     const [value, setValue] = useState(0)
+    const [patter,setPatter] = useState()
+    const [describe, setDescribe] = useState()
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
 
-    console.log(APOIOS)
+    const testclick =(data) => {
+        console.log(data[0])
+        fetch('http://127.0.0.1:8000/api/test', {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data[0]),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    }
 
-    const Item = styled(Paper)(({ theme }) => ({
+    const Item = styled('div')(({ theme }) => ({
         ...theme.typography.body2,
         borderStyle: 'none',
         padding: theme.spacing(1),
@@ -47,6 +74,7 @@ const Layout = () => {
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
+                        <InputBarra/>
                         <Item>
                             <Inputs_a></Inputs_a>
                             {APOIOS.map((el,index)=>{return  <LayoutCadastro key={index} value={el} index={index}></LayoutCadastro>})}
@@ -54,17 +82,22 @@ const Layout = () => {
                     </Grid>
                     <Grid item xs={8}>
                         <Item>
-                            <Figura apoios={APOIOS}></Figura>
+                            <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
                         </Item>
                     </Grid>
                 </Grid>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Carregamentos
-                <Figura apoios={APOIOS}></Figura>
+                <InputCar
+                patter={patter}
+                patterChange={event =>{event.preventDefault();return setPatter(event.target.value)}}
+                describe={describe}
+                describeChange={event =>{event.preventDefault();return setDescribe(event.target.value)}}
+                />
+                <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Material
+                <Button onClick={(event)=> {event.preventDefault(); return testclick(APOIOS)}}>Api</Button>
             </TabPanel>
             </Box>
         </div>
