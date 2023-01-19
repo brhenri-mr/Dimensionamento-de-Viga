@@ -20,8 +20,6 @@ const CarregamentoDist = (props)=>{
         temp=temp+espacos
     }
 
-    console.log(quantidade_arrow)
-
     return (<>
 
         <rect x={props.start} y={147-props.mag} width={props.comprimento} height={props.mag} className="cargaDistribuidaFundo"></rect>

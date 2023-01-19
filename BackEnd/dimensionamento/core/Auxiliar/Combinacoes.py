@@ -83,6 +83,7 @@ class Combine():
         
         self.carregamento = carregamento
         self.caracteristicas = caracteristicas
+        self.__combinacoes = 0
 
     def ELU(self, modo:str, CP = CP, CV = CV, FATORES_DE_REDUCAO=FATORES_DE_REDUCAO) -> list:
         """
@@ -101,7 +102,8 @@ class Combine():
         
         #divisão de dados
         for key, el in self.carregamento.items():
-            if el['patter'] == "CP":
+            print(el)
+            if el['patter'] == "Carregamento permanente":
                 desfav, fav = CP[el['describe']][modo]
                 perma.append([key, [desfav, fav]])
                 
@@ -152,18 +154,20 @@ class Combine():
                 for el in item:
                     temp.append(f'{element} + {el}')
         
-        self.combinacoes = temp+s
+        self.__combinacoes = temp+s
         
-        return self.combinacoes
+        return self.__combinacoes
     
     def ELS(self):
         pass
     
-    def json(self) -> dict:
+    def json(self, modo = 'Normal') -> dict:
         '''
             Devolve um Json do vetor carregamento com todas as combinações como parametros do próprio Json
+            
+            modo = Modo que ira se realizar a combinação (usado caso não tenha sido feito as combinações)
         '''
-        
+     
         #Dados
         
         rotulos = self.carregamento.keys()
@@ -175,7 +179,7 @@ class Combine():
             carregamentos_corr[chave]['comb'] = []
         
         #tratando as combinacoes
-        for i in self.combinacoes:
+        for i in self.__combinacoes:
             temp.append(i.split('+'))
             
         #adicionando os valores de comb nas respequetivos carregamentos
@@ -191,13 +195,13 @@ class Combine():
                             print(f'o valor adicionado não corresponde a numeros {s}')
                             
         return carregamentos_corr
-
+    
 if __name__ == '__main__':
     
     car = {
         "Peso da aco":{
             "index": "01",
-            "patter": "CP",
+            "patter": "Carregamento permanente",
             "describe":"Peso próprio de estruturas metálicas",
             "tipo": "Distruibuida",
             "mag": 15,

@@ -9,8 +9,6 @@ import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
 
 const Figura = (props) =>{
 
-    console.log(props.carregamentos)
-
     return (
         <div>
             <svg {...PadraoParaDesenho}>

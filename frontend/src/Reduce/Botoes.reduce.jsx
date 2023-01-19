@@ -2,11 +2,7 @@ import actionType from "../Constants";
 
 const INITIAL_STATE = {
     APOIOS: [],
-    CARREGAMENTOS:[{
-        tipo:'',
-        mag:0,
-        pos:[0,0]
-    }],
+    CARREGAMENTOS:[],
 }
 
 const reducers  =(state = INITIAL_STATE, action) => {

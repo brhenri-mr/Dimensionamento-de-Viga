@@ -26,8 +26,10 @@ const InputCar = (props) =>{
     const [startpos, setStartpos] = useState('')
     const [finalpos, setFinalpos] = useState('')
     const [tipocar, setTipoCar] = useState('')
+    const [nome, setNome] = useState('')
 
     let describeop = (patter===patterConst[0]) ? CP:CV
+
 
 
     const onclickevent = (event) => {
@@ -35,9 +37,10 @@ const InputCar = (props) =>{
         
         const item = {
             id:new Date().toString(),
+            name: nome,
             tipo:tipocar,
             patter:patter,
-            describre:describe,
+            describe:describe,
             mag:parseInt(mag),
             pos:[parseInt(startpos),parseInt(finalpos)],
         }
@@ -47,6 +50,9 @@ const InputCar = (props) =>{
     return(
     <>
         <Box>
+            <FormControl>
+                <TextField label='Nome Carregamento' value={nome} onChange={(event) => {event.preventDefault();setNome(event.target.value)}}></TextField>
+            </FormControl>
             <FormControl>
                 <InputLabel>Patter</InputLabel>
                 <Select

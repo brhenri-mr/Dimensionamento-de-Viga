@@ -28,19 +28,20 @@ const Layout = () => {
     const [patter,setPatter] = useState()
     const [describe, setDescribe] = useState()
 
+    console.log(CARREGAMENTOS)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
 
     const testclick =(data) => {
-        console.log(data[0])
+        console.log(...data)
         fetch('http://127.0.0.1:8000/api/test', {
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data[0]),
+                body: JSON.stringify({carregamento:data}),
                 })
                 .then((response) => response.json())
                 .then((data) => {
@@ -97,7 +98,7 @@ const Layout = () => {
                 <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Button onClick={(event)=> {event.preventDefault(); return testclick(APOIOS)}}>Api</Button>
+                <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
             </TabPanel>
             </Box>
         </div>
