@@ -30,4 +30,4 @@ def test(request, carregamentos: Carregamentos):
     
     test = comb.ELU(modo='Normal')
 
-    return comb.json()
+    return test

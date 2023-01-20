@@ -30,6 +30,11 @@ const Layout = () => {
 
     console.log(CARREGAMENTOS)
 
+
+    //test
+
+    const [comb, setComb] = useState([])
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
@@ -46,6 +51,8 @@ const Layout = () => {
                 .then((response) => response.json())
                 .then((data) => {
                     console.log('Success:', data);
+                    setComb(data)
+
                 })
                 .catch((error) => {
                     console.error('Error:', error);
@@ -99,6 +106,7 @@ const Layout = () => {
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
+                {comb.map((el,index)=>{return <p key={index}>{`Combinação ${index+1}: ${el.replaceAll('*','x')}`}</p>})}
             </TabPanel>
             </Box>
         </div>

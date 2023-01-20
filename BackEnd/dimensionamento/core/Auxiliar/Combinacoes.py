@@ -107,7 +107,7 @@ class Combine():
                 desfav, fav = CP[el['describe']][modo]
                 perma.append([key, [desfav, fav]])
                 
-            elif el['patter'] == "CV":
+            elif el['patter'] == "Carrregamento Variável":
                 desfav, fav = CV[el['describe']][modo]
                 if el['describe'] == 'Ação do vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
