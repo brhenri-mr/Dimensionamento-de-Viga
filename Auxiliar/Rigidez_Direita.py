@@ -24,6 +24,20 @@ def entrada_test(data: dict, apoio: dict):
                 
         return sorted(comprimento)
     
+    def grau_de_liberdade(parametro:str)->int:
+        match parametro:
+            case 'Apoio Rotulado':
+                return 1
+            case 'Apoio Simples':
+                return 2
+            case 'Engaste':
+                return 0
+            case 'Nenhum Apoio':
+                return 3
+            
+        return 'Caso Nao Cadastrado'
+            
+    
     #Dados
     comprimento = comprimento_trecho(data)
     numero_nos = len(comprimento) -1
@@ -48,21 +62,27 @@ def entrada_test(data: dict, apoio: dict):
                 contador = 1 + len(elementos[chave_el]['Carregamento'])
                 if temp[0] <= elementos[chave_el]['Trecho'][0] and temp[1] >= elementos[chave_el]['Trecho'][1]: #esta dentro do intervalo
                     elementos[chave_el]['Carregamento'][f'Car{contador}'] = {'nome':chave_data,'tipo':data[chave_data]['tipo'],'mag':chave_data,'pos':elementos[chave_el]['Trecho'],'comb':data[chave_data]['comb']}
-                  
-                    
-                    
-                
     
-  
+    #Definindo valores para grau de liberdade
+    for chave in Apoios.keys():
+        temp = Apoios[chave]['value']
+        for chave_el in elementos.keys():
+            if temp in elementos[chave_el]['Trecho']:
+                s = Apoios[chave]['tipo']
+            else:
+                s = 'Nenhum Apoio'
+            elementos[chave_el]['Grau de Liberdade'] = grau_de_liberdade(s)
+    
+    print(elementos)
+                
         
-
         
 
 def rigidez_local(l:int, rigidez:int, par):
     '''
     Matriz de rigidez local do elemento
     l = largura do vão do elemento
-    rigidez = produto entre E e
+    rigidez = produto entre módulo de Elastico
     '''
     
     #gera a matriz local do elemento
@@ -74,7 +94,7 @@ def rigidez_local(l:int, rigidez:int, par):
     return (rigidez / pow(l, 3)) * ke
 
 def rigidez_global(*args):
-  #Define a matriz de rigidez global do sistema dado
+    #Define a matriz de rigidez global do sistema dado
     incremento = 0
     dim = len(args)
     z = np.zeros((4 + 2 * (dim - 1), 4 + 2 * (dim - 1)), dtype=float)
@@ -287,6 +307,20 @@ if __name__ == '__main__':
             'comb': [1.25,1.40]
         }
     }
-     
-    entrada_test(car,[])
+    
+    
+    Apoios = {
+        '1':{
+            'id':'Hoje',
+            'tipo':'Apoio Rotulado',
+            'value':0
+        },
+        '2':{
+            'id':'Hoje',
+            'tipo':'Apoio Simples',
+            'value':300     
+        }
+    }
+    
+    entrada_test(car,Apoios)
      
