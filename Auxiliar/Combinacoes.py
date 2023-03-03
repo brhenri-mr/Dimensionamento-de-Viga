@@ -116,8 +116,8 @@ class Combine():
 
         #Combinção permanente 
         for item in perma:
-              
             if len(s) == 0:
+                #acessando os coeficientes
                 for i in item[1]:
                     temp.append(f"{i}*{item[0]}")
             else:
@@ -156,8 +156,78 @@ class Combine():
         
         return self.combinacoes
     
-    def ELS(self):
-        pass
+    def ELS(self, tipo:str, CP = CP, CV = CV, FATORES_DE_REDUCAO=FATORES_DE_REDUCAO):
+        
+        temp = []
+        s=  []
+        perma = []
+        var = []
+        principal_var = []
+        z= -1
+        
+        
+        #Definição do tipo de combinação [rara, semipermanente, frequente]
+        
+        match tipo:
+            case 'Rara':
+                tipo = 1
+            case 'Frequente':
+                pass
+            case 'Semi permanente':
+                tipo = 2
+        
+        #divisão de dados
+        for key, el in self.carregamento.items():
+            if el['patter'] == "CP":
+                perma.append([key, [1]]) #combinações de ELU a ação permanente é ponderada pelo número 1
+                
+            elif el['patter'] == "CV":
+                if el['describe'] == 'Ação do vento':
+                    coef_auxi = FATORES_DE_REDUCAO['Vento'][tipo]
+                elif self.caracteristicas['Local'] in FATORES_DE_REDUCAO['Cargas acidentais de edifícios'].keys():
+                    coef_auxi = FATORES_DE_REDUCAO['Cargas acidentais de edifícios'][self.caracteristicas['Local']][tipo]
+                
+                var.append([key, [1, coef_auxi]])
+
+        #Combinção permanente 
+        for item in perma:
+
+            if len(s) == 0:
+                #acessando os coeficientes
+                for i in item[1]:
+                    temp.append(f"{i}*{item[0]}")
+            else:
+                for comb in s: 
+                    for i in item[1]:
+                        temp.append(comb + f" + {i}*{item[0]}")
+                
+            s = temp.copy()
+            temp.clear()
+        
+
+        #Combinção variaveis
+        for item in var:
+            principal_var.append([f'{item[1][0]}*{item[0]}'])
+        for el in var:
+            for item in principal_var:
+                z +=1
+                for comb in item:
+                    if el[0] in comb:
+                        temp.append(f'{comb}')
+                    else:
+                        temp.append(f'{comb} + {el[1][1]}*{el[0]}')
+                principal_var[z]= temp.copy()
+                temp.clear()
+            z = -1
+        
+        for element in s:
+            for item in principal_var:
+                for el in item:
+                    temp.append(f'{element} + {el}')
+        
+        self.combinacoesELS = temp+s
+        
+        return self.combinacoesELS
     
     def json(self) -> dict:
         '''
@@ -236,11 +306,9 @@ if __name__ == '__main__':
     
     test = Combine(car, ed)
 
-    comb = test.ELU('Normal')
+    comb = test.ELS('Rara')
 
     [print(f'combinacao {j+1}: {i}') for j,i in enumerate(comb)]
 
     print('------------------------------')
 
-    for chave in car.keys():
-        print(test.json()[chave])
