@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def entrada_test(data: dict, apoio: dict):
     
     def comprimento_trecho(carregamento:dict) ->list:
@@ -29,11 +28,11 @@ def entrada_test(data: dict, apoio: dict):
             case 'Apoio Rotulado':
                 return 1
             case 'Apoio Simples':
-                return 2
+                return 1
             case 'Engaste':
                 return 0
-            case 'Nenhum Apoio':
-                return 3
+            case 'Livre':
+                return 2
             
         return 'Caso Nao Cadastrado'
             
@@ -43,42 +42,45 @@ def entrada_test(data: dict, apoio: dict):
     numero_nos = len(comprimento) -1
     elementos={}
     
-    
+    #Definicao da estrtura do obejto elementos 
     for i in range(numero_nos):
-        elementos[f'El{i+1}'] = {'Trecho':comprimento[i+0:2+i],'Comprimento':comprimento[i+1]-comprimento[i],'Carregamento':{}}
+        elementos[f'El{i+1}'] = {'Trecho':comprimento[i+0:2+i],
+                                 'Comprimento':comprimento[i+1]-comprimento[i],
+                                 'Carregamento':{},
+                                 'Grau de Liberdade':[],
+                                 'deslocabilidades':[]
+                                 }
     
-    
+    #definicao do objeto interno carregamentos
     for chave_data in data.keys():
         temp = data[chave_data]['pos']
+        #Verificar se é esforço pontual
         if isinstance(temp,int):
-            #elementos[chave_el]['Carregamento'][f'Car{contador=:1+contador}'] = {'nome':chave_data,'mag':chave_data,'pos':data[chave_data]['pos'],'comb':data[chave_data]['comb']}
             for chave_el in elementos.keys():
                 if temp in elementos[chave_el]['Trecho']:
                     contador = 1 + len(elementos[chave_el]['Carregamento'])
                     elementos[chave_el]['Carregamento'][f'Car{contador}'] = {'nome':chave_data,'tipo':data[chave_data]['tipo'],'mag':data[chave_data]['mag'],'pos':temp,'comb':data[chave_data]['comb']}
                     break
+        #Verificar se é esforço distruibuido
         else:
             for chave_el in elementos.keys():
                 contador = 1 + len(elementos[chave_el]['Carregamento'])
                 if temp[0] <= elementos[chave_el]['Trecho'][0] and temp[1] >= elementos[chave_el]['Trecho'][1]: #esta dentro do intervalo
-                    elementos[chave_el]['Carregamento'][f'Car{contador}'] = {'nome':chave_data,'tipo':data[chave_data]['tipo'],'mag':chave_data,'pos':elementos[chave_el]['Trecho'],'comb':data[chave_data]['comb']}
+                    elementos[chave_el]['Carregamento'][f'Car{contador}'] = {'nome':chave_data,'tipo':data[chave_data]['tipo'],'mag':data[chave_data]['mag'],'pos':elementos[chave_el]['Trecho'],'comb':data[chave_data]['comb']}
     
     #Definindo valores para grau de liberdade
     for chave in Apoios.keys():
         temp = Apoios[chave]['value']
         for chave_el in elementos.keys():
             if temp in elementos[chave_el]['Trecho']:
-                s = Apoios[chave]['tipo']
+                nome_apoio = Apoios[chave]['tipo']
             else:
-                s = 'Nenhum Apoio'
-            elementos[chave_el]['Grau de Liberdade'] = grau_de_liberdade(s)
+                nome_apoio = 'Livre'
+            elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade(nome_apoio))
     
-    print(elementos)
+    return elementos
                 
-        
-        
-
-def rigidez_local(l:int, rigidez:int, par):
+def rigidez_local(l:int, rigidez:int):
     '''
     Matriz de rigidez local do elemento
     l = largura do vão do elemento
@@ -93,26 +95,34 @@ def rigidez_local(l:int, rigidez:int, par):
 
     return (rigidez / pow(l, 3)) * ke
 
-def rigidez_global(*args):
-    #Define a matriz de rigidez global do sistema dado
+def rigidez_global(vetores:list):
+    '''
+    Define a matriz global da viga
+    vetores = lista de matriz de rigidez local
+    '''
+    #Dados
     incremento = 0
-    dim = len(args)
-    z = np.zeros((4 + 2 * (dim - 1), 4 + 2 * (dim - 1)), dtype=float)
-    for item in args:
+    dim = len(vetores)
+    saida = np.zeros((4 + 2 * (dim - 1), 4 + 2 * (dim - 1)), dtype=float)
+    
+    #concateção das matrizes locais
+    for vetor in vetores:
         for linha in range(4):
             for coluna in range(4):
 
-                z[linha + 2 * incremento][coluna + 2 * incremento] = round(
-                    item[linha][coluna] +
-                    z[linha + 2 * incremento][coluna + 2 * incremento], 3)
+                saida[linha + 2 * incremento][coluna + 2 * incremento] = round(vetor[linha][coluna] +saida[linha + 2 * incremento][coluna + 2 * incremento], 3)
 
         incremento = 1 + incremento
-    return z
+    return saida
 
 def ordenador(k, d):
-  #ordena a matriz global em funcao das deslocabilidade
-  
-    global local
+    '''
+    Orderna a matriz global de rigidez em funcao da matriz de deslocabilidade
+    k = matriz de rigidez global
+    d = vetor das deslocabilidade sglobais dos nos
+    '''
+    
+    #Dados
     local = []
     ord = []
     final = []
@@ -120,7 +130,6 @@ def ordenador(k, d):
         if item != 0:
             local.append(indice)
     for item in local:
-
         ord.append(k[item])
 
     for i in range(len(d)):
@@ -220,55 +229,104 @@ def ordenar_forcas(forcas, des):
             r.append(forcas[i])
     return r
 
-def reacoes(k, forcas, des):  #conferir
-    #Deslocamentos
-    np.array(forcas)
+def submatrizes_rigizes(k, des):
+    '''
+    retorna as submatrizes kll e klp do sistema
+    k = matrizes de rigidez organizada do sistema
+    des = filtro de deslocamentos global
+    '''
+    #Determinacao do corte do vetor pela: quantidade de zeros
     coef_d = len(d) - des.count(0)
+    
+    #definicao das submatrizes
     kll = k[:coef_d, :coef_d]
+    kpl = np.array(k[coef_d:, :coef_d])
+    
+    return kll,kpl
+
+def subvetores_forca(forcas, des):
+    '''
+    Retorna os subvetores de forcas do sistema [f_d, f_f]
+    forcas = vetor de forcas organizado 
+    des = filtro de deslocamentos global
+    '''
+    #Determinacao do corte do vetor pela: quantidade de zeros
+    coef_d = len(d) - des.count(0)
+    
+    #Determinacao dos subvetores
     forcas_d = np.array(forcas[0:coef_d])
+    forcas_f = np.array(forcas[coef_d:])
+    
+    return forcas_d, forcas_f
+
+def deslocabilidade(kll,forcas_d, elementos):
+    '''
+    Retorna as deslocabilidades dos sistema
+    kll= matriz que transforma acoes externas em deslocamentos
+    elementos = elementos cadastrado
+    '''
+    
     k_reacoes_inversa_d = np.linalg.inv(kll)
     desloc = forcas_d.dot(k_reacoes_inversa_d)
+    
+    #
+    temp = list(desloc).copy()
+    d = []
+    for chave in elementos.keys():
+        for gdl in elementos[chave]['Grau de Liberdade']:
+            match gdl:
+                case 0:
+                    d.append(0)
+                    d.append(0)
+                case 1:
+                    d.append(0)
+                    d.append(temp.pop(0))
+                case 2:
+                    d.append(temp.pop(0))
+                    d.append(temp.pop(1))
+        elementos[chave]['Deslocabilidades'] = d.copy()
+        print(elementos[chave]['Deslocabilidades'])
+        d.clear()
+    
+    return desloc, elementos
+
+def reacoes(kpl,deslocabilidade,forcas_f):  #conferir
+    '''
+    Calcula das reacoes de apoio da estruturas |
+    kpl = submatriz que transforma deslocabilidades em efeitos |
+    forcas_f = vetor dos carregamentos externos com incodgitas |
+    '''
     #Reacao
-    kpl = np.array(k[coef_d:, :coef_d])
-    forcas_f = np.array(forcas[coef_d:])
-    print()
-    x = kpl.dot(desloc)
+    x = kpl.dot(deslocabilidade)
     r = x - forcas_f
 
     return r
 
-#Rigidez local do elemento
+def reacoes_internas(ke,de,f):
+    '''
+    Retorna as reacoes internas do elemento 
+    [cortante, momento, cortante, momento]
+    ke = matriz de rigidez local do elemento
+    de = deslocamentos locais do elemento
+    f = forcas nodais equivalentes do elemento
+    '''
+    temp = ke.dot(de)
+    return temp - f
 
-ri = 10000
-x = rigidez_local(6, ri, "s")
-y = rigidez_local(8, ri, 's')
-z = rigidez_local(5, ri, 's')
 
-#Lembrar que o d é quando o deslocamento não é travado, ou seja, grau de indeterminação cinemática
-#....[Vertical,momento]
-d = [0, 2, 0, 4, 0, 6, 0, 8]
-
-#Rigidez global do elemento
-w = rigidez_global(x, y, z)
-k_ord = ordenador(w, d)
-
-# Forcas = Engastamento perfeito/nodais equivalentes + reações + Forcas pontais
-vetv1 = np.array(vetor_local_forcas(1.5, 6, "dist"))
-vetv2 = np.array(vetor_local_forcas(2, 8, "dist"))
-vetv3 = np.array(vetor_local_forcas(1, 5, "dist"))
-vetv4 = np.array(vetor_local_forcas(4, [2.5, 2.5], "pontual"))
-vetv3_1 = vetv3 + vetv4
-
-#Vetor de forcas global
-vetfglobal = vetor_global_forcas(vetv1, vetv2, vetv3_1)
-vtord = ordenar_forcas(vetfglobal, d)
-
-#Reacoes de apoio
-r = reacoes(k_ord, vtord, d)
-print(r)
 
 
 if __name__ == '__main__':
+    
+    props = {
+        'fck':20,
+        'h':50,
+        'Altura Util':45,
+        'bw':25,
+        'fyk':50
+    }
+    
+    
     car = {
         "Peso da aco":{
             "index": "01",
@@ -322,5 +380,45 @@ if __name__ == '__main__':
         }
     }
     
-    entrada_test(car,Apoios)
-     
+    
+    #Rigidez local do elemento
+    
+    elementos = entrada_test(car,Apoios)
+
+    ri = 10000
+    x = rigidez_local(6, ri)
+    y = rigidez_local(8, ri)
+    z = rigidez_local(5, ri)
+
+    #Lembrar que o d é quando o deslocamento não é travado, ou seja, grau de indeterminação cinemática
+    #Isso é um filtro, não importa o valor
+    #....[Vertical,momento]
+    d = [0, 2, 0, 4, 0, 6, 0, 8]
+
+    #Rigidez global do elemento
+    w = rigidez_global([x, y, z])
+    k_ord = ordenador(w, d)
+
+    # Forcas = Engastamento perfeito/nodais equivalentes + reações + Forcas pontais
+    vetv1 = np.array(vetor_local_forcas(1.5, 6, "dist"))
+    vetv2 = np.array(vetor_local_forcas(2, 8, "dist"))
+    vetv3 = np.array(vetor_local_forcas(1, 5, "dist"))
+    vetv4 = np.array(vetor_local_forcas(4, [2.5, 2.5], "pontual"))
+    vetv3_1 = vetv3 + vetv4
+
+    #Vetor de forcas global
+    vetfglobal = vetor_global_forcas(vetv1, vetv2, vetv3_1)
+    vtord = ordenar_forcas(vetfglobal, d)
+
+    #Submatrizes
+    kpp, klp = submatrizes_rigizes(k_ord,d)
+
+    #Subvetores
+    f_d, f_f = subvetores_forca(vtord,d)
+
+    #Deslocabilidades
+    desc = deslocabilidade(kpp,f_d,elementos)
+
+    #Reacoes de apoio
+    r = reacoes(klp,desc,f_f)
+    print(r)

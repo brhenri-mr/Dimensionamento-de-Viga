@@ -2,12 +2,32 @@ from numpy import log
 
 class ParametrosConcreto:
     
-    def __init__(self, fck: int,unidades='kN/cm^2') -> None:
+    def __init__(self, fck: int,ambiente: str,peca: str,bitolaL: float,unidades='kN/cm^2') -> None:
         '''
         Classe que contem os parametros do concreto presentes conforme NBR6118/2014
         fck = Resistência caracteristica do concreto a compresssao em 28 dias [MPa]
+        ambiente = ambiente onde se encontra a peça 
+        peca = tipo de peça de concreto armadi( viga, laje, pilar)
+        bitolaL = bitola logitudinal
         unidades = por padrao adota-se como kN/cm^2, aceita-se MPa tambem
         '''
+        
+        classe_de_agressividade_ambiental = {
+        'Rural':1,
+        'Submersa':1,
+        'Urbana':2,
+        'Marinha':3,
+        'Industrial1':3,
+        'Industrial2':4,
+        'Respingos de maré':4
+        }
+        #Cobrimento por elemento em cm
+        cobrimento_por_elemento = {
+            'Viga':[2.0,2.5,3.5,4.5],
+            'Laje':[2.5,3.0,4.0,5.0],
+            'Elemento em contato com o solo':[3.0,3.0,4.0,5.0]
+        }
+        
         self.__unidades = unidades
         self.__fck = fck
         self.__zeta  = 0.8 if fck<=50 else 0.8-(fck - 50)/400
@@ -16,6 +36,12 @@ class ParametrosConcreto:
         self.__fctkinf = 0.7*self.__fctkm
         self.__fctksup = 1.3*self.__fctkm
         self.__coef = 1 if unidades == 'MPa' else 10
+        self.__ecu = 0.0035
+        self.__agressividade = classe_de_agressividade_ambiental[ambiente]
+        self.__cobrimento = cobrimento_por_elemento[peca][self.__agressividade-1]
+        self.__dmax = 1.2*self.__cobrimento
+        self.__ah = max(2,bitolaL,1.2*self.__dmax)
+        self.__av = max(2,bitolaL,0.5*self.__dmax)
       
     @property
     def unidades(self):
@@ -44,6 +70,32 @@ class ParametrosConcreto:
     @property
     def fctksup(self):
         return self.__fctksup/self.__coef
+    
+    @property
+    def ecu(self):
+        '''
+        deformação maxima do concreto definda no item 8.2.10.1 da
+        NBR6618
+        '''
+        return self.__ecu
 
-
+    @property
+    def agressividade(self):
+        return self.__agressividade
+    
+    @property
+    def cobrimento(self):
+        return self.__cobrimento
+    
+    @property
+    def dmax(self):
+        return self.__dmax
+    
+    @property
+    def ah(self):
+        return self.__ah
+    
+    @property
+    def av(self):
+        return self.__av
     
