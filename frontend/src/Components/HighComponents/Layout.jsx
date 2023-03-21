@@ -14,6 +14,7 @@ import TabPanel from "../Inputs/Tabpanel";
 import LayoutCadastro from "./LayoutCadastro";
 import InputCar from "../Inputs/InputCar";
 import InputBarra from "../Inputs/InputBarra";
+import Secao from "./Secao";
 
 const Layout = () => {
 
@@ -69,16 +70,22 @@ const Layout = () => {
 
     return(
         <div>
-            <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={ handleChange} aria-label="basic tabs example">
-                    <Tab label="Geometria"  />
-                    <Tab label="Carregamento"  />
-                    <Tab label="Material"  />
-                </Tabs>
+            <Box sx={{ width: '100%'}}>
+                <Box sx={{ display: 'flex',borderBottom: 1, borderColor: 'divider',flexGrow: 1}}>
+                    <Box sx={{backgroundColor:'#D9D9D9'}}>
+                    <Tabs 
+                        value={value} 
+                        onChange={ handleChange} 
+                        aria-label="basic tabs example" 
+                        orientation="vertical"
+                        sx={{ borderRight: 1, borderColor: 'divider'}}>
+                        <Tab label="Viga"  />
+                        <Tab label="Carregamento"  />
+                        <Tab label="Seção" />
+                        <Tab label="Resultados"  />
+                    </Tabs>
                 </Box>
-            </Box>
-            <Box>
+
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
@@ -105,10 +112,14 @@ const Layout = () => {
                 <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
             </TabPanel>
             <TabPanel value={value} index={2}>
+                <Secao></Secao>
+            </TabPanel>
+            <TabPanel value={value} index={3}>
                 <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
                 {comb.map((el,index)=>{return <p key={index}>{`Combinação ${index+1}: ${el.replaceAll('*','x')}`}</p>})}
             </TabPanel>
             </Box>
+        </Box>
         </div>
     )
 }
