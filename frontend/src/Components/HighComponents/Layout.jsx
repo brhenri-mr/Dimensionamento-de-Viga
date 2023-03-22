@@ -72,19 +72,19 @@ const Layout = () => {
         <div>
             <Box sx={{ width: '100%'}}>
                 <Box sx={{ display: 'flex',borderBottom: 1, borderColor: 'divider',flexGrow: 1}}>
-                    <Box sx={{backgroundColor:'#D9D9D9'}}>
-                    <Tabs 
-                        value={value} 
-                        onChange={ handleChange} 
-                        aria-label="basic tabs example" 
-                        orientation="vertical"
-                        sx={{ borderRight: 1, borderColor: 'divider'}}>
-                        <Tab label="Viga"  />
-                        <Tab label="Carregamento"  />
-                        <Tab label="Seção" />
-                        <Tab label="Resultados"  />
-                    </Tabs>
-                </Box>
+                    <Box sx={{backgroundColor:'#D9D9D9',}}>
+                        <Tabs 
+                            value={value} 
+                            onChange={ handleChange} 
+                            aria-label="basic tabs example" 
+                            orientation="vertical"
+                            sx={{ borderRight: 1, borderColor: 'divider'}}>
+                            <Tab label="Viga" sx={{fontWeight: 'bold'}} />
+                            <Tab label="Carregamento"  sx={{fontWeight: 'bold'}}/>
+                            <Tab label="Seção" sx={{fontWeight: 'bold'}}/>
+                            <Tab label="Resultados" sx={{fontWeight: 'bold'}} />
+                        </Tabs>
+                    </Box>
 
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2}>
