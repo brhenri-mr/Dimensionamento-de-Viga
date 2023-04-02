@@ -15,6 +15,7 @@ import LayoutCadastro from "./LayoutCadastro";
 import InputCar from "../Inputs/InputCar";
 import InputBarra from "../Inputs/InputBarra";
 import Secao from "./Secao";
+import Resultados from "./Resultados";
 
 const Layout = () => {
 
@@ -115,6 +116,7 @@ const Layout = () => {
                 <Secao></Secao>
             </TabPanel>
             <TabPanel value={value} index={3}>
+                <Resultados/>
                 <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
                 {comb.map((el,index)=>{return <p key={index}>{`Combinação ${index+1}: ${el.replaceAll('*','x')}`}</p>})}
             </TabPanel>
