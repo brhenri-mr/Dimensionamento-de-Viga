@@ -102,7 +102,6 @@ class Combine():
         
         #divisão de dados
         for key, el in self.carregamento.items():
-            print(el)
             if el['patter'] == "Carregamento permanente":
                 desfav, fav = CP[el['describe']][modo]
                 perma.append([key, [desfav, fav]])
@@ -171,12 +170,13 @@ class Combine():
         #Dados
         
         rotulos = self.carregamento.keys()
-        carregamentos_corr = self.carregamento.copy()
         temp = []
+        
+        saida = dict(zip(self.carregamento.keys(),list(range(len(self.carregamento.keys())))))
         
         #criando a chave comb nos carregametos
         for chave in rotulos:
-            carregamentos_corr[chave]['comb'] = []
+            saida[chave] = []
         
         #tratando as combinacoes
         for i in self.__combinacoes:
@@ -190,11 +190,11 @@ class Combine():
                         s = item.replace(chave,'').replace(' ','')[:-1] #assim o ultimo asteristico some e resolve tudo comb1: 1.25*0.85*
                         try:
                             hm = eval(s) #eval é um 'função' q em teoria eu tenho que evitar mais processos em cima direito, é uma 'função' sensível
-                            carregamentos_corr[chave]['comb'].append(round(hm,2)) #tem que criar primeiro
+                            saida[chave].append(round(hm,2)) #tem que criar primeiro
                         except:
                             print(f'o valor adicionado não corresponde a numeros {s}')
                             
-        return carregamentos_corr
+        return saida
     
 if __name__ == '__main__':
     
@@ -246,5 +246,7 @@ if __name__ == '__main__':
 
     print('------------------------------')
 
+    verificar = test.json()
+    
     for chave in car.keys():
-        print(test.json()[chave])
+        print(verificar[chave])

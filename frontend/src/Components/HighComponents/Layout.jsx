@@ -16,6 +16,11 @@ import InputCar from "../Inputs/InputCar";
 import InputBarra from "../Inputs/InputBarra";
 import Secao from "./Secao";
 import Resultados from "./Resultados";
+//redux
+import { useDispatch } from "react-redux";
+import { actions } from "../../Actions/Carregamento";
+
+
 
 const Layout = () => {
 
@@ -29,18 +34,15 @@ const Layout = () => {
     const [value, setValue] = useState(0)
     const [patter,setPatter] = useState()
     const [describe, setDescribe] = useState()
+    const [metRigidez, setMetrigidez] = useState({})
 
-    console.log(CARREGAMENTOS)
-
-
-    //test
-
-    const [comb, setComb] = useState([])
+    //dispatch
+    const dispatch = useDispatch()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
-
+    //Fetch
     const testclick =(data) => {
         console.log(...data)
         fetch('http://127.0.0.1:8000/api/test', {
@@ -53,13 +55,40 @@ const Layout = () => {
                 .then((response) => response.json())
                 .then((data) => {
                     console.log('Success:', data);
-                    setComb(data)
+                    dispatch(actions.adicionar_comb(data))
+                    console.log(CARREGAMENTOS)
 
                 })
                 .catch((error) => {
                     console.error('Error:', error);
                 });
     }
+    //API metodo da rigidez direta
+    const MetRigidez=(data,apoios) => {
+
+        const enviar = {carregamento:data, apoios:apoios, comprimento:BARRA}
+
+
+        fetch('http://127.0.0.1:8000/api/MetRigidez', {
+
+        
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(enviar),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data);
+                    setMetrigidez(data)
+
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    }
+    
 
     const Item = styled('div')(({ theme }) => ({
         ...theme.typography.body2,
@@ -104,21 +133,27 @@ const Layout = () => {
                 </Grid>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <InputCar
-                patter={patter}
-                patterChange={event =>{event.preventDefault();return setPatter(event.target.value)}}
-                describe={describe}
-                describeChange={event =>{event.preventDefault();return setDescribe(event.target.value)}}
-                />
-                <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
+                <Grid container spacing={{xs:2}}>
+                    <Grid item xs={7.5}>
+                        <InputCar
+                        patter={patter}
+                        patterChange={event =>{event.preventDefault();return setPatter(event.target.value)}}
+                        describe={describe}
+                        describeChange={event =>{event.preventDefault();return setDescribe(event.target.value)}}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
+                    </Grid>
+                </Grid>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 <Secao></Secao>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <Resultados/>
+                <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez}/>
                 <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
-                {comb.map((el,index)=>{return <p key={index}>{`Combinação ${index+1}: ${el.replaceAll('*','x')}`}</p>})}
+                <Button onClick={(event)=> {event.preventDefault(); return MetRigidez(CARREGAMENTOS,APOIOS)}}>MetRigidez</Button>
             </TabPanel>
             </Box>
         </Box>

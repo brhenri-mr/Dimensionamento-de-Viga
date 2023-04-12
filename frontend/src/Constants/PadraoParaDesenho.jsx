@@ -1,7 +1,7 @@
 const PadraoParaDesenho ={
-    width:"800px",
-    height:"945px",
-    viewBox:"0 0 400 945"
+    width:"40rem",
+    height:"15rem",
+
 }
 
 export default PadraoParaDesenho

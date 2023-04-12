@@ -8,6 +8,10 @@ const actions ={
     remover: el =>({
         type: actionType.REMOVER_CAR,
         payload: el,
+    }),
+    adicionar_comb: el =>({
+        type:actionType.ADD_COMB,
+        payload:el
     })
 }
 

@@ -1,13 +1,13 @@
 import numpy as np
 
-def entrada_test(data: dict, apoio: dict):
+def entrada_test(data: dict, apoio: dict, comprimentoTotal:float):
     """
     recebe o Json do React
     data: JSON com propriedade das viga 
     apoio: JSON com a especificacao dos apoios
     """
     
-    def comprimento_trecho(carregamento:dict) ->list:
+    def comprimento_trecho(carregamento:dict, apoios:dict, comprimentototal:float) ->list:
         '''
         Separa do vetor geral data, um vetor do comprimento de cada trecho 
         de elemento
@@ -17,7 +17,7 @@ def entrada_test(data: dict, apoio: dict):
         #Variaveis
         comprimento = []
         
-        #Definicao elementos
+        #Definicao elementos pelo carregamentos
         for chave in carregamento.keys():
             temp = carregamento[chave]['pos']
             if isinstance(temp,int):
@@ -25,7 +25,18 @@ def entrada_test(data: dict, apoio: dict):
             else:
                 temp = [*temp]
             [comprimento.append(i) if i not in comprimento else 0 for i in temp]
+            
+        #Definicao do eelementos pelo apoios
+        for chave in apoios.keys():
+            if apoios[chave]['value'] not in comprimento:
+                comprimento.append(apoios[chave]['value'])
                 
+        #Conferencia do total ou inicio
+        if 0 not in comprimento:
+            comprimento.append(0)
+        elif comprimentototal not in comprimento:
+            comprimento.append(comprimentototal)
+        
         return sorted(comprimento)
     
     def grau_de_liberdade(parametro:str)->int:
@@ -44,7 +55,7 @@ def entrada_test(data: dict, apoio: dict):
             
     
     #Dados
-    comprimento = comprimento_trecho(data)
+    comprimento = comprimento_trecho(data,apoio,comprimentoTotal)
     numero_nos = len(comprimento) -1
     elementos={}
     
@@ -76,14 +87,23 @@ def entrada_test(data: dict, apoio: dict):
                     elementos[chave_el]['Carregamento'][f'Car{contador}'] = {'nome':chave_data,'tipo':data[chave_data]['tipo'],'mag':data[chave_data]['mag'],'pos':elementos[chave_el]['Trecho'],'comb':data[chave_data]['comb']}
     
     #Definindo valores para grau de liberdade
-    for chave in apoio.keys():
-        temp = apoio[chave]['value']
-        for chave_el in elementos.keys():
-            if temp in elementos[chave_el]['Trecho']:
-                nome_apoio =apoio[chave]['tipo']
-            else:
-                nome_apoio = 'Livre'
-            elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade(nome_apoio))
+    for chave_el in elementos.keys():
+        for item in elementos[chave_el]['Trecho']:
+            for chave in apoio.keys():
+                temp = apoio[chave]['value']
+                if temp == item:
+                    nome_apoio =apoio[chave]['tipo']
+                    elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade(nome_apoio))
+                    break
+            #Caso nao encontre na primeira tentativa, ele adotada um livre
+            if len(elementos[chave_el]['Grau de Liberdade']) in [0]:
+                print(elementos[chave_el]['Grau de Liberdade'])
+                elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade("Livre"))
+        if len(elementos[chave_el]['Grau de Liberdade']) in [1]:
+                print(elementos[chave_el]['Grau de Liberdade'])
+                elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade("Livre"))
+
+
     
     return elementos
                 
@@ -176,23 +196,19 @@ def vetor_local_forcas(carga:float, comprimento:int, tipo:str,trecho:list,pos:in
     pos: coordenada da aplicacao dos carregamentos
     '''
 
-    if tipo == 'Distruibuido':
+    if tipo == 'Distribuido':
         v_um = -carga * comprimento / 2
         v_dois = v_um
         momento_um = -carga * (comprimento**2) / 12
         momento_dois = -momento_um
         bd[chave]["Forcas Locais"] = np.array([v_um, momento_um, v_dois, momento_dois])+bd[chave]["Forcas Locais"]
-        print([v_um, momento_um, v_dois, momento_dois])
         return [v_um, momento_um, v_dois, momento_dois],bd
     elif tipo == "Pontual":
         if trecho[0] == pos:
             bd[chave]["Forcas Locais"] = bd[chave]["Forcas Locais"] #+np.array([-carga, 0, 0, 0])
-            print([-carga, 0, 0, 0])
             return [-carga, 0, 0, 0],bd
         else:
             bd[chave]["Forcas Locais"] = bd[chave]["Forcas Locais"] #+np.array([0, 0,-carga, 0])  
-            
-            print([0, 0,-carga, 0])
             return [0, 0,-carga, 0],bd
         
     elif tipo == 'Momento Pontual':
@@ -346,43 +362,18 @@ if __name__ == '__main__':
     }
     
     car = {
-        "Peso da aco":{
-            "index": "01",
-            "patter": "CP",
-            "describe":"Peso próprio de estruturas metálicas",
-            "tipo": "Pontual",
-            "mag": 15,
-            "pos": 45,
-            'comb':[1.25,1.40]
-        },
+
         "Peso da Telha":{
             "index": "01",
             "patter": "CP",
             "describe":"Elementos construtivos industrializados",
-            "tipo": "Distruibuido",
-            "mag": 15,
-            "pos":[150,300],
-            'comb':[1.25,1.40]
-        },
-        "Vento":{
-            "index": "02",
-            "patter": "CV",
-            "describe":"Ação do vento",
-            "tipo": "Distruibuido",
-            "mag": 15,
-            "pos":[0,150],
-            'comb':[1.25,1.40]
-        },
-        "Sobrecarga":{
-            "index": "03",
-            "patter": "CV",
-            "describe":"Ações veriáveis em geral",
             "tipo": "Pontual",
-            "mag": 15,
-            "pos": 250,
-            'comb': [1.25,1.40]
-        }
+            "mag": 20,
+            "pos":0,
+            'comb':[1.25,1.40]
+
     }
+}
     
     Adpoios = {
         '1':{
@@ -396,10 +387,10 @@ if __name__ == '__main__':
             'value':300     
         }
     }
-    
-    test = entrada_test(car,Adpoios)
+
+
+    test = entrada_test(car,Adpoios,300)
     print(test)
-    
     #Matriz de rigidez
     k_aglomerado = []
     d_global = []
@@ -412,7 +403,7 @@ if __name__ == '__main__':
                 [d_global.append(item) for item in coordenada_apoios]
         else:
             [d_global.append(item) for item in elemento["Grau de Liberdade"][1]]
-    
+            
     k_glob = rigidez_global(k_aglomerado)
     
     k_ordenado = ordenador(k_glob,d_global)
@@ -430,7 +421,7 @@ if __name__ == '__main__':
     vetor_glob = vetor_global_forcas(*vetor_de_forcas)
 
     vetor_glob_ord = ordenar_forcas(vetor_glob,d_global)
-
+    
     kll, kpl= submatrizes_rigizes(k_ordenado,d_global)
     
     f_d, f_f = subvetores_forca(vetor_glob_ord,d_global)

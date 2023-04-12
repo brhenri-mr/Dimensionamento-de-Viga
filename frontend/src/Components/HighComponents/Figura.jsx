@@ -18,10 +18,10 @@ const Figura = (props) =>{
                 })}
                 {Object.values(props.carregamentos).map((item,index) =>{
                     if(item['tipo'] ==='Pontual'){
-                        return <CarregamentoPontual key={index} mag={item['mag']} start={item['pos'][0]}></CarregamentoPontual>
+                        return <CarregamentoPontual key={index} mag={item['mag']} start={item['pos'][0]+50}></CarregamentoPontual>
                     }
                     else if(item['tipo']==='Distribuido'){
-                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={item['mag']} start={item['pos'][0]}></CarregamentoDist>
+                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={item['mag']} start={item['pos'][0]+50}></CarregamentoDist>
                     }
                 })}
             </svg>

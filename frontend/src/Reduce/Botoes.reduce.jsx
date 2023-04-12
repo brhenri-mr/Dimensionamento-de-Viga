@@ -16,6 +16,18 @@ const reducers  =(state = INITIAL_STATE, action) => {
             return {CARREGAMENTOS: [...state.CARREGAMENTOS, {...action.payload}],APOIOS:state.APOIOS}
         case actionType.REMOVER_CAR:
             return {CARREGAMENTOS: state.CARREGAMENTOS.filter(x => x.id !== action.payload.id),APOIOS:state.APOIOS}
+        case actionType.ADD_COMB:
+            //Adiciona a combinacao ao carregamento respectivo
+            const temp = state.CARREGAMENTOS
+            temp.map((item,indice)=>{
+                Object.keys(action.payload).forEach(chave=>{
+                    if (item.name === chave){
+                        item.comb = action.payload[chave]
+                    }
+                })
+            })
+
+            return {CARREGAMENTOS: [...temp],APOIOS:state.APOIOS}
         default:
             return state
     }

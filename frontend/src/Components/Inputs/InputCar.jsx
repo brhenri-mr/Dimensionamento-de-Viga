@@ -7,6 +7,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { FormControl } from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 //Constante
 import { patterConst, CP, CV,tipo_carr} from "../../Constants/classCar";
 //Redux
@@ -43,58 +45,90 @@ const InputCar = (props) =>{
             describe:describe,
             mag:parseInt(mag),
             pos:[parseInt(startpos),parseInt(finalpos)],
+            comb:[]
         }
     dispatch(actions.adicionar(item))
     }
 
     return(
     <>
-        <Box>
-            <FormControl>
-                <TextField label='Nome Carregamento' value={nome} onChange={(event) => {event.preventDefault();setNome(event.target.value)}}></TextField>
-            </FormControl>
-            <FormControl>
-                <InputLabel>Patter</InputLabel>
-                <Select
-                value={patter}
-                label='Patter'
-                onChange={event =>{event.preventDefault();return setPatter(event.target.value)}}
-                    >
-                    {patterConst.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
-                </Select>
-            </FormControl>
-            <FormControl>
-                <InputLabel>Describe</InputLabel>
-                <Select
-                value={describe}
-                label='Describe'
-                onChange={event =>{event.preventDefault();return setDescribe(event.target.value)}}
-                    >
-                    {describeop.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
-                </Select> 
-            </FormControl>
-            <FormControl>
-                <InputLabel>Tipo</InputLabel>
-                <Select
-                value={tipocar}
-                label='Tipo'
-                onChange={event =>{event.preventDefault()
-                    return setTipoCar(event.target.value)}}
-                    >
-                    {tipo_carr.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
-                </Select>
-            </FormControl>
-            <TextField label='Maginitude' value={mag} onChange={(event) => {event.preventDefault();setMag(event.target.value)}}></TextField>
-        </Box>
-        <Box>
-
-        </Box>
-            <FormControl>
-                <p>Posição</p>
-                <TextField label='Posição Inicial' value={startpos} onChange={(event) => {event.preventDefault();setStartpos(event.target.value)}}></TextField>
-                <TextField label='Posição Final' value={finalpos} onChange={(event) => {event.preventDefault();setFinalpos(event.target.value)}}></TextField>
-                <Button onClick={onclickevent}>Add</Button>
-            </FormControl>
+     <Grid container spacing={4}>
+        <Grid item>
+            <Box>
+                <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
+                    <p style={{fontSize:25,fontFamily:'Helvetica,Arial', border:1}}>Carregamento</p>
+                    <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+                        <item>
+                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
+                            <FormControl>
+                                <TextField label='Nome do Carregamento' sx={{backgroundColor:'white'}} value={nome} onChange={(event) => {event.preventDefault();setNome(event.target.value)}}></TextField>
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel>Persistência do Carregamento</InputLabel>
+                                <Select
+                                value={patter}
+                                label='Persistência do Carregamento'
+                                sx={{backgroundColor:'white'}}
+                                onChange={event =>{event.preventDefault();return setPatter(event.target.value)}}
+                                    >
+                                    {patterConst.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
+                            <FormControl>
+                                <InputLabel>Descrição Segundo NBR6118</InputLabel>
+                                <Select
+                                value={describe}
+                                sx={{backgroundColor:'white'}}
+                                label='Descrição Segundo NBR6118'
+                                onChange={event =>{event.preventDefault();return setDescribe(event.target.value)}}
+                                    >
+                                    {describeop.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                </Select> 
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel>Natureza do Carregamento</InputLabel>
+                                <Select
+                                value={tipocar}
+                                sx={{backgroundColor:'white'}}
+                                label='Natureza do Carregamento'
+                                onChange={event =>{event.preventDefault()
+                                    return setTipoCar(event.target.value)}}
+                                    >
+                                    {tipo_carr.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
+                        <TextField label='Maginitude [kN]' sx={{backgroundColor:'white'}} value={mag} onChange={(event) => {event.preventDefault();setMag(event.target.value)}}></TextField>
+                        </Box>
+                        </item>
+                    </Grid>
+                </Paper>
+            </Box>
+        </Grid>
+        <Grid item>
+            <Box>
+                <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
+                    <p style={{fontSize:25,fontFamily:'Helvetica,Arial', border:1}}>Posição</p>
+                    <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+                        <item>
+                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
+                            <FormControl>
+                                <TextField label='Posição Inicial' sx={{backgroundColor:'white'}} value={startpos} onChange={(event) => {event.preventDefault();setStartpos(event.target.value)}}></TextField>
+                            </FormControl>
+                            <FormControl>
+                                <TextField label='Posição Final' sx={{backgroundColor:'white'}} value={finalpos} onChange={(event) => {event.preventDefault();setFinalpos(event.target.value)}}></TextField>
+                            </FormControl>
+                        </Box>
+                        <Button onClick={onclickevent}>Add</Button>
+                        </item>
+                    </Grid>
+                </Paper>
+            </Box>
+        </Grid>
+        </Grid>
     </>
     )
 }
