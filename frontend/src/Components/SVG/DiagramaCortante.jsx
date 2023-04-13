@@ -14,8 +14,8 @@ const DiagramaCortante = (props) =>{
         Object.keys(props.metrigidez["Esforcos Internos"]).forEach((chave,indice)=>{ //roda os EL
             const Cortante = props.metrigidez["Esforcos Internos"][chave]["Cortante"]
             const trecho  = props.metrigidez["Esforcos Internos"][chave]["Trecho"]
-            points.push(`${trecho[1]+50},147.5 ${trecho[0]+50},147.5 ${50+trecho[0]},${147.5-Cortante[0]} ${trecho[1]+50},${147.5+Cortante[1]}`)
-            inicio.push(trecho[1])
+            points.push(`${trecho[trecho.length-1]+50},147.5 ${trecho[0]+50},147.5 ${50+trecho[0]},${147.5-Cortante[0]} ${trecho[trecho.length-1]+50},${147.5+Cortante[1]}`)
+            inicio.push(trecho[trecho.length-1])
             if (Cortante[0]<0){
                 texto.push([trecho[0]+50,147.5-Cortante[0],Cortante[0],-1.2])
             }
@@ -25,10 +25,10 @@ const DiagramaCortante = (props) =>{
             
             if(Object.keys(props.metrigidez["Esforcos Internos"]).length===texto.length){
                 if (Cortante[1]>0){
-                    texto.push([trecho[1]+50,147.5+Cortante[1],Cortante[1],-1.2])
+                    texto.push([trecho[trecho.length-1]+50,147.5+Cortante[1],Cortante[1],-1.2])
                 }
                 else{
-                    texto.push([trecho[1]+50,147.5+Cortante[1],Cortante[1],0.6])
+                    texto.push([trecho[trecho.length-1]+50,147.5+Cortante[1],Cortante[1],0.6])
                 }
             }
 
@@ -42,7 +42,7 @@ const DiagramaCortante = (props) =>{
             <svg {...PadraoParaDesenho}>
                 <g>
                     {texto.map((valor,key)=>{
-                        return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{valor[2]}</text>
+                        return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{`${valor[2]} kN`}</text>
                     })}
                 </g>
                 {points.map((item,indice)=>{  
