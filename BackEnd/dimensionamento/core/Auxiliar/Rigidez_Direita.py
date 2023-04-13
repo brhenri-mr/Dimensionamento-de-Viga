@@ -97,10 +97,8 @@ def entrada_test(data: dict, apoio: dict, comprimentoTotal:float):
                     break
             #Caso nao encontre na primeira tentativa, ele adotada um livre
             if len(elementos[chave_el]['Grau de Liberdade']) in [0]:
-                print(elementos[chave_el]['Grau de Liberdade'])
                 elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade("Livre"))
         if len(elementos[chave_el]['Grau de Liberdade']) in [1]:
-                print(elementos[chave_el]['Grau de Liberdade'])
                 elementos[chave_el]['Grau de Liberdade'].append(grau_de_liberdade("Livre"))
 
 

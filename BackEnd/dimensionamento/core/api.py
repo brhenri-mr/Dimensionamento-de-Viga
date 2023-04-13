@@ -14,6 +14,11 @@ def hello(request):
 
 @api.post("/test")
 def test(request, carregamentos: Carregamentos):
+    """
+    A bagunça de valores negativo se deve a descontinuidade que geram as analises locais:
+    em um lado um momento ou cortante é positivo e do outro lado o mesmo momento é negativo
+    foi feito um ajuste de forma empírica
+    """
     
     nome = []
     entrada = carregamentos.dict()['carregamento']
@@ -24,7 +29,6 @@ def test(request, carregamentos: Carregamentos):
     
     entrada = dict(zip(nome,entrada))
     
-    #print(f'entrada: {entrada}')
     
     comb = Combine(entrada, {"Local":"Bibliotecas, arquivos, depósitos, oficinas e garagens"})
     
@@ -129,12 +133,12 @@ def MetRigidez(request, data:MetRigidez):
 
         match tipo:
             case "Pontual":
-                return 1
+                return -mag
             case "Distribuido":
                 eq_car = w
                 temp = sym.integrate(eq_car,x)
-                constante = el["Cortante"][0] - temp.subs({x:el["Trecho"][0], w:-mag})
-                return temp + constante
+                constante = el["Cortante"][0] - temp.subs({x:el["Trecho"][0]/100, w:-mag})
+                return (temp + constante).subs({w:-mag})
    
     def momento(eq_cortante,mag,el):
         """
@@ -143,11 +147,11 @@ def MetRigidez(request, data:MetRigidez):
         mag: Maginitude do carregamento
         el: elementos discretizados
         """
-        x = sym.Symbol("x")
         w = sym.Symbol("w")
+        x = sym.Symbol("x")
         temp = sym.integrate(eq_cortante,x)
-        constante = el["Momento"][0] - temp.subs({w:-mag, x:el["Trecho"][0]})
-        return (temp + constante).subs({w:-mag})
+        constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
+        return (temp + constante)
 
     momento_temp = []
     posicoes_temp = []
@@ -160,29 +164,32 @@ def MetRigidez(request, data:MetRigidez):
     print('----------------')
     print(entrada)
     
+    
+    
     #Obtendo a funcao de momento para cada tramo
     for chave in entrada.keys():
+        print(chave)
         for chave_carregamento in entrada[chave]['Carregamento'].keys():
-            temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag'],saida['Esforcos Internos'][chave])
-            momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag'],saida['Esforcos Internos'][chave]))
-            print(momento_temp)
+            if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =='Pontual':
+                pass
+            else:
+                temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag'],saida['Esforcos Internos'][chave])
+                momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag'],saida['Esforcos Internos'][chave]))
         if len(momento_temp) >1:
             for m in momento_temp:
                 j = m + j
+            print(momento_temp)
+            print(j)
             momento_eq.append(j)
         else:
             momento_eq.append(momento_temp[0])
         momento_temp.clear()
-        
-    print(momento_eq)
     
     for chave,eq in zip(entrada.keys(),momento_eq):
-
         posicoes_temp.append(saida['Esforcos Internos'][chave]['Trecho'][0])
-        momento_temp.append(float(saida['Esforcos Internos'][chave]['Momento'][0]))
+        momento_temp.append(float(-saida['Esforcos Internos'][chave]['Momento'][0]))
 
         intervalo = (saida['Esforcos Internos'][chave]['Trecho'][1]-posicoes_temp[0])/(padrao)
-        print(f'intervalo = {intervalo}')
         for i in range(1,padrao+1,1):
             eq_temp = eq.subs({x:(posicoes_temp[0] +intervalo*i)/100})
             momento_temp.append(round(float(eq_temp),2))

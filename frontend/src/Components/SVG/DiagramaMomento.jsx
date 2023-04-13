@@ -8,8 +8,8 @@ import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
 const DiagramaMomento= (props) =>{
     const inicio = [0]
     const points = ['0,0 0,0']
-    const points_temp = []
     let temp = ""
+    let points_temp = []
     //controla o texto 
     const texto = []
     if (Object.keys(props.metrigidez).length !==0){ 
@@ -36,12 +36,14 @@ const DiagramaMomento= (props) =>{
                     }
                 }
             }
-            points_temp.push('50,147.5')
+            points_temp.push(`${trecho[trecho.length-1]+50},147.5 ${trecho[0]+50},147.5`)
             points_temp.forEach((valor,indice)=>{
                 temp = temp +valor +" "
             })
             points.push(temp)
-            console.log(temp)
+            console.log(points.length)
+            temp = ''
+            points_temp = []
         })
     }
 
