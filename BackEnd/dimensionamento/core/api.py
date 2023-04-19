@@ -4,6 +4,7 @@ from typing import List
 from ninja import Schema
 from core.Auxiliar.Combinacoes import Combine
 from core.Auxiliar.Rigidez_Direita import *
+from numba import jit
 
 
 api = NinjaAPI()
@@ -43,6 +44,7 @@ def MetRigidez(request, data:MetRigidez):
     import sympy as sym
     
     def interno(data):
+        
         #Variaveis
         nome = []
         k_aglomerado = []
@@ -119,8 +121,9 @@ def MetRigidez(request, data:MetRigidez):
                 "Momento":[parcial_esforcos[indice][1],parcial_esforcos[indice][3]]}})
             
         return {"Esforcos Internos":saida, "Reacoes externas":list(reacoes_externas)},test
-    
+    @jit
     def cortante(tipo:str,mag: float, el:dict):
+        
         """
         Retorna a equacao do cortante
         tipo: Natureza do carregamento (pontual, Distribuido)
@@ -139,7 +142,7 @@ def MetRigidez(request, data:MetRigidez):
                 temp = sym.integrate(eq_car,x)
                 constante = el["Cortante"][0] - temp.subs({x:el["Trecho"][0]/100, w:-mag})
                 return (temp + constante).subs({w:-mag})
-   
+    @jit
     def momento(eq_cortante,mag,el):
         """
         Retorna a equacao do Momento
@@ -155,7 +158,7 @@ def MetRigidez(request, data:MetRigidez):
 
     momento_temp = []
     posicoes_temp = []
-    padrao = 50
+    padrao = 18
     j = 0
     x = sym.Symbol("x")
     momento_eq = []
@@ -190,6 +193,7 @@ def MetRigidez(request, data:MetRigidez):
         momento_temp.append(float(-saida['Esforcos Internos'][chave]['Momento'][0]))
 
         intervalo = (saida['Esforcos Internos'][chave]['Trecho'][1]-posicoes_temp[0])/(padrao)
+        #aplicando valores
         for i in range(1,padrao+1,1):
             eq_temp = eq.subs({x:(posicoes_temp[0] +intervalo*i)/100})
             momento_temp.append(round(float(eq_temp),2))

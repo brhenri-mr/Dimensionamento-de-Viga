@@ -28,6 +28,7 @@ const Layout = () => {
     const APOIOS = useSelector(state => state.botoesReducers.APOIOS)
     const BARRA = useSelector(state => state.barraReducers.BARRA)
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
+    const CARACTERISTICAS = useSelector(state =>state)
 
 
     //useState
@@ -70,6 +71,32 @@ const Layout = () => {
 
 
         fetch('http://127.0.0.1:8000/api/MetRigidez', {
+
+        
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(enviar),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log('Success:', data);
+                    setMetrigidez(data)
+
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    }
+
+     //API metodo da rigidez direta
+     const Dimensionamento=(data) => {
+
+        const enviar = {}
+
+
+        fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
         
                 method: 'POST', // or 'PUT'
@@ -154,6 +181,7 @@ const Layout = () => {
                 <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez}/>
                 <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return MetRigidez(CARREGAMENTOS,APOIOS)}}>MetRigidez</Button>
+                <Button onClick={(event)=> {event.preventDefault(); return Dimensionamento(CARACTERISTICAS)}}>Dimensionamento</Button>
             </TabPanel>
             </Box>
         </Box>

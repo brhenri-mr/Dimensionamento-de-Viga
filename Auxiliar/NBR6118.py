@@ -2,7 +2,7 @@ from numpy import log
 
 class ParametrosConcreto:
     
-    def __init__(self, fck: int,ambiente: str,peca: str,bitolaL: float,unidades='kN/cm^2') -> None:
+    def __init__(self, fck: int,ambiente: str,peca: str,bitolaL: float,b:int,h:int,unidades='kN/cm^2') -> None:
         '''
         Classe que contem os parametros do concreto presentes conforme NBR6118/2014
         fck = Resistência caracteristica do concreto a compresssao em 28 dias [MPa]
@@ -36,12 +36,13 @@ class ParametrosConcreto:
         self.__fctkinf = 0.7*self.__fctkm
         self.__fctksup = 1.3*self.__fctkm
         self.__coef = 1 if unidades == 'MPa' else 10
-        self.__ecu = 0.0035
+        self.__ecu = 0.0035 if fck<=50 else 0.0026+0.035*((90-fck)/100)**4
         self.__agressividade = classe_de_agressividade_ambiental[ambiente]
         self.__cobrimento = cobrimento_por_elemento[peca][self.__agressividade-1]
         self.__dmax = 1.2*self.__cobrimento
         self.__ah = max(2,bitolaL,1.2*self.__dmax)
         self.__av = max(2,bitolaL,0.5*self.__dmax)
+        self.__w0 = b*h**2/6
       
     @property
     def unidades(self):
@@ -99,3 +100,6 @@ class ParametrosConcreto:
     def av(self):
         return self.__av
     
+    @property
+    def w0(self):
+        return self.__w0

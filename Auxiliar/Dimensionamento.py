@@ -16,15 +16,15 @@ def modulo_de_resistencia_transversal(bw,h,tipo):
 def verificacao_momentos(momento: float,fctksup: float,w0: float,bw: float,d: float,fcd: float,zeta: float, c: int)->list[float,float,float,str]:
     """
     Verifica o momento solicitante se está no intervalo de mínimo e máximo 
-    estabelecido pela norma |
-    momento = Monento solicitante da secao |
-    fctk = resitencia caracteristica de tracao superior do concreto |
-    w0 = modulo de resistencia transversal 
-    bw = largura comprimida do concreto |
-    d = altura util |
-    fcd = resistencia de calculo do concreto |
-    zeta = paramentro zeta do concreto |
-    c = class do concreto |
+    estabelecido pela norma 
+    momento:Monento solicitante da secao 
+    fctk : resitencia caracteristica de tracao superior do concreto 
+    w0 : modulo de resistencia transversal 
+    bw : largura comprimida do concreto 
+    d : altura util 
+    fcd : resistencia de calculo do concreto 
+    zeta : paramentro zeta do concreto 
+    c : class do concreto 
     """
     #Dados
     momentomin = 0.8*w0*fctksup
@@ -59,7 +59,7 @@ def admensionais(zeta:float,momento:float,eta:float,bw:int,d:float,fcd:float,Es:
     '''
     
     #Dados
-    bx = 1/zeta -(1/zeta)*(1-(2*momento)/(eta*bw*d**2*fcd))**0.5
+    bx = 1/zeta -(1/zeta)*(1-(2*momento)/(eta*bw*(d**2)*fcd))**0.5
     bz = 1- 0.5*zeta*bx
     bs = min([Es/fyd*(1-bx)/bx*ecu,1])
     
@@ -75,14 +75,14 @@ def area_aco(momento:float,bz:float,d:float,bs:float,fyd:float) -> float:
     fyd = resistencia caracteristica de calculo do aco
     '''
     area = (momento)/(d*bz*bs*fyd)
-    
     return area
 
 def verificacao_area(a,Ac) -> list[float,bool]:
     '''
     Verificacao da armadura minima da secao
-    a = area de aco |
-    Ac = area da secao transversal |
+    a: area de aco
+    Ac: area da secao transversal
+    return: Armadura min e Aviso(True tudo certo)
     '''
     #dados
     armadura_min = Ac *0.0015
@@ -94,14 +94,15 @@ def verificacao_area(a,Ac) -> list[float,bool]:
         
     return armadura_min, aviso #preciso que o programa no futuro passe todas essas coisas
 
-def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:float,av,ah)->int:
+def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:float,av:float,ah:float)->int:
     '''
-    Discretiza a armadura em barras e verifica a camada se esta adequada |
-    area = area de aco |
-    bw = lagura da area comprimida |
-    cnom = cobrimento nominal da peca |
-    bitolaL = diametro da armadura logitudinal |
-    bitolaT = diametro da armadura Transversal |
+    Discretiza a armadura em barras e verifica a camada se esta adequada
+    area: area de aco
+    bw: lagura da area comprimida 
+    cnom: cobrimento nominal da peca 
+    bitolaL: diametro da armadura logitudinal 
+    bitolaT: diametro da armadura Transversal
+    return: Barra necessárias, Barras por camada 
     '''
     #Dado
     barras_necessarias = ceil((4*area)/(3.1415*bitolaL**2))
@@ -112,58 +113,84 @@ def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:flo
 def area_efeitiva(barras_necessarias:int,bitolaL:float) -> float:
     '''
     Retorna a area efetiva de aco utilizada
-    barra_necessaira = quantidade de barras discretizadas
-    bitolal = bitola logitudinal
+    barra_necessaira : quantidade de barras discretizadas
+    bitolal: bitola logitudinal
     '''
     return barras_necessarias*3.1415*0.25*bitolaL**2
 
 def verificacao_admensional(fyd:float,eta:float,zeta:float,d:float,bw:int,fcd:float,a:float, Es:float,ecu:float):
+    '''
+    Verifica a posicao da linha neutra apos o arrendondamento da area de aco
+    fyd: resistencia de calculo do escoamento
+    eta: parametro do concreto
+    zeta: parametro do concreto
+    d: altura util do concreto
+    bw: largura comprimida da secao de aco
+    fcd: resistencia de calculo a compressao do concreto
+    a: area de aco efetiva
+    Es: modulo de elasticidade do ACO
+    ecu: deformacao de ruptura do concreto
+    return: Bool
+    '''
     bs_arbitrado = 1
     i = 0
     while i<=1000:
         bx = fyd/(eta*zeta*d*bw*fcd)*a*bs_arbitrado
         bs = min([Es/fyd*(1-bx)/bx*ecu,1])
+        #print(f'bs:{bx}')
+        #print(f'bs: {bs}')
         if bs_arbitrado == bs:
-            return True 
+            return True,bx,bs 
         i += 1
     return False
 
-def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras,barras_por_camada)->list[float,bool]:
+def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,barras_por_camada:int)->list[float,bool]:
     '''
-    Calculo do cg das armaduras.
-    OBS: todas as armaduras tem bitola igual
+    Calculo do cg das armaduras
+    return: ysi e numero de barras e distruibuicao de barras por camada
+    OBS: todas as armaduras tem bitola igual e o calculo foi feito pensando na menor ysi possivel, ou seja, 
+    maior quantidade de barras por camada e menor quantidade de barras
     '''
     barra= []
-    while numero_de_barras!=0:
+    Sobra_para_proxima_camada = numero_de_barras
+    j =0 
+    cri = False
+    
+    while Sobra_para_proxima_camada!=0:
         
-        temp = numero_de_barras-barras_por_camada
-        if temp>0:
-            if temp == 1:
-                #sobrou uma barra
-                barra.append(barras_por_camada-1)
-                temp = temp+1
-            elif temp<barras_por_camada:
-                #camada de cima será assimetrica
-                pass
+        #iterador
+        Sobra_para_proxima_camada = Sobra_para_proxima_camada-barras_por_camada
+        
+        if Sobra_para_proxima_camada>0:
+            
+            if Sobra_para_proxima_camada<barras_por_camada:
+                
+                if Sobra_para_proxima_camada%2 ==0:
+                    #tudo certo, vai sobrar uma quantidade que é simétrica
+                    barra.append(barras_por_camada)
+                    
+                else:
+                    #vai sobrar uma quantidade assimetrica, add mais uma barra
+                    barra.append(barras_por_camada)
+                    Sobra_para_proxima_camada = Sobra_para_proxima_camada + 1
+                    numero_de_barras = numero_de_barras + 1
+                    
             else:
-                #Tudo certo
+                #Tem mais barras ainda, ignorar e esperar
                 barra.append(barras_por_camada)
-        elif temp ==0:
+                
+        elif Sobra_para_proxima_camada == 0:
+            barra.append(barras_por_camada)
             break
         else:
-            barra.append(temp)
+            #significa que tenho mais espaco do que barras, logo ta tudo certo
+            barra.append(Sobra_para_proxima_camada+barras_por_camada)
             break
         
-        numero_de_barras = temp
+    for i in range(len(barra)):
+        j = i*barra[i]*(av+bitolaL) +j
+    return j/numero_de_barras, numero_de_barras, barra
     
-    
-    
-    ysi = bitolaL + av #bitola(i-1)+av+bitola(i)
-    for camada in range(1,2):
-        ys = (1)/numero_de_barras
-
-        
-        
     
 
 if __name__ == '__main__':

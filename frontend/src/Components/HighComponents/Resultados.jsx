@@ -9,8 +9,17 @@ import DiagramaMomento from "../SVG/DiagramaMomento";
 
 
 const Resultados = (props)=>{
-    const nome = 'Momento = 45kN'
-    const texto = ["O momento fletor se calcula aplicando a formulação a seguir","M=Fxd","Com isso, pode-se calcular os esforços vindo de momento fletor"]
+    const acoordeao ={
+        Momento:{
+            nome:'Msd = 45kN',
+            texto:["O momento fletor de calcula aplicando, segue a seguinte a formulação","M=Fxd","Com isso, pode-se calcular os esforços vindo de momento fletor"]
+        },
+        Altura_Ultil:{
+            nome:'d=45cm',
+            texto:['Explicar para primeira interacao como se faz']
+
+        }
+    }
     return(
         <>
         <Grid container spacing={4}>
@@ -25,7 +34,10 @@ const Resultados = (props)=>{
                 </Box>
             </Grid>
         </Grid>
-            <AccordionSelf label={nome} text={texto}></AccordionSelf>
+        {Object.keys(acoordeao).map((valor,indice)=>{
+            return <AccordionSelf label={acoordeao[valor]['nome']} text={acoordeao[valor]['texto']}></AccordionSelf>
+        })}
+
         </>
     )
 }
