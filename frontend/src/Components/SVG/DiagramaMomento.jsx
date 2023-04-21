@@ -17,7 +17,7 @@ const DiagramaMomento= (props) =>{
             const Cortante = props.metrigidez["Esforcos Internos"][chave]["Momento"]
             const trecho  = props.metrigidez["Esforcos Internos"][chave]["Trecho"]
             for (let i=0;i<=trecho.length-1;i++){
-                points_temp.push(`${trecho[i]+50},${147.5+Cortante[i]}`
+                points_temp.push(`${trecho[i]+50},${147.5-Cortante[i]}`
                     )
                 inicio.push(trecho[i+1])
                 if (Cortante[i]<0){
@@ -49,7 +49,7 @@ const DiagramaMomento= (props) =>{
 
     return(
         <>
-            <svg {...PadraoParaDesenho}>
+            <svg style={{ width:"40rem",height:"30rem"}}>
                 <g>
                 </g>
                 {points.map((item,indice)=>{ 

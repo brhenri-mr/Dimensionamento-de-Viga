@@ -333,13 +333,14 @@ def reacoes(kpl,deslocabilidade,forcas_f):  #conferir
 
     return r
 
-def reacoes_internas(ke,de,f):
+def reacoes_internas(ke,de,f,GDL):
     '''
     Retorna as reacoes internas do elemento 
     [cortante, momento, cortante, momento]
     ke: matriz de rigidez local do elemento
     de: deslocamentos locais do elemento
     f: forcas nodais equivalentes do elemento
+    GDL: grau de liberdade do ponto (necessario para poder compatibilizar o contexto global com o local)
     '''
     d_aberto = []
     for par_ordenado_desloc in de:
@@ -347,8 +348,11 @@ def reacoes_internas(ke,de,f):
             d_aberto.append(item_desloc)
             
     temp = ke.dot(np.array(d_aberto))
-    return temp - np.array(f)
+    temp = temp - np.array(f)
 
+    temp[-1] = temp[-1]*-1
+    temp[-2] = temp[-2]*-1
+    return temp
 if __name__ == '__main__':
     
     props = {

@@ -57,5 +57,5 @@ if __name__ == '__main__':
     print(formula_cortante)
     formula_momento = momento(formula_cortante,30,el)
     print(formula_momento)
-    maximo = maxmomento(formula_cortante,formula_momento,el)
-    print(maximo)
+
+    

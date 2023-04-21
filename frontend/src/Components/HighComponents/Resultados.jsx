@@ -26,6 +26,7 @@ const Resultados = (props)=>{
             <Grid xs={6}>
                 <Box>
                     <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez}></DiagramaCortante>
+
                 </Box>
             </Grid>
             <Grid xs={5}>

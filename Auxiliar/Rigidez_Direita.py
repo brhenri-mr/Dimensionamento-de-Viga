@@ -400,6 +400,9 @@ if __name__ == '__main__':
     test = entrada_test(car,Adpoios)
     print(test)
     
+    final = []
+    esforcos_totais = []
+    
     #Matriz de rigidez
     k_aglomerado = []
     d_global = []
@@ -416,38 +419,54 @@ if __name__ == '__main__':
     k_glob = rigidez_global(k_aglomerado)
     
     k_ordenado = ordenador(k_glob,d_global)
+    
+    for chave in test.keys():
+        for carregamento in test[chave]["Carregamento"].values():
+            if carregamento["comb"]!=0:
+                quantidade_com = len(carregamento["comb"])
+                break
 
     #vetor de forças
-    vetor_de_forcas = []
-    for chave in test.keys():
-        comprimento = test[chave]["Comprimento"]/100
-        temp = np.array([0,0,0,0])
-        for carregamento in test[chave]["Carregamento"].values():
-            incremento,elementos = vetor_local_forcas(carregamento["mag"],comprimento,carregamento["tipo"], trecho=test[chave]["Trecho"] , pos=carregamento["pos"], bd = test, chave=chave)
-            temp = temp + np.array(incremento)
-        vetor_de_forcas.append(temp.copy())
-    
-    vetor_glob = vetor_global_forcas(*vetor_de_forcas)
+    for i in range(quantidade_com):
+        vetor_de_forcas = []
+        for chave in test.keys():
+            comprimento = test[chave]["Comprimento"]/100
+            temp = np.array([0,0,0,0])
+            for carregamento in test[chave]["Carregamento"].values():
+                incremento,elementos = vetor_local_forcas(carregamento["mag"]*carregamento['comb'][i],comprimento,carregamento["tipo"], trecho=test[chave]["Trecho"] , pos=carregamento["pos"], bd = test, chave=chave)
+                temp = temp + np.array(incremento)
+            vetor_de_forcas.append(temp.copy())
+        
+            vetor_glob = vetor_global_forcas(*vetor_de_forcas)
 
-    vetor_glob_ord = ordenar_forcas(vetor_glob,d_global)
+        vetor_glob_ord = ordenar_forcas(vetor_glob,d_global)
 
-    kll, kpl= submatrizes_rigizes(k_ordenado,d_global)
-    
-    f_d, f_f = subvetores_forca(vetor_glob_ord,d_global)
-    
-    deslocabilidade_valores, elementos = deslocabilidade(kll,f_d,elementos)
-    reacoes_externas = reacoes(kpl,deslocabilidade_valores,f_f)
-    
-    parcial = []
-    for item in elementos.values():
-        print(item)
-        print('---------')
+        kll, kpl= submatrizes_rigizes(k_ordenado,d_global)
+        
+        f_d, f_f = subvetores_forca(vetor_glob_ord,d_global)
+        
+        deslocabilidade_valores, elementos = deslocabilidade(kll,f_d,elementos)
+        reacoes_externas = reacoes(kpl,deslocabilidade_valores,f_f)
+        
+        parcial = []
+        for item in elementos.values():
+            print(item)
+            print('---------')
 
-    for chave,indice in zip(elementos.keys(),range(len(elementos))):
-        parcial.append(list(map(lambda x: round(x,2),(reacoes_internas(k_aglomerado[indice],elementos[chave]["Deslocabilidades"],elementos[chave]["Forcas Locais"])))))
+        for chave,indice in zip(elementos.keys(),range(len(elementos))):
+            parcial.append(list(map(lambda x: round(x,2),(reacoes_internas(k_aglomerado[indice],elementos[chave]["Deslocabilidades"],elementos[chave]["Forcas Locais"])))))
 
-    saida = dict(zip(elementos.keys(),parcial))
+        esforcos_totais.append(parcial.copy())
     
+    
+    saida = {}
+    print(esforcos_totais)
+    for chave in elementos.keys():
+        saida[chave] =[]
+        for parcela in esforcos_totais:
+            saida[chave].append(parcela.pop(0))
+    
+        
     print(saida)
 
     
