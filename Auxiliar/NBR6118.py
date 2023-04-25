@@ -43,6 +43,7 @@ class ParametrosConcreto:
         self.__ah = max(2,bitolaL,1.2*self.__dmax)
         self.__av = max(2,bitolaL,0.5*self.__dmax)
         self.__w0 = b*h**2/6
+        self.__gammac = 1.4
       
     @property
     def unidades(self):
@@ -103,3 +104,7 @@ class ParametrosConcreto:
     @property
     def w0(self):
         return self.__w0
+
+    @property
+    def gammac(self):
+        return self.__gammac

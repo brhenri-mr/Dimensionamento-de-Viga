@@ -1,4 +1,5 @@
 from Dimensionamento import verificacao_momentos, admensionais, area_aco, verificacao_area, distruibuicao_camadas,incremento_cg_armaduras, area_efeitiva, verificacao_admensional
+from Ancoragem import *
 from NBR6118 import ParametrosConcreto
 
 
@@ -120,3 +121,15 @@ while True:
              
         
 print(saida)
+
+
+
+
+fcb = resistencia_aderencia(bitolaL,parametros.fctkinf/parametros.gammac,fyd*1.15,saida['Altura Util']['Valor'][-1],h)
+lbnec = comprimento_necessario(bitolaL,fcb,fyd,saida['Area']['Area Necessaria'][-1],saida['Area']['Area Efetiva'][-1],alfa=1)
+
+al = decalagem(1,1,saida['Altura Util']['Valor'][-1],'Modelo 2')
+
+
+momento_camada = momento_por_camada(saida['Altura Util']['Valor'][-1],parametros.zeta,saida['Admensionais'][-1][0],saida['Admensionais'][-1][2],fyd,saida['Discretizacao']['Barras'][-1],bitolaL)
+print(momento_camada)
