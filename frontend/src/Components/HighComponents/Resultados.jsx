@@ -29,7 +29,7 @@ const Resultados = (props)=>{
 
                 </Box>
             </Grid>
-            <Grid xs={5}>
+            <Grid xs={6}>
                 <Box>
                     <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez}></DiagramaMomento>
                 </Box>

@@ -25,6 +25,7 @@ def test(request, carregamentos: Carregamentos):
     
     nome = []
     entrada = carregamentos.dict()['carregamento']
+    print(entrada)
 
     #pequeno tratamento para o valor padrão a ser recebido
     for i in range(len(entrada)):
@@ -37,8 +38,7 @@ def test(request, carregamentos: Carregamentos):
     
     
     test = comb.ELU(modo='Normal')
-    
-
+    print(test)
     return comb.json()
 
 @api.post("/MetRigidez")
@@ -208,6 +208,9 @@ def MetRigidez(request, data:MetRigidez):
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
     
+    
+    print(entrada)
+    
     #Obtendo a funcao de momento para cada tramo
     #Rodando cada combinacao
     for i in range(quantidade_comb):
@@ -218,9 +221,9 @@ def MetRigidez(request, data:MetRigidez):
                 for chave_carregamento in entrada[chave]['Carregamento'].keys():
                     if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual":
                         # por cortamos a um infitessimo a regiao do ponto, o carregamento pontual nao pode existir, mas sua energia esta nas reacoes
-                        pass
+                        cortante_temp.append('discartar')
+                        momento_temp.append('discartar')
                     else:
-                        print(saida['Esforcos Internos'][i][chave])
                         temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][i],saida['Esforcos Internos'][i][chave])
                         momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][i],saida['Esforcos Internos'][i][chave]))
                         cortante_temp.append(temp)
@@ -252,13 +255,13 @@ def MetRigidez(request, data:MetRigidez):
         cortante_eq.append(cortante_el.copy())
         cortante_el.clear()
         momento_el.clear()
-        
     generico = {}
-    print(cortante_eq)
     #acessar uma elemento, indice corresponde a combinacao
-    for indice,chave in enumerate(entrada.keys()):
+    for indice,chave in zip(range(quantidade_comb),entrada.keys()):
         for comb_momento, comb_cortante in zip(momento_eq,cortante_eq):
+
             #previnindo equacoes inexistentes
+            #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
             comb_atual = 1+ comb_atual

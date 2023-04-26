@@ -16,8 +16,6 @@ def compatibilizacao(s_atual:dict,el_individual:dict,s_global:dict,sinal:str):
     if len(s_global['Trecho']) == 0:
         s_global = el_individual.copy()
     
-
-    
     #Conferindo pontos ja existentes
     for esforco_considerado in ['Momento','Cortante']:
         for i in [0,-1]:

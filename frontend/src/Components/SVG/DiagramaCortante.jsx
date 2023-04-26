@@ -40,7 +40,7 @@ const DiagramaCortante = (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:"30rem"}}>
+            <svg style={{ width:"40rem",height:"15rem"}}>
                 <g>
                     {texto.map((valor,key)=>{
                         return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{`${valor[2]} kN`}</text>

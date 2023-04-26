@@ -18,9 +18,10 @@ const Apoio = (props) =>{
             <ApoioSimples value={props.value}></ApoioSimples>
         )
     }
-    else if (props.tipo === 'Engastado'){
+    else if (props.tipo === 'Apoio Engastado'){
+        
         return (
-            <Engastado></Engastado>
+            <Engastado value={props.value}></Engastado>
         )
     }
 }

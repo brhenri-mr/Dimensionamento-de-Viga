@@ -108,10 +108,13 @@ class Combine():
                 
             elif el['patter'] == "Carrregamento Variável":
                 desfav, fav = CV[el['describe']][modo]
+                #Valores de fi
                 if el['describe'] == 'Ação do vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
                 elif self.caracteristicas['Local'] in FATORES_DE_REDUCAO['Cargas acidentais de edifícios'].keys():
                     coef_auxi = FATORES_DE_REDUCAO['Cargas acidentais de edifícios'][self.caracteristicas['Local']][0]
+                else:
+                    coef_auxi = [1,1,1]
                 
                 var.append([key, [desfav, fav, coef_auxi]])
 
@@ -133,7 +136,7 @@ class Combine():
         #Combinção variaveis
         for item in var:
             principal_var.append([f'{item[1][0]}*{item[0]}'])
-        
+            principal_var.append([f'{item[1][1]}*{item[0]}'])
 
         for el in var:
             for item in principal_var:
@@ -148,11 +151,18 @@ class Combine():
                 temp.clear()
             z = -1
         
-        for element in s:
+            
+        if len(s) != 0:
+            for element in s:
+                for item in principal_var:
+                    for el in item:
+                        temp.append(f'{element} + {el}')
+        else:
             for item in principal_var:
-                for el in item:
-                    temp.append(f'{element} + {el}')
-        
+                    for el in item:
+                        temp.append(f'{el}')
+            
+
         self.__combinacoes = temp+s
         
         return self.__combinacoes
@@ -209,7 +219,7 @@ if __name__ == '__main__':
         },
         "Peso da Telha":{
             "index": "01",
-            "patter": "CP",
+            "patter": "1",
             "describe":"Elementos construtivos industrializados",
             "tipo": "Distruibuida",
             "mag": 15,
@@ -217,7 +227,7 @@ if __name__ == '__main__':
         },
         "Vento":{
             "index": "02",
-            "patter": "CV",
+            "patter": "Carrregamento Variável",
             "describe":"Ação do vento",
             "tipo": "Distruibuido",
             "mag": 15,
@@ -241,6 +251,8 @@ if __name__ == '__main__':
     test = Combine(car, ed)
 
     comb = test.ELU('Normal')
+    
+    print('------------------------------')
 
     [print(f'combinacao {j+1}: {i}') for j,i in enumerate(comb)]
 
@@ -248,5 +260,3 @@ if __name__ == '__main__':
 
     verificar = test.json()
     
-    for chave in car.keys():
-        print(verificar[chave])

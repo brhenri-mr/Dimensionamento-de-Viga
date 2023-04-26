@@ -46,7 +46,7 @@ def entrada_test(data: dict, apoio: dict, comprimentoTotal:float):
                 return [0,1]
             case 'Apoio Simples':
                 return [0,1]
-            case 'Engaste':
+            case 'Apoio Engastado':
                 return [0,0]
             case 'Livre':
                 return [1,1]

@@ -94,6 +94,9 @@ def momento_por_camada(d:float,zeta:float,bx:float,bs:float,fyd:float,armaduras:
         temp = 0
     return saida
 
+def comprimento_de_ancoragem(lbnec,al,bitola,xcamada:list,xinferior:list):
+    if lbnec+al+(xcamada[1]-xcamada[0])>10*bitola+al+(xinferior[1]-xinferior[0]):
+        return lbnec+al,10*bitola+al,xcamada,"lbnec+al"
+    else:
+        return lbnec+al,10*bitola+al,xinferior,"10*bitola+al"
 
-def comprimento_de_ancoragem(lbnec,al,bitola):
-  return max(lbnec+al,10*bitola+al)
