@@ -18,14 +18,10 @@ const DiagramaMomento= (props) =>{
     const tamanhosvg = 240 // 15rem
 
 
-    //definindo escala
-    
-
-
     //controla o texto 
     const texto = []
     if (Object.keys(props.metrigidez).length !==0){ 
-
+        //definindo escala
         Object.keys(props.metrigidez["Esforcos Internos"]).forEach((chave,indice)=>{
             const Momento = props.metrigidez["Esforcos Internos"][chave]["Momento"]
             Momento.forEach((valor,indice)=>{

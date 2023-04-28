@@ -12,6 +12,10 @@ const actions ={
     adicionar_comb: el =>({
         type:actionType.ADD_COMB,
         payload:el
+    }),
+    adicionar_informacoes: el =>({
+        type:actionType.ADD_INF,
+        payload:el
     })
 }
 

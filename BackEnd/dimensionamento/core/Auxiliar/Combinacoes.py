@@ -111,8 +111,10 @@ class Combine():
                 #Valores de fi
                 if el['describe'] == 'Ação do vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
-                elif self.caracteristicas['Local'] in FATORES_DE_REDUCAO['Cargas acidentais de edifícios'].keys():
-                    coef_auxi = FATORES_DE_REDUCAO['Cargas acidentais de edifícios'][self.caracteristicas['Local']][0]
+                elif el['describe'] == 'Temperatura':
+                    coef_auxi = FATORES_DE_REDUCAO['Temperatura'][0]
+                elif self.caracteristicas['informacoes'] in FATORES_DE_REDUCAO[self.caracteristicas['Local']].keys():
+                    coef_auxi = FATORES_DE_REDUCAO[self.caracteristicas['Local']][self.caracteristicas['informacoes']][0]
                 else:
                     coef_auxi = [1,1,1]
                 

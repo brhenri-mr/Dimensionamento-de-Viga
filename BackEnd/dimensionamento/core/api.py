@@ -1,4 +1,4 @@
-from core.scheme import Carregamentos, MetRigidez
+from core.scheme import Carregamentos, MetRigidez, Caracteristicas
 from ninja import NinjaAPI
 from typing import List
 from ninja import Schema
@@ -15,7 +15,7 @@ api = NinjaAPI()
 def hello(request):
     return "Hello world"
 
-@api.post("/test")
+@api.post("/Combinacoes")
 def test(request, carregamentos: Carregamentos):
     """
     A bagunça de valores negativo se deve a descontinuidade que geram as analises locais:
@@ -25,7 +25,7 @@ def test(request, carregamentos: Carregamentos):
     
     nome = []
     entrada = carregamentos.dict()['carregamento']
-    print(entrada)
+    informacoes = carregamentos.dict()['ed']
 
     #pequeno tratamento para o valor padrão a ser recebido
     for i in range(len(entrada)):
@@ -34,7 +34,7 @@ def test(request, carregamentos: Carregamentos):
     entrada = dict(zip(nome,entrada))
     
     
-    comb = Combine(entrada, {"Local":"Bibliotecas, arquivos, depósitos, oficinas e garagens"})
+    comb = Combine(entrada, informacoes)
     
     
     test = comb.ELU(modo='Normal')
@@ -295,3 +295,8 @@ def MetRigidez(request, data:MetRigidez):
     '''         
     print(saida)
     return saida
+
+@api.post("/Dimensionamento")
+def dimensionamento(request,data:Caracteristicas):
+    
+    return 1

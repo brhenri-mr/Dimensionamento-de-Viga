@@ -28,7 +28,8 @@ const Layout = () => {
     const APOIOS = useSelector(state => state.botoesReducers.APOIOS)
     const BARRA = useSelector(state => state.barraReducers.BARRA)
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
-    const CARACTERISTICAS = useSelector(state =>state)
+    const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
+    const ED = useSelector(state => state.botoesReducers.ED)
 
 
     //useState
@@ -44,14 +45,14 @@ const Layout = () => {
         setValue(newValue);
       };
     //Fetch
-    const testclick =(data) => {
+    const Combinacoes =(data,ed) => {
         console.log(...data)
-        fetch('http://127.0.0.1:8000/api/test', {
+        fetch('http://127.0.0.1:8000/api/Combinacoes', {
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({carregamento:data}),
+                body: JSON.stringify({carregamento:data,ed:ed}),
                 })
                 .then((response) => response.json())
                 .then((data) => {
@@ -93,8 +94,6 @@ const Layout = () => {
      //API metodo da rigidez direta
      const Dimensionamento=(data) => {
 
-        const enviar = {}
-
 
         fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
@@ -103,7 +102,7 @@ const Layout = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(enviar),
+                body: JSON.stringify({...data}),
                 })
                 .then((response) => response.json())
                 .then((data) => {
@@ -179,7 +178,7 @@ const Layout = () => {
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez}/>
-                <Button onClick={(event)=> {event.preventDefault(); return testclick(CARREGAMENTOS)}}>Api</Button>
+                <Button onClick={(event)=> {event.preventDefault(); return Combinacoes(CARREGAMENTOS,ED)}}>Api</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return MetRigidez(CARREGAMENTOS,APOIOS)}}>MetRigidez</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return Dimensionamento(CARACTERISTICAS)}}>Dimensionamento</Button>
             </TabPanel>

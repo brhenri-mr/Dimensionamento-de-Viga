@@ -20,10 +20,25 @@ class Carregamento(Schema):
     tipo:str
     comb:list
 
+class ED(Schema):
+    Local:str
+    informacao:str
+
+
 class Carregamentos(Schema):
     carregamento:List[Carregamento]
+    ed:List[ED]
     
 class MetRigidez(Schema):
     carregamento:List[Carregamento]
     apoios:List[Apoios]
     comprimento:float
+    
+class Caracteristicas(Schema):
+    fck:int
+    fyk:int
+    h:float
+    dmax:float
+    bw:float
+    dL:float
+   

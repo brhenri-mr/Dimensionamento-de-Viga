@@ -10,30 +10,32 @@ import Button from '@mui/material/Button';
 import { useDispatch } from "react-redux";
 //Componentes
 import SecaoTransversal from '../SVG/SecaoTransversal'
+import actions from "../../Actions/Caracteristicas";
 
 const Secao  = (props)=> {
 
     //Dispatch
     const dispatch = useDispatch()
 
-    const [fck,setFck] = useState("")
-    const [fyk,setFyk] = useState("")
-    const [alturaSecao,setAlturasecao]= useState("")
-    const [diametromax,setDiametromax] = useState("")
-    const [bw,setBw] = useState("")
-    const [diametroL,setDiametroL] = useState("")
+    const [fck,setFck] = useState('')
+    const [fyk,setFyk] = useState('')
+    const [alturaSecao,setAlturasecao]= useState('')
+    const [diametromax,setDiametromax] = useState('')
+    const [bw,setBw] = useState('')
+    const [diametroL,setDiametroL] = useState('')
 
     const caracteristcas = (event)=>{
         event.preventDefault()
         const item = {
-            fck:fck,
-            fyk:fyk,
-            h:alturaSecao,
-            dmax:diametromax,
-            bw:bw,
-            dL:diametroL
+            fck:parseInt(fck),
+            fyk:parseInt(fyk),
+            h:parseFloat(alturaSecao),
+            dmax:parseFloat(diametromax),
+            bw:parseFloat(bw),
+            dL:parseFloat(diametroL)
         }
-        console.log(item)
+
+        dispatch(actions.adicionar(item))
     }
 
 

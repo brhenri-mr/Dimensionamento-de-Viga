@@ -1,11 +1,23 @@
 import actionType from "../Constants";
 
 const INITIAL_STATE = {
-    CARACTERISTICAS: [],
+    CARACTERISTICAS: {
+        fck:0,
+        fyk:0,
+        h:0,
+        dmax:0,
+        bw:0,
+        dL:0
+    }
 }
 
 const reducers = (state = INITIAL_STATE, action)=>{
-    return 1
+    switch (action.type){
+        case actionType.ADD_CARACTERISTICAS:
+            return {CARACTERISTICAS:action.payload}
+        default:
+                return state
+    }
 }
 
 

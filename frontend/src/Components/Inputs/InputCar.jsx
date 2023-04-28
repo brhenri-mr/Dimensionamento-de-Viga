@@ -10,7 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 //Constante
-import { patterConst, CP, CV,tipo_carr} from "../../Constants/classCar";
+import { patterConst, CP, CV,tipo_carr,Descricao} from "../../Constants/classCar";
 //Redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
@@ -29,10 +29,12 @@ const InputCar = (props) =>{
     const [finalpos, setFinalpos] = useState('')
     const [tipocar, setTipoCar] = useState('')
     const [nome, setNome] = useState('')
+    const [descricao,setDescricao] = useState('')
+    const [descricaosecundaria, setDescricaosecundaria] = useState('')
 
     let describeop = (patter===patterConst[0]) ? CP:CV
 
-
+    let correcaobugdescricao = (descricao==='')? ['Vento']:descricao
 
     const onclickevent = (event) => {
         event.preventDefault()
@@ -47,7 +49,16 @@ const InputCar = (props) =>{
             pos:[parseInt(startpos),parseInt(finalpos)],
             comb:[]
         }
-    dispatch(actions.adicionar(item))
+        dispatch(actions.adicionar(item))
+
+        const informacoesadicionais = {
+            Local:descricao,
+            informacao:descricaosecundaria
+        }
+
+        dispatch(actions.adicionar_informacoes(informacoesadicionais))
+
+        
     }
 
     return(
@@ -102,6 +113,41 @@ const InputCar = (props) =>{
                         </Box>
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                         <TextField label='Maginitude [kN]' sx={{backgroundColor:'white'}} value={mag} onChange={(event) => {event.preventDefault();setMag(event.target.value)}}></TextField>
+                        </Box>
+                        </item>
+                    </Grid>
+                </Paper>
+            </Box>
+        </Grid>
+        <Grid item>
+            <Box>
+                <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
+                    <p style={{fontSize:25,fontFamily:'Helvetica,Arial', border:1}}>Descrição</p>
+                    <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+                        <item>
+                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
+                            <FormControl>
+                                <InputLabel>Descrição do Carregamento</InputLabel>
+                                <Select
+                                value={descricao}
+                                sx={{backgroundColor:'white'}}
+                                label='Descrição Segundo NBR6118'
+                                onChange={event =>{event.preventDefault();return setDescricao(event.target.value)}}
+                                    >
+                                    {Object.keys(Descricao).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                </Select> 
+                            </FormControl>
+                            <FormControl>
+                                <InputLabel>Descrição do Carregamento</InputLabel>
+                                <Select
+                                value={descricaosecundaria}
+                                sx={{backgroundColor:'white'}}
+                                label='Descrição Segundo NBR6118'
+                                onChange={event =>{event.preventDefault();return setDescricaosecundaria(event.target.value)}}
+                                    >
+                                    {Descricao[correcaobugdescricao].map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                </Select> 
+                            </FormControl>
                         </Box>
                         </item>
                     </Grid>
