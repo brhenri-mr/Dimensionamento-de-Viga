@@ -1,4 +1,3 @@
-from NBR6118 import ParametrosConcreto
 from numpy import ceil, floor
 
 '''
@@ -105,9 +104,8 @@ def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:flo
     return: Barra necessárias, Barras por camada 
     '''
     #Dado
-    barras_necessarias = ceil((4*area)/(3.1415*bitolaL**2))
-    barra_por_camada = floor((bw-2*cnom-2*bitolaT+ah)/(bitolaL+ah))
-    print(type(barra_por_camada))
+    barras_necessarias = int(ceil((4*area)/(3.1415*bitolaL**2)))
+    barra_por_camada = int(floor((bw-2*cnom-2*bitolaT+ah)/(bitolaL+ah)))
     
     return barras_necessarias, barra_por_camada
 
@@ -193,40 +191,3 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
     return j/numero_de_barras, numero_de_barras, barra
     
     
-
-if __name__ == '__main__':
-    
-    #Dados 
-    h = 1 #altura da peca
-    bw = 1 # largura comprimida
-    cnom = 1 # cobrimento nominal
-    fyk = 1 # tensão de escoamento
-    fck = 1 # resistência caracteristica à compressão
-    w0 = 1 #modulo
-    bitolaT = 1 # bitola transversal
-
-    parametros = ParametrosConcreto(fck)
-
-    while True:
-        
-        ys = incremento_cg_armaduras()
-        #Etapa de verificar se o momento esta no intervalo correto
-        d = h - cnom - bitolaT - ys
-        Msd, Mmin, Mmax, aviso = verificacao_momentos()
-        print(aviso)
-        if aviso == 'Viga Ultrapassa o Momento máximo para a seção':
-            print(aviso)
-            break
-        #Calculo das variaveis auxiliares
-        bx, by, bz, bs = admensionais()
-        #Calculo da Area de Aco
-        As = area_aco(Msd,bs)
-        taxa, criterio = verificacao_area(As, bs)
-        if criterio:
-            distruibuicao_camadas(As)
-            As = area_efeitiva()
-            if verificacao_area(As, bs):
-                break
-        else:
-            print('Área de armadura insuficiente')
-            break

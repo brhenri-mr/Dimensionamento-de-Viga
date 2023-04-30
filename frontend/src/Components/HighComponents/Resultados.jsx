@@ -14,6 +14,10 @@ const Resultados = (props)=>{
             nome:'Msd = 45kN',
             texto:["O momento fletor de calcula aplicando, segue a seguinte a formulação","M=Fxd","Com isso, pode-se calcular os esforços vindo de momento fletor"]
         },
+        jose:{
+            nome:'tentativa',
+            texto:['tentativa 1']
+        },
         Altura_Ultil:{
             nome:'d=45cm',
             texto:['Explicar para primeira interacao como se faz']

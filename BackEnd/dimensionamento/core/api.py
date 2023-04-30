@@ -1,11 +1,16 @@
+
+#Django ninja
 from core.scheme import Carregamentos, MetRigidez, Caracteristicas
 from ninja import NinjaAPI
 from typing import List
 from ninja import Schema
+#funcoes internas
 from core.Auxiliar.Combinacoes import Combine
 from core.Auxiliar.Rigidez_Direita import *
-from numba import jit
 from core.Auxiliar.Auxiliar import compatibilizacao
+from core.Auxiliar.Dimensionamento import *
+from core.Auxiliar.NBR6118 import ParametrosConcreto
+#Auxiliares
 import copy
 
 
@@ -298,5 +303,118 @@ def MetRigidez(request, data:MetRigidez):
 
 @api.post("/Dimensionamento")
 def dimensionamento(request,data:Caracteristicas):
+    """
+    Api para dimensionamento da secao trasnversal retangular
+    """
+    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0):
+        '''
+        Funcao para dimensionar a secao: areas de armadura 
+        '''
+        bn =1
+        nc = 1
+        numero_barras = 0
+        sair = False
+        
+        saida = {'Admensionais':[],
+         'Altura Util':{
+            'Valor':[],
+            'ys':[]
+        },
+        'Verificacao Linha Neutra':{
+             'Aviso':[],
+             'Bx_veri':[],
+             'Bs_veri':[]
+             }, 
+         'Verificacao Momento':{
+             'Momento Minimo':[],
+             'Momento Maximo':[],
+             'Momento de Calculo':[],
+             'Aviso':[]
+            },
+        'Area':{
+            'Area Efetiva':[],
+            'Area Necessaria':[]
+        },
+        'Discretizacao':{
+            'Barras por camada':[],
+            'Barras':[],
+            'Barras totais':[]
+        },
+        'Verificacao Linha Neutra':
+            {
+                'Aviso':[],
+                'Admensionais':[],
+            }
+        } 
     
-    return 1
+        
+        while True:
+            while bn!=numero_barras:
+                
+                #Cg das armaduras
+                ys, numero_barras, barra = incremento_cg_armaduras(bitolaL,parametros.av,h,numero_de_barras=bn,barras_por_camada=nc)
+                saida['Altura Util']['ys'].append(ys)
+                saida['Discretizacao']['Barras'].append(barra)
+                #Altura util
+                d = h - cnom - bitolaT - ys
+                saida['Altura Util']['Valor'].append(d)
+                
+                #verificao momento
+                momento, momentomin, momentomax, aviso = verificacao_momentos(momento, parametros.fctksup,w0,bw,d,fcd,parametros.zeta,c)
+                saida['Verificacao Momento']['Momento Minimo'].append(momentomin)
+                saida['Verificacao Momento']['Momento Maximo'].append(momentomax)
+                saida['Verificacao Momento']['Momento de Calculo'].append(momento)
+                saida['Verificacao Momento']['Aviso'].append(aviso)
+                
+                #admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,ecu)
+                bx, bz, bs = admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,parametros.ecu)
+                saida['Admensionais'].append([bx,bz,bs])
+
+                #Area de aco 
+                a = area_aco(momento,bz,d,bs,fyd)
+                saida['Area']['Area Necessaria'].append(a)
+
+                if verificacao_area(a,Ac)[1]:
+                    bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+                    saida['Discretizacao']['Barras por camada'].append(nc)
+                    saida['Discretizacao']['Barras totais'].append(bn)
+                    Asef = area_efeitiva(bn,bitolaL)
+                    saida['Area']['Area Efetiva'].append(a)
+                else:
+                    print('Armadura insuficiente')
+                    sair = True
+                    break
+                
+
+                if verificacao_area(Asef,Ac)[1]:
+                    Asef = Asef
+                else:
+                    print('Armadura efetiva insuficiente')
+                    
+            if sair:
+                break
+            
+            verifica,bx_veri,bs_veri = verificacao_admensional(fyd,parametros.eta,parametros.zeta,d,bw,fcd,Asef,Es,parametros.ecu)
+            saida['Verificacao Linha Neutra']['Admensionais'].append([bx_veri,bs_veri])
+            if verifica:
+                saida['Verificacao Linha Neutra']['Aviso'].append(True)
+                print(f'linha Neutra verificada')
+                break
+            else:
+                saida['Verificacao Linha Neutra']['Aviso'].append(False)
+                print('erro')
+                break
+        
+
+            
+        return saida
+    
+    
+    momento = 12500
+    caracteristicas = data.dict()
+    parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'])
+    Es = 200_000
+    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0)
+    
+
+    return saida

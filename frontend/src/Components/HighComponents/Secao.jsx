@@ -6,11 +6,18 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import { FormControl } from "@mui/material";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 //Redux
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 //Componentes
 import SecaoTransversal from '../SVG/SecaoTransversal'
 import actions from "../../Actions/Caracteristicas";
+//constantes
+import { ambiente } from "../../Constants/classeAmbiental";
+
 
 const Secao  = (props)=> {
 
@@ -23,6 +30,9 @@ const Secao  = (props)=> {
     const [diametromax,setDiametromax] = useState('')
     const [bw,setBw] = useState('')
     const [diametroL,setDiametroL] = useState('')
+    const [bitolaT, setBitolaT] = useState('')
+    const [fykt, setFykt] = useState('')
+    const [classeAmbiental, setClasseambiental] = useState('')
 
     const caracteristcas = (event)=>{
         event.preventDefault()
@@ -32,7 +42,10 @@ const Secao  = (props)=> {
             h:parseFloat(alturaSecao),
             dmax:parseFloat(diametromax),
             bw:parseFloat(bw),
-            dL:parseFloat(diametroL)
+            dL:parseFloat(diametroL),
+            dT: parseFloat(bitolaT),
+            fykt: parseFloat(fykt),
+            classeambiental:classeAmbiental
         }
 
         dispatch(actions.adicionar(item))
@@ -42,7 +55,7 @@ const Secao  = (props)=> {
     return(
         <>
         <Grid container spacing={4}>
-            <Grid item >
+            <Grid item xs={8.9}>
                 <Box Class='Seção Transversal' >
                 <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
                     <p style={{fontSize:25,fontFamily:'Helvetica,Arial', border:1}}>Seção Transversal</p>
@@ -50,18 +63,17 @@ const Secao  = (props)=> {
                         <Grid item>
                             <item>
                                 <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
-
                                     <TextField id="outlined-basic" 
                                     value={fck} 
                                     onChange={(event) =>{event.preventDefault();return setFck(event.target.value)}} 
-                                    label="Resistência caracteristica a compressão" 
+                                    label="Resistência caracteristica a compressão [MPa]" 
                                     variant="outlined"  
                                     sx={{backgroundColor:'white'} }/>
 
                                     <TextField id="outlined-basic" 
                                     value={fyk} 
                                     onChange={(event) =>{event.preventDefault();return setFyk(event.target.value)}} 
-                                    label="Resistência característica ao escomento" 
+                                    label="Resistência característica ao escomento [MPa]" 
                                     variant="outlined" 
                                     sx={{backgroundColor:'white'}}/>
 
@@ -114,23 +126,61 @@ const Secao  = (props)=> {
                 </Paper>
                 </Box>
             </Grid>
-            <Grid item xs={11.33}>
-                <Box Class='Agressividade Ambiental' >
+            <Grid item >
+                <Box Class='Armadura Transversal' >
                     <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
-                    <p style={{fontSize:25}}>Agressividade Ambiental</p>
+                    <p style={{fontSize:25}}>Armadura Transversal</p>
                     <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{marginLeft:0.25}}>
                         <Grid>
                             <item>
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
-                                        <TextField id="outlined-basic" label="Resistência caracteristica a compressão" variant="outlined" sx={{backgroundColor:'white'}}/>
+                                        <TextField 
+                                        id="outlined-basic" 
+                                        value={fykt} 
+                                        onChange={(event) =>{event.preventDefault();return setFykt(event.target.value)}} 
+                                        label="Resistência caracteristicas a escoamento" 
+                                        variant="outlined" 
+                                        sx={{backgroundColor:'white'}}
+                                    />
                                     </Box>
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
-                                        <TextField id="outlined-basic" label="Altura da seção" variant="outlined" sx={{backgroundColor:'white'}}/>
+                                        <TextField 
+                                            id="outlined-basic" 
+                                            value={bitolaT} 
+                                            onChange={(event) =>{event.preventDefault();return setBitolaT(event.target.value)}} 
+                                            label="diâmetro do estribo" 
+                                            variant="outlined" 
+                                            sx={{backgroundColor:'white'}}
+                                        />
                                     </Box>
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
                                         <Button onClick={caracteristcas}>Adicionar</Button>
                                     </Box>
                             </item>
+                        </Grid>
+                    </Grid>
+                    </Paper>
+                </Box>
+            </Grid>
+            <Grid item xs={8.9}>
+                <Box Class='Agressividade Ambiental' >
+                    <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
+                    <p style={{fontSize:25}}>Classe Ambiental</p>
+                    <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{marginLeft:0.25}}>
+                        <Grid>
+                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
+                        <FormControl>
+                                <InputLabel>Classe Ambiental</InputLabel>
+                                <Select
+                                value={classeAmbiental}
+                                label='Classe Ambiental'
+                                sx={{backgroundColor:'white'}}
+                                onChange={event =>{event.preventDefault();return setClasseambiental(event.target.value)}}
+                                    >
+                                {ambiente.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                </Select>
+                            </FormControl>
+                        </Box>
                         </Grid>
                     </Grid>
                     </Paper>

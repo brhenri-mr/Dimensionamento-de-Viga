@@ -41,4 +41,7 @@ class Caracteristicas(Schema):
     dmax:float
     bw:float
     dL:float
+    dT:float
+    fykt:float
+    classeambiental:str
    

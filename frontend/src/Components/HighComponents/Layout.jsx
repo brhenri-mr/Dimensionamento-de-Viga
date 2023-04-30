@@ -30,6 +30,7 @@ const Layout = () => {
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
     const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
     const ED = useSelector(state => state.botoesReducers.ED)
+    console.log(CARACTERISTICAS)
 
 
     //useState
@@ -37,6 +38,7 @@ const Layout = () => {
     const [patter,setPatter] = useState()
     const [describe, setDescribe] = useState()
     const [metRigidez, setMetrigidez] = useState({})
+    const [dimensionamento, setDimensionamento] = useState({})
 
     //dispatch
     const dispatch = useDispatch()
@@ -44,7 +46,8 @@ const Layout = () => {
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
-    //Fetch
+
+    //Combinacoes
     const Combinacoes =(data,ed) => {
         console.log(...data)
         fetch('http://127.0.0.1:8000/api/Combinacoes', {
@@ -65,6 +68,7 @@ const Layout = () => {
                     console.error('Error:', error);
                 });
     }
+
     //API metodo da rigidez direta
     const MetRigidez=(data,apoios) => {
 
@@ -91,7 +95,7 @@ const Layout = () => {
                 });
     }
 
-     //API metodo da rigidez direta
+     //API Dimensionamento
      const Dimensionamento=(data) => {
 
 
@@ -107,7 +111,7 @@ const Layout = () => {
                 .then((response) => response.json())
                 .then((data) => {
                     console.log('Success:', data);
-                    setMetrigidez(data)
+                    setDimensionamento(data)
 
                 })
                 .catch((error) => {
