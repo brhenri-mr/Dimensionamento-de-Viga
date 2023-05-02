@@ -8,6 +8,9 @@ const CarregamentoDist = (props)=>{
     let quantidade_arrow = []
     let temp = props.start
 
+
+    const cotainicial = (props.mag>0)?147:147
+
     for(let i of [9,7,5,3]){
         if (props.comprimento%i === 0){
             espacos = props.comprimento/i
@@ -22,9 +25,9 @@ const CarregamentoDist = (props)=>{
 
     return (<>
 
-        <rect x={props.start} y={147-props.mag} width={props.comprimento} height={props.mag} className="cargaDistribuidaFundo"></rect>
-        <line x1={props.start} y1={147-props.mag} x2={comprimentoreal} y2={147-props.mag} className="cargaDistribuida"></line>
-        {quantidade_arrow.map((item,index)=>{return <Arrow key ={index} x1={item} y1={147} x2={item} y2={147-props.mag}></Arrow> })}
+        <rect x={props.start} y={cotainicial-props.mag} width={props.comprimento} height={props.mag} className="cargaDistribuidaFundo"></rect>
+        <line x1={props.start} y1={cotainicial-props.mag} x2={comprimentoreal} y2={cotainicial-props.mag} className="cargaDistribuida"></line>
+        {quantidade_arrow.map((item,index)=>{return <Arrow key ={index} x1={item} y1={147} x2={item} y2={147-props.mag} mag={props.mag}></Arrow> })}
         
     </>
     )
