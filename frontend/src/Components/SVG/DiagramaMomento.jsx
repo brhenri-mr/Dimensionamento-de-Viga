@@ -69,7 +69,7 @@ const DiagramaMomento= (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:"15rem"}}>
+            <svg style={{ width:"40rem",height:"25rem"}}>
                 <g>
                 </g>
                 {texto.map((valor,key)=>{

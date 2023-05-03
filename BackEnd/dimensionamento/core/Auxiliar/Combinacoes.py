@@ -100,25 +100,32 @@ class Combine():
         principal_var = []
         z= -1
         
+        so_carga_CP =True
+        
+        
+        
+        #contador
+        contador = 0
         #divisão de dados
         for key, el in self.carregamento.items():
             if el['patter'] == "Carregamento permanente":
                 desfav, fav = CP[el['describe']][modo]
                 perma.append([key, [desfav, fav]])
-                
             elif el['patter'] == "Carrregamento Variável":
                 desfav, fav = CV[el['describe']][modo]
+                so_carga_CP = False
                 #Valores de fi
                 if el['describe'] == 'Ação do vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
                 elif el['describe'] == 'Temperatura':
                     coef_auxi = FATORES_DE_REDUCAO['Temperatura'][0]
-                elif self.caracteristicas['informacoes'] in FATORES_DE_REDUCAO[self.caracteristicas['Local']].keys():
-                    coef_auxi = FATORES_DE_REDUCAO[self.caracteristicas['Local']][self.caracteristicas['informacoes']][0]
+                elif self.caracteristicas[contador]['informacao'] in FATORES_DE_REDUCAO[self.caracteristicas[contador]['Local']].keys():
+                    coef_auxi = FATORES_DE_REDUCAO[self.caracteristicas[contador]['Local']][self.caracteristicas[contador]['informacao']][0]
                 else:
                     coef_auxi = [1,1,1]
                 
                 var.append([key, [desfav, fav, coef_auxi]])
+            contador =+ 1
 
         #Combinção permanente 
         for item in perma:
@@ -165,7 +172,7 @@ class Combine():
                         temp.append(f'{el}')
             
 
-        self.__combinacoes = temp+s
+        self.__combinacoes = temp+(s if so_carga_CP else [])
         
         return self.__combinacoes
     
@@ -186,25 +193,30 @@ class Combine():
         
         saida = dict(zip(self.carregamento.keys(),list(range(len(self.carregamento.keys())))))
         
-        #criando a chave comb nos carregametos
+        
+        #Adquando o tipo de dado a chave, no caso numero para lista 
         for chave in rotulos:
             saida[chave] = []
+        
         
         #tratando as combinacoes
         for i in self.__combinacoes:
             temp.append(i.split('+'))
             
+    
         #adicionando os valores de comb nas respequetivos carregamentos
         for chave in rotulos:
             for _ in temp:
                 for item in _:
-                    if chave in item:
-                        s = item.replace(chave,'').replace(' ','')[:-1] #assim o ultimo asteristico some e resolve tudo comb1: 1.25*0.85*
+                    if chave == item[len(item)-item[::-1].find('*'):len(item)].replace(' ',''):  #encontrado a ultima posicao do asterisco 
+                        s = item[0:len(item)-item[::-1].find('*')-1].replace(' ','') #assim o ultimo asteristico some e resolve tudo comb1: 1.25*0.85*
                         try:
                             hm = eval(s) #eval é um 'função' q em teoria eu tenho que evitar mais processos em cima direito, é uma 'função' sensível
                             saida[chave].append(round(hm,2)) #tem que criar primeiro
                         except:
                             print(f'o valor adicionado não corresponde a numeros {s}')
+        
+        print(saida)
                             
         return saida
     
