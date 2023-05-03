@@ -31,6 +31,18 @@ const Inputs_a = (props) => {
         dispatch(actions.adicionar(apoio))
 
     }
+    
+    const erro = (variavel) =>{
+        if (variavel[0] === undefined){
+            return false
+        }
+        else if ('1234567890'.includes(variavel[variavel.length-1])){
+            return false
+        }
+        return true
+    }
+
+
 
     return(
         <Box  component="form"
@@ -54,8 +66,14 @@ const Inputs_a = (props) => {
                         return <MenuItem key= {index} value={classeApoios[el]}>{classeApoios[el]}</MenuItem>
                     })}
                 </Select>
-                <TextField id="outlined-basic" label="Posição" variant="outlined" value={pos} onChange={event =>{event.preventDefault()
-                    return setPos(event.target.value)}} />
+                <TextField 
+                id="outlined-basic" 
+                label="Posição" 
+                variant="outlined" 
+                value={pos}
+                error={erro(pos)}
+                helperText = {erro(pos)?'insira somente numeros':''}
+                onChange={event =>{event.preventDefault();return setPos(event.target.value)}} />
                 <Button onClick={onClickAdd}>Add</Button>
             </FormControl>
         </Box>

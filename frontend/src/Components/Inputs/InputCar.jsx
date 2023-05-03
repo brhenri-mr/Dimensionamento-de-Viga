@@ -61,6 +61,26 @@ const InputCar = (props) =>{
         
     }
 
+
+    const erro = (variavel,nome ) =>{
+        if (variavel[0] === undefined){
+            return false
+        }
+        else if (nome==='nome'){
+            if (!'*'.includes(variavel[variavel.length-1])){
+                return false
+        }
+        }
+        else if (nome==='numeros'){
+            if ('1234567890-+'.includes(variavel[variavel.length-1])){
+                return false
+        }
+        }
+        return true
+    }
+
+
+
     return(
     <>
      <Grid container spacing={4}>
@@ -72,7 +92,14 @@ const InputCar = (props) =>{
                         <item>
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                             <FormControl>
-                                <TextField label='Nome do Carregamento' sx={{backgroundColor:'white'}} value={nome} onChange={(event) => {event.preventDefault();setNome(event.target.value)}}></TextField>
+                                <TextField 
+                                label='Nome do Carregamento' 
+                                sx={{backgroundColor:'white'}} 
+                                value={nome} 
+                                onChange={(event) => {event.preventDefault();setNome(event.target.value)}}
+                                error={erro(nome,'nome')}
+                                helperText = {erro(nome,'nome')?'Não pode nomes com *':''}
+                                ></TextField>
                             </FormControl>
                             <FormControl>
                                 <InputLabel>Persistência do Carregamento</InputLabel>
@@ -112,7 +139,14 @@ const InputCar = (props) =>{
                             </FormControl>
                         </Box>
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
-                        <TextField label='Maginitude [kN]' sx={{backgroundColor:'white'}} value={mag} onChange={(event) => {event.preventDefault();setMag(event.target.value)}}></TextField>
+                        <TextField 
+                        label='Maginitude [kN]' 
+                        sx={{backgroundColor:'white'}} 
+                        value={mag} 
+                        onChange={(event) => {event.preventDefault();setMag(event.target.value)}}
+                        error={erro(mag,'numeros')}
+                        helperText = {erro(mag,'numeros')?'Insira somente números':''}
+                        ></TextField>
                         </Box>
                         </item>
                     </Grid>
