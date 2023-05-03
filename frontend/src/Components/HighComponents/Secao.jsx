@@ -53,7 +53,6 @@ const Secao  = (props)=> {
 
 
     return(
-        <>
         <Grid container spacing={4}>
             <Grid item xs={8.9}>
                 <Box Class='Seção Transversal' >
@@ -187,7 +186,6 @@ const Secao  = (props)=> {
                 </Box>
             </Grid>
         </Grid>
-        </>
     )
 }
 

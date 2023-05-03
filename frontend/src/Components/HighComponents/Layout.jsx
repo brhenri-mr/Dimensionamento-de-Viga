@@ -181,7 +181,7 @@ const Layout = () => {
                 <Secao></Secao>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez}/>
+                <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento}/>
                 <Button onClick={(event)=> {event.preventDefault(); return Combinacoes(CARREGAMENTOS,ED)}}>Api</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return MetRigidez(CARREGAMENTOS,APOIOS)}}>MetRigidez</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return Dimensionamento(CARACTERISTICAS)}}>Dimensionamento</Button>
