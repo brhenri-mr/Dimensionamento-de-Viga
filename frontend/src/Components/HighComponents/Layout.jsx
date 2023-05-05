@@ -30,7 +30,7 @@ const Layout = () => {
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
     const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
     const ED = useSelector(state => state.botoesReducers.ED)
-    console.log(CARACTERISTICAS)
+    console.log(CARREGAMENTOS)
 
 
     //useState

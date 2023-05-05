@@ -9,11 +9,15 @@ import { FormControl } from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import Collapse from '@mui/material/Collapse';
+import Alert from '@mui/material/Alert';
+import { AlertTitle } from "@mui/material";
 //Constante
 import { patterConst, CP, CV,tipo_carr,Descricao} from "../../Constants/classCar";
 //Redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
+//Componentes
 
 const InputCar = (props) =>{
 
@@ -31,34 +35,85 @@ const InputCar = (props) =>{
     const [nome, setNome] = useState('')
     const [descricao,setDescricao] = useState('')
     const [descricaosecundaria, setDescricaosecundaria] = useState('')
+    const [alerta,setAlerta] = useState(false)
+    const [sucesso, setSucesso] = useState(false)
+    const [mensagem, setMensagem] = useState('')
 
     let describeop = (patter===patterConst[0]) ? CP:CV
+    let TipodeCarregamento = (patter===patterConst[0]) ? true:false // diz qual o tipo de carregamento CP (true) ou Cv (false)
 
     let correcaobugdescricao = (descricao==='')? ['Vento']:descricao
 
     const onclickevent = (event) => {
         event.preventDefault()
-        
-        const item = {
-            id:new Date().toString(),
-            name: nome,
-            tipo:tipocar,
-            patter:patter,
-            describe:describe,
-            mag:parseInt(mag),
-            pos:[parseInt(startpos),parseInt(finalpos)],
-            comb:[]
-        }
-        dispatch(actions.adicionar(item))
 
-        const informacoesadicionais = {
-            Local:descricao,
-            informacao:descricaosecundaria
+        let buginfernal = alerta //o setAlert nao funciona, nao adiant
+        let temp = 0
+
+        for(let i of [nome,tipocar,patter,describe,mag,startpos,finalpos]){
+            if (i === ''){
+                setAlerta(true)
+                buginfernal = true
+                setMensagem('Há campos vazios')
+                break
+            }
+            else{
+                buginfernal = false
+            }
         }
 
-        dispatch(actions.adicionar_informacoes(informacoesadicionais))
+        for(let i of [mag,startpos,finalpos]){
+            for(let letra of i){
+                if ('1234567890'.includes(letra)){
+                    break
+                }
+                else{
+                    buginfernal = true
+                    setAlerta(true)
+                    setMensagem('Precisa existir pelo menos um numero em campos numericos, não so espacadores')
+                }
+            }
+            for(let letra of i){
+                if (letra ===',' || letra==='.'){
+                    temp = temp + 1
+                }
+                if (temp>1){
+                    buginfernal = true
+                    setAlerta(true)
+                    break
+                }
+            }
+            temp = 0
+        }
+       
+
 
         
+
+
+        if (!buginfernal){
+            const item = {
+                name: nome,
+                tipo:tipocar,
+                patter:patter,
+                describe:describe,
+                mag:parseInt(mag.replace(',','.')),
+                pos:[parseInt(startpos.replace(',','.')),parseInt(finalpos.replace(',','.'))],
+                comb:[]
+            }
+            dispatch(actions.adicionar(item))
+    
+            const informacoesadicionais = {
+                Local:descricao,
+                informacao:descricaosecundaria
+            }
+    
+            dispatch(actions.adicionar_informacoes(informacoesadicionais))
+
+            setSucesso(true)
+            setAlerta(false)
+            
+        }
     }
 
 
@@ -72,17 +127,28 @@ const InputCar = (props) =>{
         }
         }
         else if (nome==='numeros'){
-            if ('1234567890-+'.includes(variavel[variavel.length-1])){
+            if ('1234567890-+.,'.includes(variavel[variavel.length-1])){
                 return false
         }
         }
         return true
     }
 
-
-
     return(
     <>
+    <Box sx={{paddingBottom:(alerta || sucesso)?'1rem':'0rem'}}>
+    <Collapse in={alerta}>
+        <Alert severity="warning" onClose={() => {setAlerta(false)}}>
+            <AlertTitle>Atenção Entrada de Dados — <strong>Inválida</strong></AlertTitle>
+            {mensagem}
+        </Alert>
+    </Collapse>
+    <Collapse in={(sucesso)} >
+        <Alert onClose={() => {setSucesso(false)}} >
+            <AlertTitle>Carregamento Cadastrado com Sucesso</AlertTitle>
+            </Alert>
+    </Collapse>
+    </Box>
      <Grid container spacing={4}>
         <Grid item>
             <Box>
@@ -163,6 +229,7 @@ const InputCar = (props) =>{
                             <FormControl>
                                 <InputLabel>Descrição do Carregamento</InputLabel>
                                 <Select
+                                disabled = {TipodeCarregamento}
                                 value={descricao}
                                 sx={{backgroundColor:'white'}}
                                 label='Descrição Segundo NBR6118'
@@ -174,6 +241,7 @@ const InputCar = (props) =>{
                             <FormControl>
                                 <InputLabel>Descrição do Carregamento</InputLabel>
                                 <Select
+                                disabled = {TipodeCarregamento}
                                 value={descricaosecundaria}
                                 sx={{backgroundColor:'white'}}
                                 label='Descrição Segundo NBR6118'
@@ -196,10 +264,23 @@ const InputCar = (props) =>{
                         <item>
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                             <FormControl>
-                                <TextField label='Posição Inicial' sx={{backgroundColor:'white'}} value={startpos} onChange={(event) => {event.preventDefault();setStartpos(event.target.value)}}></TextField>
+                                <TextField 
+                                label='Posição Inicial' 
+                                sx={{backgroundColor:'white'}} 
+                                value={startpos} 
+                                onChange={(event) => {event.preventDefault();setStartpos(event.target.value)}}
+                                error={erro(startpos,'numeros')}
+                                helperText = {erro(startpos,'numeros')?'Insira somente números':''}
+                                ></TextField>
                             </FormControl>
                             <FormControl>
-                                <TextField label='Posição Final' sx={{backgroundColor:'white'}} value={finalpos} onChange={(event) => {event.preventDefault();setFinalpos(event.target.value)}}></TextField>
+                                <TextField 
+                                label='Posição Final' 
+                                sx={{backgroundColor:'white'}} 
+                                value={finalpos} 
+                                error={erro(finalpos,'numeros')}
+                                helperText = {erro(finalpos,'numeros')?'Insira somente números':''}
+                                onChange={(event) => {event.preventDefault();setFinalpos(event.target.value)}}></TextField>
                             </FormControl>
                         </Box>
                         <Button onClick={onclickevent}>Add</Button>
