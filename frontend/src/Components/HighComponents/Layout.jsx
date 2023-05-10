@@ -39,6 +39,7 @@ const Layout = () => {
     const [describe, setDescribe] = useState()
     const [metRigidez, setMetrigidez] = useState({})
     const [dimensionamento, setDimensionamento] = useState({})
+    console.log(dimensionamento)
 
     //dispatch
     const dispatch = useDispatch()
@@ -50,6 +51,7 @@ const Layout = () => {
     //Combinacoes
     const Combinacoes =(data,ed) => {
         console.log(...data)
+        console.log(ed)
         fetch('http://127.0.0.1:8000/api/Combinacoes', {
                 method: 'POST', // or 'PUT'
                 headers: {
@@ -181,7 +183,7 @@ const Layout = () => {
                 <Secao></Secao>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento}/>
+                <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
                 <Button onClick={(event)=> {event.preventDefault(); return Combinacoes(CARREGAMENTOS,ED)}}>Api</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return MetRigidez(CARREGAMENTOS,APOIOS)}}>MetRigidez</Button>
                 <Button onClick={(event)=> {event.preventDefault(); return Dimensionamento(CARACTERISTICAS)}}>Dimensionamento</Button>

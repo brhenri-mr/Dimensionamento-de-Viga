@@ -43,7 +43,7 @@ def test(request, carregamentos: Carregamentos):
     
     
     test = comb.ELU(modo='Normal')
-    print(test)
+    
     return comb.json()
 
 @api.post("/MetRigidez")
@@ -315,6 +315,10 @@ def dimensionamento(request,data:Caracteristicas):
         numero_barras = 0
         sair = False
         
+        
+        
+        
+        
         saida = {'Admensionais':[],
          'Altura Util':{
             'Valor':[],
@@ -344,14 +348,34 @@ def dimensionamento(request,data:Caracteristicas):
             {
                 'Aviso':[],
                 'Admensionais':[],
-            }
+            },
+        'Parametros':{
+            'zeta':parametros.zeta,
+            'Cobrimento':cnom,
+            'eta':parametros.eta,
+            'ecu':parametros.ecu,
+            'av':parametros.av,
+            'ah':parametros.ah,
+            'w0':w0,
+            'fcktsup':parametros.fctksup
+            
+            
+        }
+            
         } 
+    
+        #parametros utilizados 
+        
+        
+    
     
         
         while True:
             while bn!=numero_barras:
                 
                 #Cg das armaduras
+                
+                
                 ys, numero_barras, barra = incremento_cg_armaduras(bitolaL,parametros.av,h,numero_de_barras=bn,barras_por_camada=nc)
                 saida['Altura Util']['ys'].append(ys)
                 saida['Discretizacao']['Barras'].append(barra)

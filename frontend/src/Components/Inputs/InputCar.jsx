@@ -65,6 +65,7 @@ const InputCar = (props) =>{
         for(let i of [mag,startpos,finalpos]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
+                    buginfernal = false
                     break
                 }
                 else{
@@ -80,6 +81,7 @@ const InputCar = (props) =>{
                 if (temp>1){
                     buginfernal = true
                     setAlerta(true)
+                    setMensagem('Há quantidade excessiva de separadores viruglas ou pontos')
                     break
                 }
             }

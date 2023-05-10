@@ -38,33 +38,65 @@ const Secao  = (props)=> {
     const [classeAmbiental, setClasseambiental] = useState('')
     const [alerta,setAlerta] = useState(false)
     const [sucesso, setSucesso] = useState(false)
+    const [mensagem, setMensagem] = useState('')
 
     const caracteristcas = (event)=>{
         event.preventDefault()
 
         let buginfernal = alerta //o setAlert nao funciona, nao adianta
+        let temp = 0
 
         for(let i of [fck,fyk,alturaSecao,diametromax,bw,diametroL,bitolaT,fykt,classeAmbiental]){
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
+                setMensagem('Há campos vazios')
                 break
             }
             else{
                 buginfernal = false
             }
         }
+
+
+        for(let i of [fck,fyk,alturaSecao,diametromax,bw,diametroL,bitolaT,fykt]){
+            for(let letra of i){
+                if ('1234567890'.includes(letra)){
+                    break
+                }
+                else{
+                    buginfernal = true
+                    setAlerta(true)
+                    setMensagem('Precisa existir pelo menos um numero em campos numericos, não so espacadores')
+                }
+            }
+            for(let letra of i){
+                if (letra ===',' || letra==='.'){
+                    temp = temp + 1
+                }
+                if (temp>1){
+                    buginfernal = true
+                    setAlerta(true)
+                    setMensagem('Há quantidade excessiva de separadores viruglas ou pontos')
+                    break
+                }
+            }
+            temp = 0
+        }
+
+
+
         if (!buginfernal){
 
             const item = {
-                fck:parseInt(fck),
-                fyk:parseInt(fyk),
-                h:parseFloat(alturaSecao),
-                dmax:parseFloat(diametromax),
-                bw:parseFloat(bw),
-                dL:parseFloat(diametroL),
-                dT: parseFloat(bitolaT),
-                fykt: parseFloat(fykt),
+                fck:parseInt(fck.replace(',','.')),
+                fyk:parseInt(fyk.replace(',','.')),
+                h:parseFloat(alturaSecao.replace(',','.')),
+                dmax:parseFloat(diametromax.replace(',','.')),
+                bw:parseFloat(bw.replace(',','.')),
+                dL:parseFloat(diametroL.replace(',','.')),
+                dT: parseFloat(bitolaT.replace(',','.')),
+                fykt: parseFloat(fykt.replace(',','.')),
                 classeambiental:classeAmbiental
             }
             dispatch(actions.adicionar(item))
@@ -83,7 +115,7 @@ const Secao  = (props)=> {
         }
         }
         else if (nome==='numeros'){
-            if ('1234567890-+.'.includes(variavel[variavel.length-1])){
+            if ('1234567890-+.,'.includes(variavel[variavel.length-1])){
                 return false
         }
         }
@@ -96,6 +128,7 @@ const Secao  = (props)=> {
                 <Collapse in={alerta}>
                     <Alert severity="warning" onClose={() => {setAlerta(false)}}>
                         <AlertTitle>Atenção Entrada de Dados — <strong>Inválida</strong></AlertTitle>
+                        {mensagem}
                         </Alert>
                 </Collapse>
                 <Collapse in={(sucesso)} >

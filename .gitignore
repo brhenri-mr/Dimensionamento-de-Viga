@@ -1,3 +1,6 @@
 
 *.pyc
 *.pyc
+Auxiliar/__pycache__/NBR6118.cpython-310.pyc
+*.pyc
+BackEnd/dimensionamento/core/__pycache__/api.cpython-310.pyc

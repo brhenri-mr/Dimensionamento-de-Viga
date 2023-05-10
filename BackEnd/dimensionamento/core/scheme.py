@@ -12,7 +12,6 @@ class APoiosTrue(Schema):
 
 class Carregamento(Schema):
     describe: str
-    id: str
     name:str
     mag: int
     patter:str
