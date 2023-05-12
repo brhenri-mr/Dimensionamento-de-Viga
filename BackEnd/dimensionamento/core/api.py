@@ -397,7 +397,7 @@ def dimensionamento(request,data:Caracteristicas):
                 #Area de aco 
                 a = area_aco(momento,bz,d,bs,fyd)
                 saida['Area']['Area Necessaria'].append(a)
-
+                print('1')
                 if verificacao_area(a,Ac)[1]:
                     bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
                     saida['Discretizacao']['Barras por camada'].append(nc)
@@ -414,6 +414,7 @@ def dimensionamento(request,data:Caracteristicas):
                     Asef = Asef
                 else:
                     print('Armadura efetiva insuficiente')
+                    
                     
             if sair:
                 break

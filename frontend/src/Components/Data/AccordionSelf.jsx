@@ -35,7 +35,7 @@ const AccordionSelf = (props)=>{
 
         const quantidade = texto.length/2
 
-        if(quantidade>1){
+        if(quantidade>1 && !label.includes('ignorar')){
             return (
                 <>
                     <Tabs
