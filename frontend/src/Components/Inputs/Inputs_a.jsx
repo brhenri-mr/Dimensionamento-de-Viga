@@ -23,7 +23,6 @@ const Inputs_a = (props) => {
         event.preventDefault()
 
         const apoio ={
-            id: new Date().toString(),
             tipo: tipo,
             value: parseInt(pos),
         }
@@ -45,20 +44,13 @@ const Inputs_a = (props) => {
 
 
     return(
-        <Box  component="form"
-        sx={{
-          '& > :not(style)': { m: 1, width: '25ch' },
-        }}
-        noValidate
-        autoComplete="off">
-            <p>{props.titulo}</p>
+        <>
             <FormControl>
-                <InputLabel id="demo-simple-select-label">Tipo</InputLabel>
+                <InputLabel>Grau de Liberdade do Apoio</InputLabel>
                 <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     value={tipo}
-                    label="Tipo"
+                    label="Grau de Liberdade do Apoio"
+                    sx={{backgroundColor:'white'} }
                     onChange={event =>{event.preventDefault()
                         return setTipo(event.target.value)}}
                 >
@@ -66,17 +58,20 @@ const Inputs_a = (props) => {
                         return <MenuItem key= {index} value={classeApoios[el]}>{classeApoios[el]}</MenuItem>
                     })}
                 </Select>
+                </FormControl>
+                <FormControl>
                 <TextField 
                 id="outlined-basic" 
-                label="Posição" 
+                label="Posição do Apoio" 
                 variant="outlined" 
                 value={pos}
                 error={erro(pos)}
+                sx={{backgroundColor:'white'} }
                 helperText = {erro(pos)?'insira somente numeros':''}
                 onChange={event =>{event.preventDefault();return setPos(event.target.value)}} />
                 <Button onClick={onClickAdd}>Add</Button>
             </FormControl>
-        </Box>
+        </>
         )
 }
 

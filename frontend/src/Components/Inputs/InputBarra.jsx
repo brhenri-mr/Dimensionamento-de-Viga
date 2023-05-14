@@ -31,10 +31,7 @@ const InputBarra = (props)=>{
     }
 
     return(
-    <Box  component="form"
-    sx={{'& > :not(style)': { m: 1, width: '25ch' },}}
-    noValidate
-    autoComplete="off">
+
         <FormControl>
             <TextField 
             label='Comprimento da barra' 
@@ -43,9 +40,10 @@ const InputBarra = (props)=>{
             onChange={handlechange}
             error = {erro(comprimento)}
             helperText = {erro(comprimento)?'insira somente numeros':''}
+            sx={{backgroundColor:'white'} }
             />
         </FormControl>
-    </Box>
+
     )
 }
 

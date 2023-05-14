@@ -2,7 +2,6 @@ from ninja import Schema
 from typing import List
 
 class Apoios(Schema):
-    id: str
     tipo: str
     value: int
 

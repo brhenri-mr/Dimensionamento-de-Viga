@@ -9,16 +9,15 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 //compoments
 import Figura from "./Figura";
-import Inputs_a from "../Inputs/Inputs_a";
 import TabPanel from "../Inputs/Tabpanel";
-import LayoutCadastro from "./LayoutCadastro";
 import InputCar from "../Inputs/InputCar";
-import InputBarra from "../Inputs/InputBarra";
 import Secao from "./Secao";
+import InputBarra from "../Inputs/InputBarra";
 import Resultados from "./Resultados";
 //redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
+import Geometria from "./Geometria";
 
 
 
@@ -151,11 +150,9 @@ const Layout = () => {
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
-                        <InputBarra/>
-                        <Item>
-                            <Inputs_a></Inputs_a>
-                            {APOIOS.map((el,index)=>{return  <LayoutCadastro key={index} value={el} index={index}></LayoutCadastro>})}
-                        </Item>
+
+                        <Geometria APOIOS = {APOIOS}></Geometria>
+                        
                     </Grid>
                     <Grid item xs={8}>
                         <Item>

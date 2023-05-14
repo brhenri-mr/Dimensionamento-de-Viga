@@ -337,7 +337,9 @@ def dimensionamento(request,data:Caracteristicas):
             },
         'Area':{
             'Area Efetiva':[],
-            'Area Necessaria':[]
+            'Area Necessaria':[],
+            'Aviso':[],
+            'Aviso_arredondado':[]
         },
         'Discretizacao':{
             'Barras por camada':[],
@@ -357,8 +359,8 @@ def dimensionamento(request,data:Caracteristicas):
             'av':parametros.av,
             'ah':parametros.ah,
             'w0':w0,
-            'fcktsup':parametros.fctksup
-            
+            'fcktsup':parametros.fctksup,
+            'Ac':Ac
             
         }
             
@@ -397,23 +399,29 @@ def dimensionamento(request,data:Caracteristicas):
                 #Area de aco 
                 a = area_aco(momento,bz,d,bs,fyd)
                 saida['Area']['Area Necessaria'].append(a)
-                print('1')
                 if verificacao_area(a,Ac)[1]:
+                    saida['Area']['Aviso'].append('Armadura suficiente')
                     bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
                     saida['Discretizacao']['Barras por camada'].append(nc)
                     saida['Discretizacao']['Barras totais'].append(bn)
                     Asef = area_efeitiva(bn,bitolaL)
                     saida['Area']['Area Efetiva'].append(a)
                 else:
+                    saida['Area']['Aviso'].append('Armadura insuficiente')
                     print('Armadura insuficiente')
                     sair = True
                     break
                 
 
                 if verificacao_area(Asef,Ac)[1]:
+                    saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
                     Asef = Asef
                 else:
+                    saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
                     print('Armadura efetiva insuficiente')
+                    sair =True
+                    break
+                    
                     
                     
             if sair:
