@@ -23,6 +23,7 @@ const Inputs_a = (props) => {
         event.preventDefault()
 
         const apoio ={
+            id: new Date(),
             tipo: tipo,
             value: parseInt(pos),
         }
@@ -62,7 +63,7 @@ const Inputs_a = (props) => {
                 <FormControl>
                 <TextField 
                 id="outlined-basic" 
-                label="Posição do Apoio" 
+                label="Posição do Apoio [cm]" 
                 variant="outlined" 
                 value={pos}
                 error={erro(pos)}

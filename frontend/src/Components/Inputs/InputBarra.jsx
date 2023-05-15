@@ -34,7 +34,7 @@ const InputBarra = (props)=>{
 
         <FormControl>
             <TextField 
-            label='Comprimento da barra' 
+            label='Comprimento da barra [cm]' 
             variant="outlined" 
             value={comprimento} 
             onChange={handlechange}

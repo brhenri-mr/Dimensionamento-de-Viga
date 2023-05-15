@@ -18,6 +18,8 @@ import Resultados from "./Resultados";
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
 import Geometria from "./Geometria";
+import BasicTable from "../test/tabela";
+import LayoutCadastro from "./LayoutCadastro";
 
 
 
@@ -173,6 +175,7 @@ const Layout = () => {
                     </Grid>
                     <Grid item xs={2}>
                         <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
+                        <LayoutCadastro Apoios={[]} label={['Nome','Tipo','Patter','Descrição','Magnitude','Posição']} rotulos={['name','tipo','patter','describe','mag','pos']}></LayoutCadastro>
                     </Grid>
                 </Grid>
             </TabPanel>

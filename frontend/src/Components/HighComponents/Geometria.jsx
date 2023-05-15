@@ -35,12 +35,14 @@ const Geometria = (props) =>{
                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                     <Inputs_a></Inputs_a>
                     </Box>
-                    {props.APOIOS.map((el,index)=>{return  <LayoutCadastro key={index} value={el} index={index}></LayoutCadastro>})}
                     </item>
                     </Grid>
                 </Grid>
             </Paper>
         </Box>
+
+            <LayoutCadastro Apoios= {props.APOIOS} label={['Tipo','Posição','Ação']} rotulos={['tipo','value']}></LayoutCadastro>
+
         </Grid>
         </Grid>
     </>
