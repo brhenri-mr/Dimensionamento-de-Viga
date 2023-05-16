@@ -1,6 +1,6 @@
 const PadraoParaDesenho ={
-    width:"40rem",
-    height:"15rem",
+    width:"45rem",
+    height:"20rem",
 
 }
 

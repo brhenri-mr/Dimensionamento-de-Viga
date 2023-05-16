@@ -78,7 +78,7 @@ const DiagramaMomento= (props) =>{
                 {points.map((item,indice)=>{ 
                     return <polygon points={item} key={indice} className="graficomomento"></polygon>
                 })}
-                <Viga value={props.barra}></Viga>
+                <Viga value={props.barra} ignorar={true} apoios={[]}></Viga>
                 {props.apoios.map((item,index)=>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
                 })}

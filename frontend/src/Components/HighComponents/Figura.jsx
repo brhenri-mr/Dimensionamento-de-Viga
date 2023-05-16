@@ -9,10 +9,18 @@ import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
 
 const Figura = (props) =>{
 
+    let magmax = 0
+
+    for(let item of props.carregamentos){
+        if (magmax>=item['mag']){
+            magmax = item['mag']
+        }
+    }
+
     return (
         <div>
             <svg {...PadraoParaDesenho}>
-                <Viga value={props.barra}></Viga>
+                <Viga value={props.barra} mag={magmax} apoios={props.apoios}></Viga>
                 {props.apoios.map((item,index)=>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
                 })}

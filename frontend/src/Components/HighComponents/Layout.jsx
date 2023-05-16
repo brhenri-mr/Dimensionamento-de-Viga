@@ -152,9 +152,7 @@ const Layout = () => {
             <TabPanel value={value} index={0}>
                 <Grid container spacing={2}>
                     <Grid item xs={4}>
-
                         <Geometria APOIOS = {APOIOS}></Geometria>
-                        
                     </Grid>
                     <Grid item xs={8}>
                         <Item>
