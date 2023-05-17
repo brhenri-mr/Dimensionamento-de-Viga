@@ -63,6 +63,8 @@ def MetRigidez(request, data:MetRigidez):
         entrada = data.dict()["carregamento"]
         apoios =  data.dict()["apoios"]
         comprimento = data.dict()["comprimento"]
+        Es = ParametrosConcreto(int(data.dict()['fck']),'Rural','Viga',0.1,1,1,data.dict()['agregado']).Ecs*10**-5
+        rigidez = data.dict()['MomentodeInercia']*Es
         
         #Normalizando os dados
         for i in range(len(entrada)):
@@ -79,7 +81,7 @@ def MetRigidez(request, data:MetRigidez):
         test = entrada_test(entrada,apoios,comprimentoTotal=comprimento)
         
         for elemento in test.values():
-            k_aglomerado.append(rigidez_local(elemento["Comprimento"]/100,448000000))
+            k_aglomerado.append(rigidez_local(elemento["Comprimento"]/100,rigidez))
             
             if len(d_global) ==0:
                 for coordenada_apoios in elemento["Grau de Liberdade"]:
@@ -183,21 +185,29 @@ def MetRigidez(request, data:MetRigidez):
         constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
         return (temp + constante)
     
-    def maxmomento(cortante,momento,el):
+    def maxmomento(cortante,momento,el,padrao=4):
+        '''
+        Funcao que retorna o momento maximo qque uma funcao tem para um intervalo
+        cortante: funcao de cortanto do sympy
+        momento: funcao de momento so sympy
+        el: elemento
+        padrao: variavel que contra q quantidade de pontos a mais a serem gerados
         
+        '''
         saida = {'Momento':[],'Trecho':[],'Cortante':[]}
         x = sym.Symbol('x')
         xs = sym.solve(cortante,x)
         momento_pronto = sym.lambdify(x,momento)
         cortante_pronto = sym.lambdify(x,cortante)
         for coordenada in xs:
-            #Vendo se esta na barra
+            #Vendo o esforco esta no intervalo da barra
             if coordenada*100>= el['Trecho'][0] and coordenada*100<=el['Trecho'][1]:
                 saida['Momento'].append(round(float(momento_pronto(coordenada)),2))
                 saida['Trecho'].append(round(float(coordenada*100),2))
                 saida['Cortante'].append(round(float(cortante_pronto(coordenada)),2))
             else:
                 pass
+        print(saida)
         return saida
     
     
@@ -212,9 +222,6 @@ def MetRigidez(request, data:MetRigidez):
     comb_atual = 0
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
-    
-    
-    print(entrada)
     
     #Obtendo a funcao de momento para cada tramo
     #Rodando cada combinacao
@@ -277,7 +284,7 @@ def MetRigidez(request, data:MetRigidez):
     
     saida["Esforcos Internos"] = generico
 
-                
+    print(momento_eq)          
 
     '''
     for chave,eq in zip(entrada.keys(),momento_eq):
@@ -445,7 +452,7 @@ def dimensionamento(request,data:Caracteristicas):
     
     momento = 12500
     caracteristicas = data.dict()
-    parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'])
+    parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0)
     

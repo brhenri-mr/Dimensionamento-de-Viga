@@ -75,7 +75,13 @@ const Layout = () => {
     //API metodo da rigidez direta
     const MetRigidez=(data,apoios) => {
 
-        const enviar = {carregamento:data, apoios:apoios, comprimento:BARRA}
+        const enviar = {
+            carregamento:data, 
+            apoios:apoios, 
+            comprimento:BARRA, 
+            fck:CARACTERISTICAS['fck'],
+            agregado:CARACTERISTICAS['agregado'],
+            MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12}
 
 
         fetch('http://127.0.0.1:8000/api/MetRigidez', {

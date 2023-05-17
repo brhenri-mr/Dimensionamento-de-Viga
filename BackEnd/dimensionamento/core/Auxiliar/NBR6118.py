@@ -2,14 +2,15 @@ from numpy import log
 
 class ParametrosConcreto:
     
-    def __init__(self, fck: int,ambiente: str,peca: str,bitolaL: float,b:int,h:int,unidades='kN/cm^2') -> None:
+    def __init__(self, fck: int,ambiente: str,peca: str,bitolaL: float,b:int,h:int,agregado:str,unidades='kN/cm^2') -> None:
         '''
         Classe que contem os parametros do concreto presentes conforme NBR6118/2014
-        fck = Resistência caracteristica do concreto a compresssao em 28 dias [MPa]
-        ambiente = ambiente onde se encontra a peça 
-        peca = tipo de peça de concreto armadi( viga, laje, pilar)
-        bitolaL = bitola logitudinal
-        unidades = por padrao adota-se como kN/cm^2, aceita-se MPa tambem
+        fck: Resistência caracteristica do concreto a compresssao em 28 dias [MPa]
+        ambiente: ambiente onde se encontra a peça 
+        peca: tipo de peça de concreto armadi( viga, laje, pilar)
+        bitolaL: bitola logitudinal
+        agregado: tipo de agregado estabelcido na NBR6118 item 8.2.8
+        unidades: por padrao adota-se como kN/cm^2, aceita-se MPa tambem
         '''
         
         classe_de_agressividade_ambiental = {
@@ -28,6 +29,14 @@ class ParametrosConcreto:
             'Elemento em contato com o solo':[3.0,3.0,4.0,5.0]
         }
         
+        tipo_agregado ={
+            'Basalto e Diabásio':1.2,
+            'Granito e Gnaisse':1,
+            'Calcário':0.9,
+            'Arenito':0.7
+        }
+        
+        
         self.__unidades = unidades
         self.__fck = fck
         self.__zeta  = 0.8 if fck<=50 else 0.8-(fck - 50)/400
@@ -44,6 +53,10 @@ class ParametrosConcreto:
         self.__av = max(2,bitolaL,0.5*self.__dmax)
         self.__w0 = b*h**2/6
         self.__gammac = 1.4
+        self.__alfai = 0.8+0.2*fck/80 if 0.8+0.2*fck/80<=1 else 1
+        self.__alfae = tipo_agregado[agregado]
+        self.__Eci = self.__alfae*5600*(fck)**0.5 if fck<=50 else self.__alfae*21500*(fck/10+1.25)**1/3
+        self.__Ecs = self.__alfai *self.__Eci
       
     @property
     def unidades(self):
@@ -108,3 +121,20 @@ class ParametrosConcreto:
     @property
     def gammac(self):
         return self.__gammac
+    
+    @property
+    def alfae(self):
+        return self.__alfae
+    
+    @property
+    def alfai(self):
+        return self.__alfai
+    
+    @property
+    def Eci(self):
+        return self.__Eci
+    
+    @property
+    def Ecs(self):
+        return self.__Ecs
+    

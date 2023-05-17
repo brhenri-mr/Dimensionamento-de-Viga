@@ -32,12 +32,15 @@ class MetRigidez(Schema):
     carregamento:List[Carregamento]
     apoios:List[Apoios]
     comprimento:float
+    MomentodeInercia:float
+    fck:str
+    agregado:str
     
 class Caracteristicas(Schema):
     fck:int
     fyk:int
     h:float
-    dmax:float
+    agregado:str
     bw:float
     dL:float
     dT:float

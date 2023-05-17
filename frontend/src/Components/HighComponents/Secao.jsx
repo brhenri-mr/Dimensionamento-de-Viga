@@ -20,6 +20,7 @@ import SecaoTransversal from '../SVG/SecaoTransversal'
 import actions from "../../Actions/Caracteristicas";
 //constantes
 import { ambiente } from "../../Constants/classeAmbiental";
+import { NomesAgregados } from "../../Constants/classSecao";
 
 
 const Secao  = (props)=> {
@@ -30,7 +31,7 @@ const Secao  = (props)=> {
     const [fck,setFck] = useState('')
     const [fyk,setFyk] = useState('')
     const [alturaSecao,setAlturasecao]= useState('')
-    const [diametromax,setDiametromax] = useState('')
+    //const [diametromax,setDiametromax] = useState('')
     const [bw,setBw] = useState('')
     const [diametroL,setDiametroL] = useState('')
     const [bitolaT, setBitolaT] = useState('')
@@ -39,6 +40,7 @@ const Secao  = (props)=> {
     const [alerta,setAlerta] = useState(false)
     const [sucesso, setSucesso] = useState(false)
     const [mensagem, setMensagem] = useState('')
+    const [agregado,setAgregado] = useState('')
 
     const caracteristcas = (event)=>{
         event.preventDefault()
@@ -46,7 +48,7 @@ const Secao  = (props)=> {
         let buginfernal = alerta //o setAlert nao funciona, nao adianta
         let temp = 0
 
-        for(let i of [fck,fyk,alturaSecao,diametromax,bw,diametroL,bitolaT,fykt,classeAmbiental]){
+        for(let i of [fck,fyk,alturaSecao,bw,diametroL,bitolaT,fykt,classeAmbiental]){
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -59,7 +61,7 @@ const Secao  = (props)=> {
         }
 
 
-        for(let i of [fck,fyk,alturaSecao,diametromax,bw,diametroL,bitolaT,fykt]){
+        for(let i of [fck,fyk,alturaSecao,bw,diametroL,bitolaT,fykt]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
                     break
@@ -88,11 +90,13 @@ const Secao  = (props)=> {
 
         if (!buginfernal){
 
+            //dmax:parseFloat(diametromax.replace(',','.')),
+
             const item = {
                 fck:parseInt(fck.replace(',','.')),
                 fyk:parseInt(fyk.replace(',','.')),
                 h:parseFloat(alturaSecao.replace(',','.')),
-                dmax:parseFloat(diametromax.replace(',','.')),
+                agregado:agregado,
                 bw:parseFloat(bw.replace(',','.')),
                 dL:parseFloat(diametroL.replace(',','.')),
                 dT: parseFloat(bitolaT.replace(',','.')),
@@ -177,17 +181,18 @@ const Secao  = (props)=> {
                                         error={erro(alturaSecao,'numeros')}
                                         helperText = {erro(alturaSecao,'numeros')?'Insira somente números':''}
                                         sx={{backgroundColor:'white'}}/>
-
-                                        <TextField 
-                                        id="outlined-basic"
-                                        value={diametromax} 
-                                        onChange={(event) =>{event.preventDefault();return setDiametromax(event.target.value)}} 
-                                        label="Diâmetro máximo do agregado"
-                                        variant="outlined"
-                                        error={erro(diametromax,'numeros')}
-                                        helperText = {erro(diametromax,'numeros')?'Insira somente números':''}
-                                        sx={{backgroundColor:'white'}}/>
-
+                                        <FormControl>
+                                            <InputLabel>Natureza do Agregado</InputLabel>
+                                            <Select 
+                                            id="outlined-basic"
+                                            value={agregado} 
+                                            onChange={(event) =>{event.preventDefault();return setAgregado(event.target.value)}} 
+                                            label="Natureza do Agregado"
+                                            variant="outlined"
+                                            sx={{backgroundColor:'white'}}>
+                                                {NomesAgregados.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                            </Select> 
+                                        </FormControl>
                                     </Box>
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
 
