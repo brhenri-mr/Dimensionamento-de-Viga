@@ -33,7 +33,7 @@ function textotentativa(db,caso,caracteristicas){
             label:['ζ','ηc','εcu','av','ah']
         },
         Momento:{
-            titulo: `Msd = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN`,
+            titulo: `Msd = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm`,
             texto:['Verifique os momentos mínimos:',
             `\\(M_{mín} = 0,8 W0 f_{ckt,sup} = 0,8\\ ${db['Parametros']['w0'].toFixed(2).replace('.',',')}\\ ${db['Parametros']['fcktsup'].toFixed(2).replace('.',',')} = ${db['Verificacao Momento']['Momento Minimo'][caso].toFixed(2).replace('.',',')}\\ kN.cm\\)`,
             'Verifique o momento máximo',

@@ -73,7 +73,7 @@ const DiagramaMomento= (props) =>{
                 <g>
                 </g>
                 {texto.map((valor,key)=>{
-                        return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{`${valor[2]} kN`}</text>
+                        return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{`${valor[2]} kN.m`}</text>
                     })}
                 {points.map((item,indice)=>{ 
                     return <polygon points={item} key={indice} className="graficomomento"></polygon>

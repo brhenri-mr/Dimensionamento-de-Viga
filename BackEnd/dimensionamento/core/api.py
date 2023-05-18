@@ -216,9 +216,9 @@ def MetRigidez(request, data:MetRigidez):
                 pass
 
         for i in range(1,padrao):
-            saida['Momento'].append(-1*round(float(momento_pronto(incrimento*i/100)),2))
-            saida['Trecho'].append(round(float(incrimento*i),2))
-            saida['Cortante'].append(round(float(cortante_pronto(incrimento*i/100)),2))
+            saida['Momento'].append(-1*round(float(momento_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
+            saida['Trecho'].append(round(float(el['Trecho'][0]+incrimento*i),2))
+            saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
 
         return saida
     
@@ -295,9 +295,8 @@ def MetRigidez(request, data:MetRigidez):
             #previnindo equacoes inexistentes
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
-            print(s)
+
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
-            print(s_global)
             comb_atual = 1+ comb_atual
             
         generico[chave] = copy.deepcopy(s_global)
@@ -472,11 +471,13 @@ def dimensionamento(request,data:Caracteristicas):
         return saida
     
     
-    momento = 12500
+    momento = 1
     caracteristicas = data.dict()
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0)
     
-
+    for item in saida.items():
+        print(item)
+    
     return saida
