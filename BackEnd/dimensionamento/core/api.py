@@ -185,7 +185,7 @@ def MetRigidez(request, data:MetRigidez):
         constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
         return (temp + constante)
     
-    def maxmomento(cortante,momento,el,padrao=4):
+    def maxmomento(cortante,momento,el,padrao=8):
         '''
         Funcao que retorna o momento maximo qque uma funcao tem para um intervalo
         cortante: funcao de cortanto do sympy
@@ -194,12 +194,19 @@ def MetRigidez(request, data:MetRigidez):
         padrao: variavel que contra q quantidade de pontos a mais a serem gerados
         
         '''
+        #Dados
         saida = {'Momento':[],'Trecho':[],'Cortante':[]}
         x = sym.Symbol('x')
         xs = sym.solve(cortante,x)
         momento_pronto = sym.lambdify(x,momento)
         cortante_pronto = sym.lambdify(x,cortante)
+        
+        #Iterador
+        incrimento = (el['Trecho'][1]-el['Trecho'][0])/(padrao)
+
+        
         for coordenada in xs:
+
             #Vendo o esforco esta no intervalo da barra
             if coordenada*100>= el['Trecho'][0] and coordenada*100<=el['Trecho'][1]:
                 saida['Momento'].append(round(float(momento_pronto(coordenada)),2))
@@ -207,7 +214,12 @@ def MetRigidez(request, data:MetRigidez):
                 saida['Cortante'].append(round(float(cortante_pronto(coordenada)),2))
             else:
                 pass
-        print(saida)
+
+        for i in range(1,padrao):
+            saida['Momento'].append(-1*round(float(momento_pronto(incrimento*i/100)),2))
+            saida['Trecho'].append(round(float(incrimento*i),2))
+            saida['Cortante'].append(round(float(cortante_pronto(incrimento*i/100)),2))
+
         return saida
     
     
@@ -270,12 +282,22 @@ def MetRigidez(request, data:MetRigidez):
     generico = {}
     #acessar uma elemento, indice corresponde a combinacao
     for indice,chave in zip(range(quantidade_comb),entrada.keys()):
+        '''
+        chave: elemnto a ser pesquisado
+        indice: combinacao a ser pesquisada
+        '''
         for comb_momento, comb_cortante in zip(momento_eq,cortante_eq):
+            '''
+            comb_momento: equacao de momento a ser utilizada
+            comb_cortante: equacao de cortante a ser utilizada
+            '''
 
             #previnindo equacoes inexistentes
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
+            print(s)
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
+            print(s_global)
             comb_atual = 1+ comb_atual
             
         generico[chave] = copy.deepcopy(s_global)
