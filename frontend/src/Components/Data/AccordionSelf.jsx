@@ -35,6 +35,7 @@ const AccordionSelf = (props)=>{
 
         const quantidade = texto.length/2
 
+
         if(quantidade>1 && !label.includes('ignorar')){
             return (
                 <>
@@ -67,32 +68,38 @@ const AccordionSelf = (props)=>{
     }
 
 
+    if(props.text[0].includes('ignorar')){
+        return <></>
+    }
+    else{
 
-    return(
-        <Accordion >
-            <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            onClick={()=>{setVerificador(!verificador)}}
-            >
-                <Typography sx={{fontWeight: (verificador)?'bold':'normal',fontSize:'18px'}}>{props.label}</Typography>
-            </AccordionSummary>
-            <Grid container spacing={1}>
-                <Grid item xs={(props.label==='Discretização')?8:12}>
-                    {multiplaspaginas(props.text,props.labesecundario)}
+    
+        return(
+            <Accordion >
+                <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                onClick={()=>{setVerificador(!verificador)}}
+                >
+                    <Typography sx={{fontWeight: (verificador)?'bold':'normal',fontSize:'18px'}}>{props.label}</Typography>
+                </AccordionSummary>
+                <Grid container spacing={1}>
+                    <Grid item xs={(props.label==='Discretização')?8:12}>
+                        {multiplaspaginas(props.text,props.labesecundario)}
+                    </Grid>
+                    <Grid xs>
+                        <Collapse in={props.label==='Discretização'}>
+                            <svg>
+                                <Discretizacao h={CARACTERISTICAS['h']} bw={CARACTERISTICAS['bw']}  fi={CARACTERISTICAS['dL']}></Discretizacao>
+                            </svg>
+                        </Collapse>
+                    </Grid>
                 </Grid>
-                <Grid xs>
-                    <Collapse in={props.label==='Discretização'}>
-                        <svg>
-                            <Discretizacao h={CARACTERISTICAS['h']} bw={CARACTERISTICAS['bw']}  fi={CARACTERISTICAS['dL']}></Discretizacao>
-                        </svg>
-                    </Collapse>
-                </Grid>
-            </Grid>
-            
-      </Accordion>
-    )
+                
+        </Accordion>
+        )
+    }
 }
 
 export default AccordionSelf

@@ -420,25 +420,34 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Verificacao Momento']['Momento de Calculo'].append(momento)
                 saida['Verificacao Momento']['Aviso'].append(aviso)
                 
+                if momento==-1:
+                    sair = True
+                    break
+                
                 #admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,ecu)
                 bx, bz, bs = admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,parametros.ecu)
                 saida['Admensionais'].append([bx,bz,bs])
 
+
                 #Area de aco 
                 a = area_aco(momento,bz,d,bs,fyd)
+                a_min, verificacao, criterio = verificacao_area(a,Ac)
                 saida['Area']['Area Necessaria'].append(a)
-                if verificacao_area(a,Ac)[1]:
-                    saida['Area']['Aviso'].append('Armadura suficiente')
-                    bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
-                    saida['Discretizacao']['Barras por camada'].append(nc)
-                    saida['Discretizacao']['Barras totais'].append(bn)
-                    Asef = area_efeitiva(bn,bitolaL)
-                    saida['Area']['Area Efetiva'].append(a)
+                if verificacao:
+                    saida['Area']['Aviso'].append(criterio)
+                   
                 else:
-                    saida['Area']['Aviso'].append('Armadura insuficiente')
-                    print('Armadura insuficiente')
-                    sair = True
-                    break
+                    saida['Area']['Aviso'].append(criterio)
+                    a = a_min
+                    
+                bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+                saida['Discretizacao']['Barras por camada'].append(nc)
+                saida['Discretizacao']['Barras totais'].append(bn)
+                Asef = area_efeitiva(bn,bitolaL)
+                saida['Area']['Area Efetiva'].append(a)
+                    
+                    
+                    
                 
 
                 if verificacao_area(Asef,Ac)[1]:
@@ -453,6 +462,8 @@ def dimensionamento(request,data:Caracteristicas):
                     
                     
             if sair:
+                saida['Verificacao Linha Neutra']['Admensionais'].append(['ignorar','ignorar'])
+                saida['Verificacao Linha Neutra']['Aviso'].append('ignorar')
                 break
             
             verifica,bx_veri,bs_veri = verificacao_admensional(fyd,parametros.eta,parametros.zeta,d,bw,fcd,Asef,Es,parametros.ecu)
@@ -471,7 +482,7 @@ def dimensionamento(request,data:Caracteristicas):
         return saida
     
     
-    momento = 1
+    momento = 12500
     caracteristicas = data.dict()
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000

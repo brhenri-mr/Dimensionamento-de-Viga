@@ -85,13 +85,22 @@ def verificacao_area(a,Ac) -> list[float,bool]:
     '''
     #dados
     armadura_min = Ac *0.0015
+    armadura_max = Ac * 0.04
+    criterio = 'Armadura Suficiente'
     #verificacao da aramdura
-    if a> armadura_min:
+    if a>=armadura_min:
         aviso = True
     else:
         aviso = False
-        
-    return armadura_min, aviso #preciso que o programa no futuro passe todas essas coisas
+        criterio = 'Armadura Insuficiente, adotada armadura mínima'
+    
+    if a<=armadura_max:
+        aviso = True
+    else:
+        aviso = False
+        criterio = 'Armadura Excessiva'
+    
+    return armadura_min, aviso, criterio #preciso que o programa no futuro passe todas essas coisas
 
 def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:float,av:float,ah:float)->int:
     '''
