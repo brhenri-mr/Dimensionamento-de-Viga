@@ -39,8 +39,19 @@ function textotentativa(db,caso,caracteristicas){
                 'Parametros estabelecidos pela NBR6118 distância horizontal entre armaduras:',
                 `\\(a_h ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 1,2\\ d_{max} \\\\
                     \\end{cases} \\therefore \\ a_v = ${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')} \\ cm \\)`,
+                'Parametros estabelecidos pela NBR6118:',
+                (caracteristicas['fck']>50) ? '\\(\\beta_x =0,35\\)':'\\(\\beta_x =0,45\\)',
+                'Parametros estabelecidos pela NBR6118:',
+                `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
             ],
-            label:['ζ','ηc','εcu','av','ah']
+            label:['ζ','ηc','εcu','av','ah','bxmáx','cnom']
+        },
+        Quantidade:{
+            titulo:'Quantidade de Barras por cada',
+            texto:[
+                'Substitua os valores na equação',
+                `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
+            label:['ignorar']
         },
         DiscretizacaoInicial:{
             titulo: `ys = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} cm`,
@@ -76,9 +87,9 @@ function textotentativa(db,caso,caracteristicas){
             titulo: `bx = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}, by = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}, bs = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}`,
             texto:[
                 'Substitua os valores na equação',
-                `\\(\\beta_x= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 \\ ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} \\ ${caracteristicas['bw']} \\ ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}}\\)`,
+                `\\(\\beta_x= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 \\ ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} \\ ${caracteristicas['bw']} \\ ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
                 'Substitua os valores na equação',
-                `\\(\\beta_z = 1-0,5\\zeta \\beta_x = 1-0,5\\ ${db['Parametros']['zeta']}\\ ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
+                `\\(\\beta_z = 1-0,5\\zeta \\beta_x = 1-0,5\\ ${db['Parametros']['zeta']}\\ ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
                 'Substitua os valores na equação',
                 `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-\\beta_x}{\\beta_x} \\epsilon_{cu} ≤ 1 \\rightarrow \\beta_s =\\dfrac{200}{${(caracteristicas['fyk']/11.5).toFixed(2).toString().replace('.',',')}} \\dfrac{1-${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}{${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}\\ ${db['Parametros']['ecu'].toString().replace('.',',')} ≤ 1 \\rightarrow \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).toString().replace('.',',')}\\)`
             ],
@@ -136,14 +147,14 @@ function textotentativa(db,caso,caracteristicas){
                 `\\(\\beta_x = \\dfrac{f_{yd}}{\\eta_c \\zeta_c \\ b_w d \\ f_cd} A_s \\beta_s \\)`, 
                 'Aplicando os resultados da equação a cima em',
                 `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-\\beta_x}{\\beta_x} \\epsilon_{cu} ≤ 1 \\)`,
-                `Convergindo para os valores de \\(\\beta_s = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][1]} e \\(\\beta_x = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][0].toFixed(2).toString().replace('.',',')}`       
+                `Convergindo para os valores de \\(\\beta_s = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][1]} e \\(\\beta_x = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][0].toFixed(2).toString().replace('.',',')}. Como o valor de \\(\\beta_x\\) convergiu para um número ${(verificacaoadm ==='Linha Neutra não verifica')?'maior':'menor'} que o limite ${(caracteristicas['fck']>50) ? '\\(\\beta_x =0,35\\)':'\\(\\beta_x =0,45\\)'}, então a ${verificacaoadm}`,     
+                (db['Verificacao Linha Neutra']['Aviso'][0]) ? '':'Recomenda-se aumentar o valor da altura (h) da seção'
             ],
             label:['ignorar']
 
         },
     }
 }
-
 
 
 const Resultados = (props)=>{

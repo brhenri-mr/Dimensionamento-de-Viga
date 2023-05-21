@@ -46,4 +46,5 @@ class Caracteristicas(Schema):
     dT:float
     fykt:float
     classeambiental:str
+    momento:list
    

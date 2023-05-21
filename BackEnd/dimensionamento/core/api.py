@@ -214,14 +214,27 @@ def MetRigidez(request, data:MetRigidez):
                 saida['Cortante'].append(round(float(cortante_pronto(coordenada)),2))
             else:
                 pass
-
-        for i in range(1,padrao):
-            saida['Momento'].append(-1*round(float(momento_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
-            saida['Trecho'].append(round(float(el['Trecho'][0]+incrimento*i),2))
-            saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
+        if momento =='discartar':
+            pass
+        else:
+            for i in range(1,padrao):
+                saida['Momento'].append(-1*round(float(momento_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
+                saida['Trecho'].append(round(float(el['Trecho'][0]+incrimento*i),2))
+                saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
 
         return saida
     
+    def maximo_momentona_secao(el):
+        
+        maximo = [0,0]
+        
+        for chave in el['Esforcos Internos'].keys():
+            for elemento,posicao in zip(el['Esforcos Internos'][chave]['Momento'],el['Esforcos Internos'][chave]['Trecho']):
+                if abs(elemento*100)>maximo[1]:
+                    maximo[1] = elemento*100
+                    maximo[0] = posicao
+                
+        return maximo
     
     s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
     momento_temp = []
@@ -294,6 +307,7 @@ def MetRigidez(request, data:MetRigidez):
 
             #previnindo equacoes inexistentes
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
+            
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
 
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
@@ -326,7 +340,9 @@ def MetRigidez(request, data:MetRigidez):
         momento_temp.clear()
                 
     '''         
-    print(saida)
+
+    
+    saida['Maximo'] = maximo_momentona_secao(saida)
     return saida
 
 @api.post("/Dimensionamento")
@@ -334,7 +350,7 @@ def dimensionamento(request,data:Caracteristicas):
     """
     Api para dimensionamento da secao trasnversal retangular
     """
-    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0):
+    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0,bxmaximo):
         '''
         Funcao para dimensionar a secao: areas de armadura 
         '''
@@ -342,9 +358,6 @@ def dimensionamento(request,data:Caracteristicas):
         nc = 1
         numero_barras = 0
         sair = False
-        
-        
-        
         
         
         saida = {'Admensionais':[],
@@ -468,7 +481,7 @@ def dimensionamento(request,data:Caracteristicas):
             
             verifica,bx_veri,bs_veri = verificacao_admensional(fyd,parametros.eta,parametros.zeta,d,bw,fcd,Asef,Es,parametros.ecu)
             saida['Verificacao Linha Neutra']['Admensionais'].append([bx_veri,bs_veri])
-            if verifica:
+            if verifica and bx_veri<bxmaximo:
                 saida['Verificacao Linha Neutra']['Aviso'].append(True)
                 print(f'linha Neutra verificada')
                 break
@@ -482,13 +495,14 @@ def dimensionamento(request,data:Caracteristicas):
         return saida
     
     
-    momento = 12500
+    
     caracteristicas = data.dict()
+    momento = caracteristicas['momento'][1]
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
-    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0)
-    
+    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo)
+    '''
     for item in saida.items():
         print(item)
-    
+    '''
     return saida

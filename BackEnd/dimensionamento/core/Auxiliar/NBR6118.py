@@ -57,6 +57,7 @@ class ParametrosConcreto:
         self.__alfae = tipo_agregado[agregado]
         self.__Eci = self.__alfae*5600*(fck)**0.5 if fck<=50 else self.__alfae*21500*(fck/10+1.25)**1/3
         self.__Ecs = self.__alfai *self.__Eci
+        self.__bxmaximo = 0.45 if fck<=50 else 0.35
       
     @property
     def unidades(self):
@@ -138,3 +139,6 @@ class ParametrosConcreto:
     def Ecs(self):
         return self.__Ecs
     
+    @property
+    def bxmaximo(self):
+        return self.__bxmaximo
