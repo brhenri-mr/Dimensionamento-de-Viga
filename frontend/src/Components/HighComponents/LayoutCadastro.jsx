@@ -15,7 +15,8 @@ import IconButton from '@mui/material/IconButton';
 import { useDispatch } from "react-redux";
 //compoments
 import ItemCadastrado from "../Cadastro/ItemCadastrado";
-import { actions } from "../../Actions/Apoios";
+import { actions as apoio} from "../../Actions/Apoios";
+import { actions as carregamento } from "../../Actions/Carregamento";
 
 
 
@@ -44,7 +45,7 @@ const LayoutCadastro = (props)=>{
                                 {props.rotulos.map((valor,key)=>{
                                     return <TableCell align="center" key={key}>{row[valor]}</TableCell>
                                 })}
-                                <IconButton aria-label="delete" onClick={()=>{dispatch(actions.remover(Apoios[index]))}} >
+                                <IconButton aria-label="delete" onClick={()=>{dispatch((tamanho===600)? carregamento.remover(Apoios[index]):apoio.remover(Apoios[index]))}} >
                                     <DeleteIcon  />
                                 </IconButton>
                             </TableRow>
