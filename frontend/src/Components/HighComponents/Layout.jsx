@@ -179,7 +179,7 @@ const Layout = () => {
                     </Grid>
                     <Grid item xs={2}>
                         <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
-                        <LayoutCadastro Apoios={CARREGAMENTOS} label={['Nome','Tipo','Patter','Descrição','Magnitude','Posição']} rotulos={['name','tipo','patter','describe','mag','pos']}></LayoutCadastro>
+                        <LayoutCadastro Apoios={CARREGAMENTOS} label={['Nome','Tipo','Persistência','Descrição','Magnitude','Posição',"Ação"]} rotulos={['name','tipo','patter','describe','mag','pos']}></LayoutCadastro>
                     </Grid>
                 </Grid>
             </TabPanel>

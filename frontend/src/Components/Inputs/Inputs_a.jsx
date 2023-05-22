@@ -21,14 +21,16 @@ const Inputs_a = (props) => {
 
     const onClickAdd = (event) => {
         event.preventDefault()
-
-        const apoio ={
-            id: new Date(),
-            tipo: tipo,
-            value: parseInt(pos),
+        if (tipo!=="" && pos!==""){
+            const apoio ={
+                id: new Date(),
+                tipo: tipo,
+                value: parseInt(pos),
+            }
+    
+            dispatch(actions.adicionar(apoio))
         }
-
-        dispatch(actions.adicionar(apoio))
+       
 
     }
     
@@ -36,9 +38,16 @@ const Inputs_a = (props) => {
         if (variavel[0] === undefined){
             return false
         }
+        else if (variavel.includes('-')){
+            return true
+        }
         else if ('1234567890'.includes(variavel[variavel.length-1])){
             return false
         }
+        'abcdefghijklmnopqrstuvwxyz'.forEach(item =>{
+            if (variavel.includes(item))
+            return false
+        })
         return true
     }
 
@@ -68,9 +77,9 @@ const Inputs_a = (props) => {
                 value={pos}
                 error={erro(pos)}
                 sx={{backgroundColor:'white'} }
-                helperText = {erro(pos)?'insira somente numeros':''}
+                helperText = {erro(pos)?'insira somente numeros positivos':''}
                 onChange={event =>{event.preventDefault();return setPos(event.target.value)}} />
-                <Button onClick={onClickAdd}>Add</Button>
+                <Button onClick={erro(pos)? '':onClickAdd}>Add</Button>
             </FormControl>
         </>
         )

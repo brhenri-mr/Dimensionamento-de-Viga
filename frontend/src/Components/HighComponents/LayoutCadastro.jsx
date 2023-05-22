@@ -43,7 +43,7 @@ const LayoutCadastro = (props)=>{
                         {Apoios.map((row,index) => (
                             <TableRow sx={{backgroundColor: (index%2 !==0)?'#FBFAFA': '#ffffff' }}>
                                 {props.rotulos.map((valor,key)=>{
-                                    return <TableCell align="center" key={key}>{row[valor]}</TableCell>
+                                    return <TableCell align="center" key={key}>{(row[valor]).length ===2 ? `${row[valor][0]}-${row[valor][1]}`:row[valor]}</TableCell>
                                 })}
                                 <IconButton aria-label="delete" onClick={()=>{dispatch((tamanho===600)? carregamento.remover(Apoios[index]):apoio.remover(Apoios[index]))}} >
                                     <DeleteIcon  />

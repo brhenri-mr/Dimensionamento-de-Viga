@@ -15,7 +15,12 @@ const InputBarra = (props)=>{
 
     const handlechange = (event) =>{
         event.preventDefault()
-        dispach(actions.modificar(event.target.value))
+        if (erro(event.target.value)){
+            
+        }
+        else{
+            dispach(actions.modificar(event.target.value))
+        }
         return setComprimento(event.target.value)
     }
 
@@ -24,9 +29,17 @@ const InputBarra = (props)=>{
         if (variavel[0] === undefined){
             return false
         }
+        else if (variavel.includes('-')){
+            return true
+        }
         else if ('1234567890'.includes(variavel[variavel.length-1])){
             return false
         }
+
+        'abcdefghijklmnopqrstuvwxyz'.forEach(item =>{
+            if (variavel.includes(item))
+            return false
+        })
         return true
     }
 

@@ -50,7 +50,10 @@ const InputCar = (props) =>{
         let buginfernal = alerta //o setAlert nao funciona, nao adiant
         let temp = 0
 
+
+
         for(let i of [nome,tipocar,patter,describe,mag,startpos,finalpos]){
+            console.log(i)
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -62,6 +65,7 @@ const InputCar = (props) =>{
             }
         }
 
+        if(!buginfernal && !alerta){
         for(let i of [mag,startpos,finalpos]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
@@ -87,13 +91,13 @@ const InputCar = (props) =>{
             }
             temp = 0
         }
-       
+    }
 
 
         
 
 
-        if (!buginfernal){
+        if (!buginfernal && !alerta){
             const item = {
                 name: nome,
                 tipo:tipocar,
