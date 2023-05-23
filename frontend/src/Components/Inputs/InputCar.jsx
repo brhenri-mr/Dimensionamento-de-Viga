@@ -17,6 +17,7 @@ import { patterConst, CP, CV,tipo_carr,Descricao} from "../../Constants/classCar
 //Redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
+import { useSelector } from "react-redux";
 //Componentes
 
 const InputCar = (props) =>{
@@ -39,18 +40,20 @@ const InputCar = (props) =>{
     const [sucesso, setSucesso] = useState(false)
     const [mensagem, setMensagem] = useState('')
 
+    const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
+
     let describeop = (patter===patterConst[0]) ? CP:CV
     let TipodeCarregamento = (patter===patterConst[0]) ? true:false // diz qual o tipo de carregamento CP (true) ou Cv (false)
 
     let correcaobugdescricao = (descricao==='')? ['Vento']:descricao
+
 
     const onclickevent = (event) => {
         event.preventDefault()
 
         let buginfernal = alerta //o setAlert nao funciona, nao adiant
         let temp = 0
-
-
+       
 
         for(let i of [nome,tipocar,patter,describe,mag,startpos,finalpos]){
             console.log(i)
@@ -93,6 +96,14 @@ const InputCar = (props) =>{
         }
     }
 
+    for(let carregamento of CARREGAMENTOS){
+        if(nome===carregamento['name']){
+            setAlerta(true)
+            buginfernal = true
+            setMensagem('Nome já cadastrado')
+            break
+        }
+    }
 
         if (!buginfernal && !alerta){
             const item = {
@@ -136,6 +147,9 @@ const InputCar = (props) =>{
         }
         return true
     }
+
+
+ 
 
     return(
     <>
@@ -230,7 +244,7 @@ const InputCar = (props) =>{
                         <item>
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                             <FormControl>
-                                <InputLabel>Descrição do Carregamento</InputLabel>
+                                <InputLabel>{TipodeCarregamento? "":"Descrição do Carregamento"}</InputLabel>
                                 <Select
                                 disabled = {TipodeCarregamento}
                                 value={descricao}
@@ -242,10 +256,10 @@ const InputCar = (props) =>{
                                 </Select> 
                             </FormControl>
                             <FormControl>
-                                <InputLabel>Descrição do Carregamento</InputLabel>
+                                <InputLabel>{TipodeCarregamento? "":"Complemento a Descrição"}</InputLabel>
                                 <Select
                                 disabled = {TipodeCarregamento}
-                                value={descricaosecundaria}
+                                value={ descricaosecundaria}
                                 sx={{backgroundColor:'white'}}
                                 label='Descrição Segundo NBR6118'
                                 onChange={event =>{event.preventDefault();return setDescricaosecundaria(event.target.value)}}
@@ -268,7 +282,7 @@ const InputCar = (props) =>{
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                             <FormControl>
                                 <TextField 
-                                label='Posição Inicial' 
+                                label={(tipocar ==="Pontual") ?'Posição':'Posição Inicial'} 
                                 sx={{backgroundColor:'white'}} 
                                 value={startpos} 
                                 onChange={(event) => {event.preventDefault();setStartpos(event.target.value)}}
@@ -278,9 +292,10 @@ const InputCar = (props) =>{
                             </FormControl>
                             <FormControl>
                                 <TextField 
-                                label='Posição Final' 
+                                label={(tipocar ==="Pontual") ?'':'Posição Final'}
                                 sx={{backgroundColor:'white'}} 
-                                value={finalpos} 
+                                value={finalpos}
+                                disabled = {tipocar ==="Pontual"}
                                 error={erro(finalpos,'numeros')}
                                 helperText = {erro(finalpos,'numeros')?'Insira somente números':''}
                                 onChange={(event) => {event.preventDefault();setFinalpos(event.target.value)}}></TextField>

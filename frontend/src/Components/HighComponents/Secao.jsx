@@ -143,7 +143,7 @@ const Secao  = (props)=> {
             </Box>
         
             <Grid container spacing={4}>
-                <Grid item xs={8.9}>
+                <Grid item>
                     <Box Class='Seção Transversal' >
                     <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
                         <p style={{fontSize:25,fontFamily:'Helvetica,Arial', border:1}}>Seção Transversal</p>
@@ -216,11 +216,6 @@ const Secao  = (props)=> {
                                         helperText = {erro(diametroL,'numeros')?'Insira somente números':''}
                                         sx={{backgroundColor:'white'}} />
                                     </Box>
-                                </item>
-                            </Grid>
-                            <Grid item xs sx={{marginLeft:'6rem', paddingRight:'0%', marginRight:'4rem'}}>
-                                <item>
-                                    <SecaoTransversal></SecaoTransversal>
                                 </item>
                             </Grid>
                         </Grid>
