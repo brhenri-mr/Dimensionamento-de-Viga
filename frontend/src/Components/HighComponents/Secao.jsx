@@ -16,7 +16,6 @@ import { AlertTitle } from "@mui/material";
 //Redux
 import { useDispatch} from "react-redux";
 //Componentes
-import SecaoTransversal from '../SVG/SecaoTransversal'
 import actions from "../../Actions/Caracteristicas";
 //constantes
 import { ambiente } from "../../Constants/classeAmbiental";

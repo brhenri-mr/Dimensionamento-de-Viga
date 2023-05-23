@@ -99,7 +99,12 @@ const DiagramaMomento= (props) =>{
         <>
             <svg style={{ width:"40rem",height:"25rem"}}>
                 {texto.map((valor,key)=>{
+                    if(valor[0]==0){
+                        return 1
+                    }
+                    else{
                         return (valor<0) ?<text x={valor[1]+50} y={147.5-valor[0]+15}>{`${valor[0]} kN.m`}</text>:<text x={valor[1]+50} y={147.5-valor[0]-15}>{`${valor[0]} kN.m`}</text>
+                    }
                     })}
                 {points.map((item,indice)=>{  
                     return <polygon points={item} key={indice} className="graficomomento"></polygon>

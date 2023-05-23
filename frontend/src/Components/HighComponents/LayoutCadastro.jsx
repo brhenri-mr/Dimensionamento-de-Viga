@@ -11,10 +11,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import { TransitionGroup } from 'react-transition-group';
 //Redux
 import { useDispatch } from "react-redux";
 //compoments
-import ItemCadastrado from "../Cadastro/ItemCadastrado";
 import { actions as apoio} from "../../Actions/Apoios";
 import { actions as carregamento } from "../../Actions/Carregamento";
 

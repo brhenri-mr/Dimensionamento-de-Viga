@@ -12,10 +12,11 @@ import Figura from "./Figura";
 import TabPanel from "../Inputs/Tabpanel";
 import InputCar from "../Inputs/InputCar";
 import Secao from "./Secao";
-import InputBarra from "../Inputs/InputBarra";
 import Resultados from "./Resultados";
 import Geometria from "./Geometria";
 import LayoutCadastro from "./LayoutCadastro";
+import CircularProgress from '@mui/material/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
 //redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
@@ -31,22 +32,26 @@ function estabilidaded(el){
     const tipos = [0,0,0]
 
     for (let dicionario of el){
-        if (dicionario['tipo']=="Apoio Simples"){
+        if (dicionario['tipo']==="Apoio Simples"){
             restricao += 1
             tipos[0] = 1 + tipos[0]
 
         }
-        else if (dicionario['tipo']=="Apoio Rotulado"){
+        else if (dicionario['tipo']==="Apoio Rotulado"){
             restricao += 2
             tipos[1] = 1 + tipos[1]
         }
-        else if (dicionario['tipo']=="Apoio Engastado"){
+        else if (dicionario['tipo']==="Apoio Engastado"){
             restricao += 3
             tipos[2] = 1 + tipos[2]
         }
     }
 
-    if (tipos[0]>1 && tipos[1]===0 && tipos[2]==0){
+    if(tipos[0]===0 && tipos[1]===0 && tipos[2]===0){
+        mensagem = 'Insira um Apoio'
+    }
+
+    else if (tipos[0]>1 && tipos[1]===0 && tipos[2]===0){
         mensagem = 'Estrutura Hipoestática'
     }
     else if (restricao<3){
@@ -80,27 +85,33 @@ const Layout = () => {
     const [describe, setDescribe] = useState()
     const [metRigidez, setMetrigidez] = useState({})
     const [dimensionamento, setDimensionamento] = useState({})
-    console.log(dimensionamento)
-
     const estabilidade = estabilidaded(APOIOS)
 
 
+    //validarores
+    const cadastrocompleto = (APOIOS.length!==0 && CARREGAMENTOS.length!==0 && BARRA!==0 && CARACTERISTICAS['fck'] !==0)
 
+    console.log(cadastrocompleto)
 
     //dispatch
     const dispatch = useDispatch()
 
     const handleChange = (event, newValue) => {
+        if (newValue===3 && cadastrocompleto){
+            Combinacoes(CARREGAMENTOS,ED)
+            MetRigidez(CARREGAMENTOS,APOIOS)
+            Dimensionamento(CARACTERISTICAS)
+        }
         setValue(newValue);
       };
 
 
 
     //Combinacoes
-    const Combinacoes =(data,ed) => {
+    async function Combinacoes (data,ed) {
         console.log(...data)
         console.log(ed)
-        fetch('http://127.0.0.1:8000/api/Combinacoes', {
+        await fetch('http://127.0.0.1:8000/api/Combinacoes', {
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,7 +131,7 @@ const Layout = () => {
     }
 
     //API metodo da rigidez direta
-    const MetRigidez=(data,apoios) => {
+    async function MetRigidez(data,apoios){
 
         const enviar = {
             carregamento:data, 
@@ -131,7 +142,7 @@ const Layout = () => {
             MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12}
 
 
-        fetch('http://127.0.0.1:8000/api/MetRigidez', {
+        await fetch('http://127.0.0.1:8000/api/MetRigidez', {
 
         
                 method: 'POST', // or 'PUT'
@@ -152,10 +163,10 @@ const Layout = () => {
     }
 
      //API Dimensionamento
-     const Dimensionamento=(data) => {
+     async function Dimensionamento(data) {
 
 
-        fetch('http://127.0.0.1:8000/api/Dimensionamento', {
+        await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
         
                 method: 'POST', // or 'PUT'
@@ -209,6 +220,9 @@ const Layout = () => {
                     </Grid>
                     <Grid item xs={8}>
                         <Item>
+                            <Collapse in={estabilidade[0] ==='Insira um Apoio'}>
+                                <Alert severity="info">{estabilidade[0]}</Alert>
+                            </Collapse>
                             <Collapse in={estabilidade[0] ==='Estrutura Hipoestática'}>
                                 <Alert severity="warning">{estabilidade[0]}</Alert>
                             </Collapse>
@@ -240,10 +254,20 @@ const Layout = () => {
                 <Secao></Secao>
             </TabPanel>
             <TabPanel value={value} index={3}>
-                <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
-                <Button onClick={(event)=> {event.preventDefault(); return Combinacoes(CARREGAMENTOS,ED)}}>Api</Button>
-                <Button onClick={(event)=> {event.preventDefault(); return MetRigidez(CARREGAMENTOS,APOIOS)}}>MetRigidez</Button>
-                <Button onClick={(event)=> {event.preventDefault(); return Dimensionamento(CARACTERISTICAS)}}>Dimensionamento</Button>
+                <Collapse in={cadastrocompleto}>
+                    <Collapse in={Object.keys(dimensionamento).length===0}>
+                        <CircularProgress />
+                    </Collapse>
+                    <Collapse in={!(Object.keys(dimensionamento).length===0)}>
+                        <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
+                    </Collapse>
+                </Collapse>
+                <Collapse in={!cadastrocompleto}>
+                    <Alert severity="error"> <strong>Faltam Cadastrar Informações</strong></Alert>
+                
+                </Collapse>
+                
+                
             </TabPanel>
             </Box>
         </Box>

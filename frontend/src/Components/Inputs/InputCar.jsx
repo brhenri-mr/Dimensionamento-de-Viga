@@ -53,9 +53,9 @@ const InputCar = (props) =>{
 
         let buginfernal = alerta //o setAlert nao funciona, nao adiant
         let temp = 0
-       
-
-        for(let i of [nome,tipocar,patter,describe,mag,startpos,finalpos]){
+        let grupo = ((tipocar ==="Pontual"))? [nome,tipocar,patter,describe,mag,startpos]:[nome,tipocar,patter,describe,mag,startpos,finalpos]
+        
+        for(let i of grupo){
             console.log(i)
             if (i === ''){
                 setAlerta(true)
@@ -105,6 +105,12 @@ const InputCar = (props) =>{
         }
     }
 
+    if(tipocar==="Distribuido" && startpos===finalpos){
+        setAlerta(true)
+        buginfernal = true
+        setMensagem('Carregamento Distribuido precisa ter pontos de inicio e final Diferentes')
+    }
+
         if (!buginfernal && !alerta){
             const item = {
                 name: nome,
@@ -112,7 +118,7 @@ const InputCar = (props) =>{
                 patter:patter,
                 describe:describe,
                 mag:parseInt(mag.replace(',','.')),
-                pos:[parseInt(startpos.replace(',','.')),parseInt(finalpos.replace(',','.'))],
+                pos:[parseInt(startpos.replace(',','.')),(tipocar ==="Pontual")? parseInt(startpos.replace(',','.')):parseInt(finalpos.replace(',','.'))],
                 comb:[]
             }
             dispatch(actions.adicionar(item))

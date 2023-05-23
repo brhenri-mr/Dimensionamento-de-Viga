@@ -1,9 +1,6 @@
 import React from "react";
 
-
-
 const Viga = (props) => {
-
 
     let auxiliar = []
     let temp = []
@@ -27,10 +24,6 @@ const Viga = (props) => {
         }
     }
 
-
-
-
-
     //so funciona pq apoios é uma lista 
     for(let i=0;i<=auxiliar.length-2;i++){
         comprimentos.push([Math.abs(auxiliar[i+1].value-auxiliar[i].value),auxiliar[i].value])
@@ -38,11 +31,6 @@ const Viga = (props) => {
             comprimentos.push([props.value-auxiliar[i+1].value,auxiliar[i+1].value])
         }
     }
-
-
-    console.log(comprimentos)
-
-
 
     if (props.value===''){
         return(<></>)

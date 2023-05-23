@@ -56,7 +56,6 @@ const Inputs_a = (props) => {
     
     const erro = (variavel) =>{
 
-        console.log(variavel)
 
         for (let item of 'abcdefghijklmnopqrstuvwxyz'){
             if (variavel.includes(item)){
