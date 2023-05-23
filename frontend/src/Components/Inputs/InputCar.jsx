@@ -94,9 +94,6 @@ const InputCar = (props) =>{
     }
 
 
-        
-
-
         if (!buginfernal && !alerta){
             const item = {
                 name: nome,

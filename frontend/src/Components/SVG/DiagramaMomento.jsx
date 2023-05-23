@@ -6,76 +6,102 @@ import Apoio from "../SVG/Apoios";
 //Constante
 import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
 
+
+
+function escrever(valores,posicoes){
+    //textos: valores e posicoes dos textos
+    return (
+        <text x={posicoes+50} y={147.5-valores}>{`${valores} kN.m`}</text>
+    )
+}
+
+
 const DiagramaMomento= (props) =>{
 
-    //variaveis
-    const inicio = [0]
-    const points = ['0,0 0,0']
-    let escala = 1
-    let temp = ""
-    let points_temp = []
-
-    const tamanhosvg = 240 // 15rem
+    let graficomomento = []
+    const points =[]
+    let temp = ''
+    let maximo = [0,0] //maximo[0] = valor de momento , maximo[1] = posicao
+    let texto = []
 
 
-    //controla o texto 
-    const texto = []
-    if (Object.keys(props.metrigidez).length !==0){ 
-        //definindo escala
-        Object.keys(props.metrigidez["Esforcos Internos"]).forEach((chave,indice)=>{
-            const Momento = props.metrigidez["Esforcos Internos"][chave]["Momento"]
-            Momento.forEach((valor,indice)=>{
-                if (valor>= tamanhosvg-80){
-                    escala = 0.70 - valor/1000
-                    console.log(escala)
-                }
-            })
-        })
-        
+    try{
+        //rodando cada elemento
+        for(let chave of Object.keys(props.metrigidez['Esforcos Internos'])){
+            //rodando momento e posicao simultaneamente
+            for(let i=0;i<=props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1 ;i++){
+                const momento = props.metrigidez["Esforcos Internos"][chave]["Momento"]
+                const trecho  = props.metrigidez["Esforcos Internos"][chave]["Trecho"]
 
-        Object.keys(props.metrigidez["Esforcos Internos"]).forEach((chave,indice)=>{ //roda os EL
-            const Cortante = props.metrigidez["Esforcos Internos"][chave]["Momento"]
-            const trecho  = props.metrigidez["Esforcos Internos"][chave]["Trecho"]
-            for (let i=0;i<=trecho.length-1;i++){
-                points_temp.push(`${trecho[i]+50},${147.5-Cortante[i]*escala}`
-                    )
-                inicio.push(trecho[i+1])
-                //definicao do vetor de texto [x,y,valor do momento, escala]
-                if (Cortante[i]<0){
-                    texto.push([trecho[i]+50,147.5-Cortante[i]*escala,Cortante[i],-1.2])
+                //garantindo o primeiro ponto na altura da viga, para poder ter um solido
+                if (i===0){
+                    graficomomento.push(`${trecho[0]+50},147.5`)
                 }
-                else{
-                    texto.push([trecho[i]+50,147.5-Cortante[i]*escala,Cortante[i],0.6])
+
+                graficomomento.push(`${trecho[i]+50},${147.5-momento[i]}`)
+
+                //garantirndo o ultimo ponto na altura da viga, para pode ter um solido
+                if (i===props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1){
+                    graficomomento.push(`${trecho[i]+50},${147.5}`)
+
                 }
-                
-                if(Object.keys(props.metrigidez["Esforcos Internos"]).length===texto.length){
-                    if (Cortante[i+1]>0){
-                        texto.push([trecho[i+1]+50,147.5+Cortante[i+1]*escala,Cortante[i+1],-1.2])
-                    }
-                    else{
-                        texto.push([trecho[i+1]+50,147.5+Cortante[i+1]*escala,Cortante[i+1],0.6])
-                    }
+
+
+                if (Math.abs(maximo[0])<Math.abs(momento[i])){
+                    maximo[0] = momento[i]
+                    maximo[1] = trecho[i]
                 }
+
             }
-            points_temp.push(`${trecho[trecho.length-1]+50},147.5 ${trecho[0]+50},147.5`)
-            points_temp.forEach((valor,indice)=>{
-                temp = temp +valor +" "
-            })
+            //depois que rodei todo um elemento eu preciso tranformar tudo em um unico string do elemento inteiro
+            for(let parte of graficomomento){
+                temp = temp + parte+ ' '
+            }
             points.push(temp)
-            temp = ''
-            points_temp = []
-        })
+
+
+            // as logica vai ser sempre tagear o ponto de tras
+            
+            //adicionando o ponto mais a esquerda
+            texto.push([props.metrigidez["Esforcos Internos"][chave]["Momento"][0],props.metrigidez["Esforcos Internos"][chave]["Trecho"][0]])
+
+            //Verificando a necessidade de adicionar um ponto de maximo (se não foi igual ao ponto mais a esquerda)
+            if (maximo[1] === props.metrigidez["Esforcos Internos"][chave]["Trecho"][0]){
+
+            }
+            else{
+                texto.push(maximo)
+            }
+
+            //verificando se o elemento é o ultimo e se nao é igual ao momento maximo na secao 
+            if (chave === Object.keys(props.metrigidez['Esforcos Internos'])[[Object.keys(props.metrigidez['Esforcos Internos']).length-1]] && maximo[1]!==props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1]){
+                //Ultimo elemento
+                texto.push([props.metrigidez["Esforcos Internos"][chave]["Momento"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1],props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1]])
+            }
+
+            //limpando os iteradores
+            temp =''
+            graficomomento = []
+            maximo = [0,0]
+
+        }
     }
+
+    catch(erro){
+        console.log(erro)
+
+    }
+
+
+    console.log(points)
 
     return(
         <>
             <svg style={{ width:"40rem",height:"25rem"}}>
-                <g>
-                </g>
                 {texto.map((valor,key)=>{
-                        return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{`${valor[2]} kN.m`}</text>
+                        return (valor<0) ?<text x={valor[1]+50} y={147.5-valor[0]+15}>{`${valor[0]} kN.m`}</text>:<text x={valor[1]+50} y={147.5-valor[0]-15}>{`${valor[0]} kN.m`}</text>
                     })}
-                {points.map((item,indice)=>{ 
+                {points.map((item,indice)=>{  
                     return <polygon points={item} key={indice} className="graficomomento"></polygon>
                 })}
                 <Viga value={props.barra} ignorar={true} apoios={[]}></Viga>

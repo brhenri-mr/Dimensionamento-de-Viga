@@ -10,6 +10,7 @@ import Select from '@mui/material/Select';
 //Redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Apoios";
+import { useSelector } from "react-redux";
 //Constantes
 import classeApoios from '../../Constants/classApoios'
 
@@ -19,13 +20,32 @@ const Inputs_a = (props) => {
     const [pos, setPos] = useState('')
     const dispatch = useDispatch()
 
+    const APOIOS = useSelector(state => state.botoesReducers.APOIOS)
+    const BARRA = useSelector(state => state.barraReducers.BARRA)
+
     const onClickAdd = (event) => {
         event.preventDefault()
-        if (tipo!=="" && pos!==""){
+
+        let jaexiste = false
+
+        for(let item of APOIOS){
+            if (item['value']===parseFloat(pos)){
+                jaexiste = true
+                break
+            }
+        }
+
+        if (parseFloat(pos)>BARRA){
+            jaexiste = true
+        }
+
+
+        if (tipo!=="" && pos!=="" && !jaexiste ){
+
             const apoio ={
                 id: new Date(),
                 tipo: tipo,
-                value: parseInt(pos),
+                value: parseFloat(pos),
             }
     
             dispatch(actions.adicionar(apoio))
@@ -35,6 +55,16 @@ const Inputs_a = (props) => {
     }
     
     const erro = (variavel) =>{
+
+        console.log(variavel)
+
+        for (let item of 'abcdefghijklmnopqrstuvwxyz'){
+            if (variavel.includes(item)){
+                return true
+
+            }
+        }
+
         if (variavel[0] === undefined){
             return false
         }
@@ -44,10 +74,9 @@ const Inputs_a = (props) => {
         else if ('1234567890'.includes(variavel[variavel.length-1])){
             return false
         }
-        'abcdefghijklmnopqrstuvwxyz'.forEach(item =>{
-            if (variavel.includes(item))
-            return false
-        })
+
+
+
         return true
     }
 
@@ -79,7 +108,7 @@ const Inputs_a = (props) => {
                 sx={{backgroundColor:'white'} }
                 helperText = {erro(pos)?'insira somente numeros positivos':''}
                 onChange={event =>{event.preventDefault();return setPos(event.target.value)}} />
-                <Button onClick={erro(pos)? '':onClickAdd}>Add</Button>
+                <Button onClick={erro(pos)? ()=>{return 1}:onClickAdd}>Add</Button>
             </FormControl>
         </>
         )

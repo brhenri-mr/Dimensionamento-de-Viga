@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 //Material ui
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -7,6 +6,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { Alert, Collapse } from "@mui/material";
 //compoments
 import Figura from "./Figura";
 import TabPanel from "../Inputs/Tabpanel";
@@ -14,12 +14,53 @@ import InputCar from "../Inputs/InputCar";
 import Secao from "./Secao";
 import InputBarra from "../Inputs/InputBarra";
 import Resultados from "./Resultados";
+import Geometria from "./Geometria";
+import LayoutCadastro from "./LayoutCadastro";
 //redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
-import Geometria from "./Geometria";
-import BasicTable from "../test/tabela";
-import LayoutCadastro from "./LayoutCadastro";
+import { useSelector } from "react-redux";
+
+
+
+function estabilidaded(el){
+    ///vetor com o tipo de apoios
+    let restricao= 0
+    let mensagem = ''
+
+    const tipos = [0,0,0]
+
+    for (let dicionario of el){
+        if (dicionario['tipo']=="Apoio Simples"){
+            restricao += 1
+            tipos[0] = 1 + tipos[0]
+
+        }
+        else if (dicionario['tipo']=="Apoio Rotulado"){
+            restricao += 2
+            tipos[1] = 1 + tipos[1]
+        }
+        else if (dicionario['tipo']=="Apoio Engastado"){
+            restricao += 3
+            tipos[2] = 1 + tipos[2]
+        }
+    }
+
+    if (tipos[0]>1 && tipos[1]===0 && tipos[2]==0){
+        mensagem = 'Estrutura Hipoestática'
+    }
+    else if (restricao<3){
+        mensagem = 'Estrutura Hipoestática'
+    }
+    else if(restricao>3){
+        mensagem = 'Estrutura Hiperestática'
+    }
+    else{
+        mensagem = 'Estrutura Isoestática'
+    }
+
+    return [mensagem,restricao]
+}
 
 
 
@@ -31,7 +72,6 @@ const Layout = () => {
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
     const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
     const ED = useSelector(state => state.botoesReducers.ED)
-    console.log(CARREGAMENTOS)
 
 
     //useState
@@ -42,12 +82,19 @@ const Layout = () => {
     const [dimensionamento, setDimensionamento] = useState({})
     console.log(dimensionamento)
 
+    const estabilidade = estabilidaded(APOIOS)
+
+
+
+
     //dispatch
     const dispatch = useDispatch()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
       };
+
+
 
     //Combinacoes
     const Combinacoes =(data,ed) => {
@@ -162,6 +209,12 @@ const Layout = () => {
                     </Grid>
                     <Grid item xs={8}>
                         <Item>
+                            <Collapse in={estabilidade[0] ==='Estrutura Hipoestática'}>
+                                <Alert severity="warning">{estabilidade[0]}</Alert>
+                            </Collapse>
+                            <Collapse in={estabilidade[0] ==='Estrutura Isoestática' || estabilidade[0] ==='Estrutura Hiperestática'}>
+                                <Alert>{estabilidade[0]}</Alert>
+                            </Collapse>
                             <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
                         </Item>
                     </Grid>

@@ -209,7 +209,7 @@ def MetRigidez(request, data:MetRigidez):
 
             #Vendo o esforco esta no intervalo da barra
             if coordenada*100>= el['Trecho'][0] and coordenada*100<=el['Trecho'][1]:
-                saida['Momento'].append(round(float(momento_pronto(coordenada)),2))
+                saida['Momento'].append(-1*round(float(momento_pronto(coordenada)),2))
                 saida['Trecho'].append(round(float(coordenada*100),2))
                 saida['Cortante'].append(round(float(cortante_pronto(coordenada)),2))
             else:
@@ -218,10 +218,9 @@ def MetRigidez(request, data:MetRigidez):
             pass
         else:
             for i in range(1,padrao):
-                saida['Momento'].append(-1*round(float(momento_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
-                saida['Trecho'].append(round(float(el['Trecho'][0]+incrimento*i),2))
-                saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
-
+                    saida['Momento'].append(-1*round(float(momento_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
+                    saida['Trecho'].append(round(float(el['Trecho'][0]+incrimento*i),2))
+                    saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
         return saida
     
     def maximo_momentona_secao(el):
@@ -311,6 +310,7 @@ def MetRigidez(request, data:MetRigidez):
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
 
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
+            print(s_global)
             comb_atual = 1+ comb_atual
             
         generico[chave] = copy.deepcopy(s_global)
@@ -318,8 +318,7 @@ def MetRigidez(request, data:MetRigidez):
         s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
     
     saida["Esforcos Internos"] = generico
-
-    print(momento_eq)          
+      
 
     '''
     for chave,eq in zip(entrada.keys(),momento_eq):

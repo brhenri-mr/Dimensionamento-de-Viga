@@ -20,12 +20,16 @@ const InputBarra = (props)=>{
         }
         else{
             dispach(actions.modificar(event.target.value))
+            return setComprimento(event.target.value)
         }
-        return setComprimento(event.target.value)
+        
     }
 
 
     const erro = (variavel) =>{
+
+        let alerta = true
+
         if (variavel[0] === undefined){
             return false
         }
@@ -36,10 +40,13 @@ const InputBarra = (props)=>{
             return false
         }
 
-        'abcdefghijklmnopqrstuvwxyz'.forEach(item =>{
-            if (variavel.includes(item))
-            return false
-        })
+
+        for (let item of 'abcdefghijklmnopqrstuvwxyz'){
+            if (variavel.includes(item)){
+                return true
+            }
+        }
+
         return true
     }
 
