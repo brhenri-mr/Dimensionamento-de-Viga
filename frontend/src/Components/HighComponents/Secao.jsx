@@ -40,6 +40,7 @@ const Secao  = (props)=> {
     const [sucesso, setSucesso] = useState(false)
     const [mensagem, setMensagem] = useState('')
     const [agregado,setAgregado] = useState('')
+    const [dmax,setDmax] = useState('')
 
     const caracteristcas = (event)=>{
         event.preventDefault()
@@ -47,7 +48,7 @@ const Secao  = (props)=> {
         let buginfernal = alerta //o setAlert nao funciona, nao adianta
         let temp = 0
 
-        for(let i of [fyk,alturaSecao,bw,diametroL,bitolaT,fykt,classeAmbiental]){
+        for(let i of [alturaSecao,bw,diametroL,bitolaT,classeAmbiental,dmax]){
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -60,7 +61,7 @@ const Secao  = (props)=> {
         }
 
 
-        for(let i of [fyk,alturaSecao,bw,diametroL,bitolaT,fykt]){
+        for(let i of [alturaSecao,bw,diametroL,bitolaT,dmax]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
                     break
@@ -100,6 +101,7 @@ const Secao  = (props)=> {
                 dL:parseFloat(diametroL.replace(',','.')),
                 dT: parseFloat(bitolaT.replace(',','.')),
                 fykt: ClasseAço[fykt],
+                dmax:parseFloat(dmax.replace(',','.')),
                 classeambiental:classeAmbiental
             }
             dispatch(actions.adicionar(item))
@@ -177,7 +179,6 @@ const Secao  = (props)=> {
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
 
                                         <TextField 
-                                        id="outlined-basic" 
                                         value={alturaSecao} 
                                         onChange={(event) =>{event.preventDefault();return setAlturasecao(event.target.value)}} 
                                         label="Altura da seção" 
@@ -188,7 +189,6 @@ const Secao  = (props)=> {
                                         <FormControl>
                                             <InputLabel>Natureza do Agregado</InputLabel>
                                             <Select 
-                                            id="outlined-basic"
                                             value={agregado} 
                                             onChange={(event) =>{event.preventDefault();return setAgregado(event.target.value)}} 
                                             label="Natureza do Agregado"
@@ -201,7 +201,6 @@ const Secao  = (props)=> {
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
 
                                         <TextField 
-                                        id="outlined-basic" 
                                         value={bw} 
                                         onChange={(event) =>{event.preventDefault();return setBw(event.target.value)}} 
                                         label="Largura comprimida " 
@@ -210,8 +209,7 @@ const Secao  = (props)=> {
                                         helperText = {erro(bw,'numeros')?'Insira somente números':''}
                                         sx={{backgroundColor:'white'}}/>
 
-                                        <TextField 
-                                        id="outlined-basic" 
+                                        <TextField  
                                         value={diametroL} 
                                         onChange={(event) =>{event.preventDefault();return setDiametroL(event.target.value)}} 
                                         label="Diâmetro das Armaduras Logitudinais" 
@@ -249,7 +247,6 @@ const Secao  = (props)=> {
                                         
                                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
                                             <TextField 
-                                                id="outlined-basic" 
                                                 value={bitolaT} 
                                                 onChange={(event) =>{event.preventDefault();return setBitolaT(event.target.value)}} 
                                                 label="diâmetro do estribo" 
@@ -286,6 +283,14 @@ const Secao  = (props)=> {
                                     {ambiente.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                     </Select>
                                 </FormControl>
+                            <TextField 
+                                    value={dmax} 
+                                    onChange={(event) =>{event.preventDefault();return setDmax(event.target.value)}} 
+                                    label="Diâmetro das Armaduras Logitudinais" 
+                                    variant="outlined"
+                                    error={erro(dmax,'numeros')}
+                                    helperText = {erro(dmax,'numeros')?'Insira somente números':''}
+                                    sx={{backgroundColor:'white'}} />
                             </Box>
                             </Grid>
                         </Grid>
