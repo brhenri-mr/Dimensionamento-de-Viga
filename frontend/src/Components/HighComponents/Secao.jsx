@@ -19,7 +19,7 @@ import { useDispatch} from "react-redux";
 import actions from "../../Actions/Caracteristicas";
 //constantes
 import { ambiente } from "../../Constants/classeAmbiental";
-import { NomesAgregados } from "../../Constants/classSecao";
+import { NomesAgregados,ClasseConcreto,ClasseAço } from "../../Constants/classSecao";
 
 
 const Secao  = (props)=> {
@@ -47,7 +47,7 @@ const Secao  = (props)=> {
         let buginfernal = alerta //o setAlert nao funciona, nao adianta
         let temp = 0
 
-        for(let i of [fck,fyk,alturaSecao,bw,diametroL,bitolaT,fykt,classeAmbiental]){
+        for(let i of [fyk,alturaSecao,bw,diametroL,bitolaT,fykt,classeAmbiental]){
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -60,7 +60,7 @@ const Secao  = (props)=> {
         }
 
 
-        for(let i of [fck,fyk,alturaSecao,bw,diametroL,bitolaT,fykt]){
+        for(let i of [fyk,alturaSecao,bw,diametroL,bitolaT,fykt]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
                     break
@@ -92,14 +92,14 @@ const Secao  = (props)=> {
             //dmax:parseFloat(diametromax.replace(',','.')),
 
             const item = {
-                fck:parseInt(fck.replace(',','.')),
-                fyk:parseInt(fyk.replace(',','.')),
+                fck:ClasseConcreto[fck],
+                fyk:ClasseAço[fyk],
                 h:parseFloat(alturaSecao.replace(',','.')),
                 agregado:agregado,
                 bw:parseFloat(bw.replace(',','.')),
                 dL:parseFloat(diametroL.replace(',','.')),
                 dT: parseFloat(bitolaT.replace(',','.')),
-                fykt: parseFloat(fykt.replace(',','.')),
+                fykt: ClasseAço[fykt],
                 classeambiental:classeAmbiental
             }
             dispatch(actions.adicionar(item))
@@ -150,23 +150,28 @@ const Secao  = (props)=> {
                             <Grid item>
                                 <item>
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
-                                        <TextField id="outlined-basic" 
-                                        value={fck} 
-                                        onChange={(event) =>{event.preventDefault();return setFck(event.target.value)}} 
-                                        label="Resistência caracteristica a compressão [MPa]" 
-                                        variant="outlined"  
-                                        error={erro(fck,'numeros')}
-                                        helperText = {erro(fck,'numeros')?'Insira somente números':''}
-                                        sx={{backgroundColor:'white'} }/>
-
-                                        <TextField id="outlined-basic" 
-                                        value={fyk} 
-                                        onChange={(event) =>{event.preventDefault();return setFyk(event.target.value)}} 
-                                        label="Resistência característica ao escomento [MPa]" 
-                                        variant="outlined"
-                                        error={erro(fyk,'numeros')}
-                                        helperText = {erro(fyk,'numeros')?'Insira somente números':''}
-                                        sx={{backgroundColor:'white'}}/>
+                                    <FormControl>
+                                            <InputLabel>Classe de Concreto</InputLabel>
+                                            <Select 
+                                            value={fck} 
+                                            onChange={(event) =>{event.preventDefault();return setFck(event.target.value)}} 
+                                            label="Classe de Concreto" 
+                                            variant="outlined"  
+                                            sx={{backgroundColor:'white'}}>
+                                                {Object.keys(ClasseConcreto).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                            </Select> 
+                                        </FormControl>
+                                        <FormControl>
+                                            <InputLabel>Classe de Aço</InputLabel>
+                                            <Select 
+                                            value={fyk} 
+                                            onChange={(event) =>{event.preventDefault();return setFyk(event.target.value)}} 
+                                            label="Classe de Aço" 
+                                            variant="outlined"
+                                            sx={{backgroundColor:'white'}}>
+                                                {Object.keys(ClasseAço).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                            </Select> 
+                                        </FormControl>
 
                                     </Box>
                                     <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
@@ -229,17 +234,19 @@ const Secao  = (props)=> {
                             <Grid>
                                 <item>
                                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
-                                            <TextField 
-                                            id="outlined-basic" 
-                                            value={fykt} 
-                                            onChange={(event) =>{event.preventDefault();return setFykt(event.target.value)}} 
-                                            label="Resistência caracteristicas a escoamento" 
-                                            variant="outlined"
-                                            error={erro(fykt,'numeros')}
-                                            helperText = {erro(fykt,'numeros')?'Insira somente números':''}
-                                            sx={{backgroundColor:'white'}}
-                                        />
+                                            <FormControl>
+                                                <InputLabel>Classe de Aço</InputLabel>
+                                                <Select 
+                                                value={fykt} 
+                                                onChange={(event) =>{event.preventDefault();return setFykt(event.target.value)}} 
+                                                label="Classe de Aço" 
+                                                variant="outlined"
+                                                sx={{backgroundColor:'white'}}>
+                                                    {Object.keys(ClasseAço).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                                </Select> 
+                                            </FormControl>
                                         </Box>
+                                        
                                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
                                             <TextField 
                                                 id="outlined-basic" 
@@ -261,7 +268,7 @@ const Secao  = (props)=> {
                         </Paper>
                     </Box>
                 </Grid>
-                <Grid item xs={8.9}>
+                <Grid item>
                     <Box Class='Agressividade Ambiental' >
                         <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
                         <p style={{fontSize:25}}>Classe Ambiental</p>
