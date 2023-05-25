@@ -200,7 +200,7 @@ const Layout = () => {
         <div>
             <Box sx={{ width: '100%'}}>
                 <Box sx={{ display: 'flex',borderBottom: 1, borderColor: 'divider',flexGrow: 1}}>
-                    <Box sx={{backgroundColor:'#D9D9D9',}}>
+                    <Box sx={{backgroundColor:'#D9D9D9',height: '100vh'}}>
                         <Tabs 
                             value={value} 
                             onChange={ handleChange} 
