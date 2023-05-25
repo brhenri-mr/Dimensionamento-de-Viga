@@ -286,7 +286,7 @@ const Secao  = (props)=> {
                             <TextField 
                                     value={dmax} 
                                     onChange={(event) =>{event.preventDefault();return setDmax(event.target.value)}} 
-                                    label="Diâmetro das Armaduras Logitudinais" 
+                                    label="Diâmetro Máximo de Agreagado" 
                                     variant="outlined"
                                     error={erro(dmax,'numeros')}
                                     helperText = {erro(dmax,'numeros')?'Insira somente números':''}

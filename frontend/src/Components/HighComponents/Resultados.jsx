@@ -8,7 +8,7 @@ import DiagramaCortante from "../SVG/DiagramaCortante";
 import DiagramaMomento from "../SVG/DiagramaMomento";
 
 
-function textotentativa(db,caso,caracteristicas){
+function textotentativa(db,caso,caracteristicas,momentomaximo){
 
     const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
     const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
@@ -67,7 +67,7 @@ function textotentativa(db,caso,caracteristicas){
         Momento:(ignorar)?{
             titulo:'Necessidade de Armadura negativa',
             texto:[
-                `Compare o momento solicitante de ${1} com o momento máximo`,
+                `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo`,
                 eqmomentomax,
                 'Como o valor do Momento Solicitante é maior que o Momento Máximo da seção, então deve-se utilizar Armadura Negativa'
             ],
@@ -160,31 +160,34 @@ function textotentativa(db,caso,caracteristicas){
 const Resultados = (props)=>{
 
 
-    console.log(props.caracteristicas)
 
     let acoordeao = {}
     try {
-        console.log(props.dimensionamento)
-        acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas)
+        acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
         
     } catch (error) {
         console.log(error)
     }
     
-    console.log(acoordeao)
+    // 147.4 = altura da viga| 15 = altura padrao do texto | 15 = altura das letras
+    const escala = (props.metrigidez['Maximo'][1]<0) ? 1.98-(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
+
+    console.log(escala)
+
+
 
     return(
         <div >
-        <Grid container spacing={4}>
+        <Grid container spacing={0} alignContent="center">
             <Grid xs={6}>
                 <Box>
-                    <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez}></DiagramaCortante>
+                    <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala}></DiagramaCortante>
 
                 </Box>
             </Grid>
             <Grid xs={6}>
                 <Box>
-                    <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez}></DiagramaMomento>
+                    <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala}></DiagramaMomento>
                 </Box>
             </Grid>
         </Grid>

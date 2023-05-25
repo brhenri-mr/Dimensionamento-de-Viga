@@ -1,4 +1,3 @@
-
 import React from "react";
 //Componentes
 import Viga from "../SVG/Viga";
@@ -38,7 +37,7 @@ const DiagramaMomento= (props) =>{
                     graficomomento.push(`${trecho[0]+50},147.5`)
                 }
 
-                graficomomento.push(`${trecho[i]+50},${147.5-momento[i]}`)
+                graficomomento.push(`${trecho[i]+50},${147.5-momento[i]*props.escala}`)
 
                 //garantirndo o ultimo ponto na altura da viga, para pode ter um solido
                 if (i===props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1){
@@ -93,17 +92,15 @@ const DiagramaMomento= (props) =>{
     }
 
 
-    console.log(points)
-
     return(
         <>
-            <svg style={{ width:"40rem",height:"25rem"}}>
+            <svg style={{ width:"40rem",height:"12rem"}}>
                 {texto.map((valor,key)=>{
                     if(valor[0]==0){
                         return 1
                     }
                     else{
-                        return (valor<0) ?<text x={valor[1]+50} y={147.5-valor[0]+15}>{`${valor[0]} kN.m`}</text>:<text x={valor[1]+50} y={147.5-valor[0]-15}>{`${valor[0]} kN.m`}</text>
+                        return (valor<0) ?<text x={valor[1]+50} y={147.5+15-valor[0]*props.escala}>{`${valor[0]} kN.m`}</text>:<text x={valor[1]+50} y={147.5-valor[0]*props.escala-15}>{`${valor[0]} kN.m`}</text>
                     }
                     })}
                 {points.map((item,indice)=>{  

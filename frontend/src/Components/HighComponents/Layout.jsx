@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 
 
 
+
 function estabilidaded(el){
     ///vetor com o tipo de apoios
     let restricao= 0
@@ -264,7 +265,6 @@ const Layout = () => {
                 </Collapse>
                 <Collapse in={!cadastrocompleto}>
                     <Alert severity="error"> <strong>Faltam Cadastrar Informações</strong></Alert>
-                
                 </Collapse>
                 
                 

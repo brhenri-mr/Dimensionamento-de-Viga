@@ -269,10 +269,19 @@ def MetRigidez(request, data:MetRigidez):
                 cortante_temp.append(temp)
             #definicao das eqs de momento para uma elemento e uma combinacao
             if len(momento_temp) >1:
+                #Somando os efeitos dos diversos momentos
+                #Discartando as ocorrencias de Discarte
+                [momento_temp.remove('discartar') for _ in range(momento_temp.count('discartar'))]
+                #Compondo o elemento final
                 for m in momento_temp:
+                    print(m,j)
                     j = m + j
                 momento_el.append(j)
+                #Somando os efeitos dos diversos cortantes
                 j = 0
+                #Discartando as ocorrencias de Discarte
+                [cortante_temp.remove('discartar') for _ in range(cortante_temp.count('discartar'))]
+                #Compondo o elemento final
                 for m in cortante_temp:
                     incremento = m + incremento
                 cortante_el.append(incremento)

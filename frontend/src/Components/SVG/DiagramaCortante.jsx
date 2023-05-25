@@ -15,21 +15,21 @@ const DiagramaCortante = (props) =>{
             const Cortante = props.metrigidez["Esforcos Internos"][chave]["Cortante"]
             const trecho  = props.metrigidez["Esforcos Internos"][chave]["Trecho"]
             const final = Cortante.length-1
-            points.push(`${trecho[trecho.length-1]+50},147.5 ${trecho[0]+50},147.5 ${50+trecho[0]},${147.5-Cortante[0]} ${trecho[trecho.length-1]+50},${147.5-Cortante[final]}`)
+            points.push(`${trecho[trecho.length-1]+50},147.5 ${trecho[0]+50},147.5 ${50+trecho[0]},${147.5-Cortante[0]*props.escala} ${trecho[trecho.length-1]+50},${147.5-Cortante[final]*props.escala}`)
             inicio.push(trecho[trecho.length-1])
             if (Cortante[0]<0){
-                texto.push([trecho[0]+50,147.5-Cortante[0],Cortante[0],-1.2])
+                texto.push([trecho[0]+50,147.5-Cortante[0],Cortante[0],1])
             }
             else{
-                texto.push([trecho[0]+50,147.5-Cortante[0],Cortante[0],0.6])
+                texto.push([trecho[0]+50,147.5-Cortante[0],Cortante[0],1])
             }
             
             if(Object.keys(props.metrigidez["Esforcos Internos"]).length===texto.length){
                 if (Cortante[1]>0){
-                    texto.push([trecho[trecho.length-1]+50,147.5+Cortante[1],Cortante[1],-1.2])
+                    texto.push([trecho[trecho.length-1]+50,147.5+Cortante[1],Cortante[1],1])
                 }
                 else{
-                    texto.push([trecho[trecho.length-1]+50,147.5-Cortante[1],Cortante[1],-1.2])
+                    texto.push([trecho[trecho.length-1]+50,147.5-Cortante[1],Cortante[1],1])
                 }
             }
 
@@ -40,10 +40,10 @@ const DiagramaCortante = (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:"15rem"}}>
+            <svg style={{ width:"40rem",height:"12rem"}}>
                 <g>
                     {texto.map((valor,key)=>{
-                        return <text key={key} x={valor[0]} y={valor[1]-valor[3]*15}>{`${valor[2]} kN`}</text>
+                        return (valor[3]>0)?<text key={key} x={valor[0]} y={valor[1]-valor[3]*props.escala+15}>{`${valor[2]} kN`}</text>:<text key={key} x={valor[0]} y={valor[1]-valor[3]*props.escala-15}>{`${valor[2]} kN`}</text>
                     })}
                 </g>
                 {points.map((item,indice)=>{  

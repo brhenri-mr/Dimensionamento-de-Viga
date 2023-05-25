@@ -24,7 +24,6 @@ const AccordionSelf = (props)=>{
     const [verificador,setVerificador] = useState(false)
     const [value, setValue] = useState(0)
 
-    console.log(props.labesecundario)
     
     const multiplaspaginas = (texto,label) =>{
 
