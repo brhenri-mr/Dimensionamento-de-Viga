@@ -9,7 +9,6 @@ const INITIAL_STATE = {
 const reducers  =(state = INITIAL_STATE, action) => {
     switch (action.type){
         case actionType.ADD_APOIO:
-            console.log(state)
             return {APOIOS: [...state.APOIOS, {...action.payload}], CARREGAMENTOS:state.CARREGAMENTOS,ED:state.ED}
         case actionType.REMOVER_APOIO:
             return {APOIOS: state.APOIOS.filter(x => x.id !== action.payload.id),CARREGAMENTOS:state.CARREGAMENTOS,ED:state.ED}

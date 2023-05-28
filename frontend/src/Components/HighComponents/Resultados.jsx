@@ -2,10 +2,17 @@ import React from "react";
 //Material ui
 import AccordionSelf from "../Data/AccordionSelf";
 import Box from '@mui/material/Box';
+import { FormControl } from "@mui/material";
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid';
 //Componente
 import DiagramaCortante from "../SVG/DiagramaCortante";
 import DiagramaMomento from "../SVG/DiagramaMomento";
+import { useState } from "react";
+//reduz
+import { useSelector } from "react-redux";
 
 
 function textotentativa(db,caso,caracteristicas,momentomaximo){
@@ -13,6 +20,8 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
     const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
     const ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
+
+
 
     const ignorarFrame = {
         titulo:'ignorar',
@@ -159,6 +168,16 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 
 const Resultados = (props)=>{
 
+    const [combinacao,setCombinacao] = useState('')
+    
+    const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
+
+    const listacombinacoes = []
+    for(let i=1;i<=CARREGAMENTOS[0].comb.length;i++){
+        listacombinacoes.push(`Combinação ${i}`)
+    }
+
+    listacombinacoes.push('Envoltória')
 
     let escala = 1
     let acoordeao = {}
@@ -180,16 +199,31 @@ const Resultados = (props)=>{
     return(
         <div >
         <Grid container spacing={0} alignContent="center">
-            <Grid xs={6}>
+            <Grid xs={4}>
                 <Box>
                     <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala}></DiagramaCortante>
 
                 </Box>
             </Grid>
-            <Grid xs={6}>
+            <Grid xs={4}>
                 <Box>
                     <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala}></DiagramaMomento>
                 </Box>
+            </Grid>
+            <Grid xs={4}>
+                <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch', paddingLeft:1 }}}noValidate autoComplete="off" >
+                                <FormControl>
+                                        <InputLabel sx={{ paddingLeft:2 }}>Combinação</InputLabel>
+                                        <Select
+                                        value={combinacao}
+                                        label='Classe Ambiental'
+                                        sx={{backgroundColor:'white'}}
+                                        onChange={event =>{event.preventDefault();return setCombinacao(event.target.value)}}
+                                            >
+                                        {listacombinacoes.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                        </Select>
+                                    </FormControl>
+                    </Box>
             </Grid>
         </Grid>
         {Object.keys(acoordeao).map((valor,indice)=>{

@@ -44,6 +44,7 @@ def test(request, carregamentos: Carregamentos):
     
     test = comb.ELU(modo='Normal')
     
+    
     return comb.json()
 
 @api.post("/MetRigidez")
@@ -65,6 +66,7 @@ def MetRigidez(request, data:MetRigidez):
         comprimento = data.dict()["comprimento"]
         Es = ParametrosConcreto(int(data.dict()['fck']),'Rural','Viga',0.1,1,1,data.dict()['agregado']).Ecs*10**-5
         rigidez = data.dict()['MomentodeInercia']*Es
+        combinacao = data.dict()['combinacao']
         
         #Normalizando os dados
         for i in range(len(entrada)):
@@ -99,8 +101,13 @@ def MetRigidez(request, data:MetRigidez):
                     quantidade_comb = len(carregamento["comb"])
                     break
         
+        # 0 == envoltoria
+        if combinacao == 0:
+            quantidade_comb = range(quantidade_comb)
+        else:
+            quantidade_comb = [combinacao-1]
         
-        for i in range(quantidade_comb):
+        for i in quantidade_comb:
         #vetor de forças
 
             elementos = copy.deepcopy(test)
@@ -221,6 +228,13 @@ def MetRigidez(request, data:MetRigidez):
                     saida['Momento'].append(-1*round(float(momento_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
                     saida['Trecho'].append(round(float(el['Trecho'][0]+incrimento*i),2))
                     saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
+        
+        #Tirando os valores minimos 
+        if saida['Momento'][0] != max(saida['Momento']):
+            saida['Momento'].pop(0)
+            saida['Trecho'].pop(0)
+            saida['Cortante'].pop(0)
+        
         return saida
     
     def maximo_momentona_secao(el):
@@ -246,9 +260,14 @@ def MetRigidez(request, data:MetRigidez):
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
     
+    
     #Obtendo a funcao de momento para cada tramo
     #Rodando cada combinacao
-    for i in range(quantidade_comb):
+    for i in range(len(quantidade_comb)):
+        if len(quantidade_comb)==1:
+            var_auxiliar = quantidade_comb[0]
+        else:
+            var_auxiliar = i
         #rodando cada elemento
         for chave in entrada.keys():
             #Obtendo informacoes sobre cada carregamento
@@ -259,8 +278,8 @@ def MetRigidez(request, data:MetRigidez):
                         cortante_temp.append('discartar')
                         momento_temp.append('discartar')
                     else:
-                        temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][i],saida['Esforcos Internos'][i][chave])
-                        momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][i],saida['Esforcos Internos'][i][chave]))
+                        temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave])
+                        momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
                         cortante_temp.append(temp)
             else:
                 temp = cortante('Nada',1,saida['Esforcos Internos'][i][chave])
@@ -300,11 +319,12 @@ def MetRigidez(request, data:MetRigidez):
         momento_el.clear()
     generico = {}
     #acessar uma elemento, indice corresponde a combinacao
-    for indice,chave in zip(range(quantidade_comb),entrada.keys()):
+    for indice,chave in zip(range(len(quantidade_comb)),entrada.keys()):
         '''
         chave: elemnto a ser pesquisado
         indice: combinacao a ser pesquisada
         '''
+        
         for comb_momento, comb_cortante in zip(momento_eq,cortante_eq):
             '''
             comb_momento: equacao de momento a ser utilizada
@@ -315,7 +335,6 @@ def MetRigidez(request, data:MetRigidez):
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
-            print(s)
 
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
             comb_atual = 1+ comb_atual
@@ -349,9 +368,6 @@ def MetRigidez(request, data:MetRigidez):
 
     
     saida['Maximo'] = maximo_momentona_secao(saida)
-    
-    print(saida)
-    
     return saida
 
 @api.post("/Dimensionamento")

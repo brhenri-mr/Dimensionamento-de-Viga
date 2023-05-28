@@ -35,6 +35,7 @@ class MetRigidez(Schema):
     MomentodeInercia:float
     fck:str
     agregado:str
+    combinacao:int
     
 class Caracteristicas(Schema):
     fck:int

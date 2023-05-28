@@ -86,6 +86,11 @@ const Secao  = (props)=> {
             temp = 0
         }
 
+        if(parseFloat(bw.replace(',','.'))<12){
+            setAlerta(true)
+            buginfernal = true
+            setMensagem('A NBR6118:2014 limita o tamanho mínimo de comprimentos de vigas a 12 cm')
+        }
 
 
         if (!buginfernal){
@@ -138,7 +143,7 @@ const Secao  = (props)=> {
                 </Collapse>
                 <Collapse in={(sucesso)} >
                     <Alert onClose={() => {setSucesso(false)}} >
-                        <AlertTitle>Carregamento Cadastrado com Sucesso</AlertTitle>
+                        <AlertTitle >Seção Cadastrada com Sucesso</AlertTitle>
                         </Alert>
                 </Collapse>
             </Box>

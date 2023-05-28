@@ -140,7 +140,9 @@ const Layout = () => {
             comprimento:BARRA, 
             fck:CARACTERISTICAS['fck'],
             agregado:CARACTERISTICAS['agregado'],
-            MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12}
+            MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12,
+            combinacao: 1
+        }
 
 
         await fetch('http://127.0.0.1:8000/api/MetRigidez', {

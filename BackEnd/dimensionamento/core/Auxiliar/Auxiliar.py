@@ -50,13 +50,13 @@ def compatibilizacao(s_atual:dict,el_individual:dict,s_global:dict,sinal:str):
             #x variavel que controla a pesquisa dos novos valores
             for i in range(len(s_global['Trecho'])):
                 if sinal =="Positivo":
-                    if s_global['Trecho'][i] == s_atual['Trecho'][x] or abs(s_global['Trecho'][i]- s_atual['Trecho'][x])<=1:
+                    if s_global['Trecho'][i] == s_atual['Trecho'][x]:
                         ja_existente.append(x)
                         if abs(s_atual[esforco_considerado][x]) > abs(s_global[esforco_considerado][i]):
                             s_global[esforco_considerado][i] = s_atual[esforco_considerado][x]
                 
                 else:
-                    if s_global['Trecho'][i] == s_atual['Trecho'][x] or abs(s_global['Trecho'][i]- s_atual['Trecho'][x])<=10:
+                    if s_global['Trecho'][i] == s_atual['Trecho'][x]:
                         ja_existente.append(x)
                         if abs(s_atual[esforco_considerado][x]) < abs(s_global[esforco_considerado][i]):
                             s_global[esforco_considerado][i] = s_atual[esforco_considerado][x]
