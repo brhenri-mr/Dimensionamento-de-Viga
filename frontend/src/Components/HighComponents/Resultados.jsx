@@ -73,7 +73,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             ],
 
             label:['ignorar']
-        }:
+            }:
         {
             titulo: `Msd = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm`,
             texto:['Verifique os momentos mínimos:',
@@ -116,7 +116,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         
         Discretizacao:(ignorar)?ignorarFrame:{
             titulo: 'Discretização',
-            texto:['Substitua os valores na equação:',`\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Efetiva'][caso].toFixed(2).toString().replace('.',',')}\\ 4}{\\pi \\ ${caracteristicas['dL'].toString().replace('.',',')}}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`],
+            texto:['Substitua os valores na equação:',`\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}\\ 4}{\\pi \\ ${caracteristicas['dL'].toString().replace('.',',')}}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`],
             label:['']
 
         },

@@ -89,20 +89,20 @@ def verificacao_area(a,Ac) -> list[float,bool]:
     criterio = 'Armadura Suficiente'
     #verificacao da aramdura
     if a>=armadura_min:
-        aviso = True
+        aviso_min = True
     else:
-        aviso = False
+        aviso_min= False
         criterio = 'Armadura Insuficiente, adotada armadura mínima'
     
     if a<=armadura_max:
-        aviso = True
+        aviso_max = True
     else:
-        aviso = False
+        aviso_max = False
         criterio = 'Armadura Excessiva'
     
-    return armadura_min, aviso, criterio #preciso que o programa no futuro passe todas essas coisas
+    return armadura_min, aviso_min and aviso_max, criterio #preciso que o programa no futuro passe todas essas coisas
 
-def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:float,av:float,ah:float)->int:
+def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:float,av:float,ah:float, ignorar=False)->int:
     '''
     Discretiza a armadura em barras e verifica a camada se esta adequada
     area: area de aco
@@ -192,11 +192,23 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
             break
         else:
             #significa que tenho mais espaco do que barras, logo ta tudo certo
-            barra.append(Sobra_para_proxima_camada+barras_por_camada)
-            break
-        
+            if Sobra_para_proxima_camada+barras_por_camada%2 !=0:
+                #é menor que a quantidade minima de barras na secao
+                if Sobra_para_proxima_camada+barras_por_camada+1 >barras_por_camada:
+                    #acho que é um cenário impossivel, se é negativo é no minimo -1
+                    pass
+                else:
+                    barra.append(Sobra_para_proxima_camada+barras_por_camada+1)
+                    break
+            elif Sobra_para_proxima_camada+barras_por_camada%2 ==0:
+                barra.append(Sobra_para_proxima_camada+barras_por_camada)
+                break
+    
     for i in range(len(barra)):
         j = i*barra[i]*(av+bitolaL) +j
+    
+    print(numero_de_barras)
+    
     return j/numero_de_barras, numero_de_barras, barra
     
     

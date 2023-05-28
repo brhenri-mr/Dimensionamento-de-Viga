@@ -360,8 +360,8 @@ def dimensionamento(request,data:Caracteristicas):
         '''
         Funcao para dimensionar a secao: areas de armadura 
         '''
-        bn =1
-        nc = 1
+        bn, nc = distruibuicao_camadas(1,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+        bn = 2
         numero_barras = 0
         sair = False
         
@@ -385,13 +385,15 @@ def dimensionamento(request,data:Caracteristicas):
         'Area':{
             'Area Efetiva':[],
             'Area Necessaria':[],
+            'Area Adotada':[],
             'Aviso':[],
             'Aviso_arredondado':[]
         },
         'Discretizacao':{
             'Barras por camada':[],
             'Barras':[],
-            'Barras totais':[]
+            'Barras totais':[],
+            'Arredondamento de Bn':[]
         },
         'Verificacao Linha Neutra':
             {
@@ -452,20 +454,28 @@ def dimensionamento(request,data:Caracteristicas):
                 a = area_aco(momento,bz,d,bs,fyd)
                 a_min, verificacao, criterio = verificacao_area(a,Ac)
                 saida['Area']['Area Necessaria'].append(a)
+                print(verificacao)
+                #verificacao das areas
                 if verificacao:
                     saida['Area']['Aviso'].append(criterio)
                    
                 else:
                     saida['Area']['Aviso'].append(criterio)
                     a = a_min
-                    
+                saida['Area']['Area Adotada'].append(a)
                 bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+                
+                #armadura minima
+                if bn ==1:
+                    bn = bn+1
+                    saida['Discretizacao']['Arredondamento de Bn'] = 'Sim'
+                else:
+                    saida['Discretizacao']['Arredondamento de Bn'] = 'Não'
+                
                 saida['Discretizacao']['Barras por camada'].append(nc)
                 saida['Discretizacao']['Barras totais'].append(bn)
                 Asef = area_efeitiva(bn,bitolaL)
                 saida['Area']['Area Efetiva'].append(a)
-                    
-                    
                     
                 
 
