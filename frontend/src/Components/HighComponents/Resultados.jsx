@@ -160,19 +160,24 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 const Resultados = (props)=>{
 
 
-
+    let escala = 1
     let acoordeao = {}
     try {
         acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
+        if (props.metrigidez['Maximo'][1]===0){
+            escala = 1
+        }
+        else{
+
+        escala = (props.metrigidez['Maximo'][1]<0) ? 1.98-(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
+        }
         
     } catch (error) {
         console.log(error)
     }
     
     // 147.4 = altura da viga| 15 = altura padrao do texto | 15 = altura das letras
-    const escala = (props.metrigidez['Maximo'][1]<0) ? 1.98-(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
 
-    console.log(escala)
 
 
 

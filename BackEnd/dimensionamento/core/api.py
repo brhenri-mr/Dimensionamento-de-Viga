@@ -274,7 +274,6 @@ def MetRigidez(request, data:MetRigidez):
                 [momento_temp.remove('discartar') for _ in range(momento_temp.count('discartar'))]
                 #Compondo o elemento final
                 for m in momento_temp:
-                    print(m,j)
                     j = m + j
                 momento_el.append(j)
                 #Somando os efeitos dos diversos cortantes
@@ -319,7 +318,6 @@ def MetRigidez(request, data:MetRigidez):
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
 
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
-            print(s_global)
             comb_atual = 1+ comb_atual
             
         generico[chave] = copy.deepcopy(s_global)

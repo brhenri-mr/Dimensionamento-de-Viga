@@ -115,9 +115,9 @@ class Combine():
                 desfav, fav = CV[el['describe']][modo]
                 so_carga_CP = False
                 #Valores de fi
-                if el['describe'] == 'Ação do vento':
+                if el['describe'] == 'Ação do vento' or self.caracteristicas[contador]['informacao'] =='Vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
-                elif el['describe'] == 'Temperatura':
+                elif el['describe'] == 'Temperatura' or self.caracteristicas[contador]['informacao'] =='Temperatura':
                     coef_auxi = FATORES_DE_REDUCAO['Temperatura'][0]
                 elif self.caracteristicas[contador]['informacao'] in FATORES_DE_REDUCAO[self.caracteristicas[contador]['Local']].keys():
                     coef_auxi = FATORES_DE_REDUCAO[self.caracteristicas[contador]['Local']][self.caracteristicas[contador]['informacao']][0]
