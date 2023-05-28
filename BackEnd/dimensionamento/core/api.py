@@ -229,10 +229,9 @@ def MetRigidez(request, data:MetRigidez):
         
         for chave in el['Esforcos Internos'].keys():
             for elemento,posicao in zip(el['Esforcos Internos'][chave]['Momento'],el['Esforcos Internos'][chave]['Trecho']):
-                if abs(elemento*100)>maximo[1]:
+                if abs(elemento*100)>abs(maximo[1]):
                     maximo[1] = elemento*100
                     maximo[0] = posicao
-                
         return maximo
     
     s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
@@ -454,7 +453,6 @@ def dimensionamento(request,data:Caracteristicas):
                 a = area_aco(momento,bz,d,bs,fyd)
                 a_min, verificacao, criterio = verificacao_area(a,Ac)
                 saida['Area']['Area Necessaria'].append(a)
-                print(verificacao)
                 #verificacao das areas
                 if verificacao:
                     saida['Area']['Aviso'].append(criterio)
@@ -462,6 +460,7 @@ def dimensionamento(request,data:Caracteristicas):
                 else:
                     saida['Area']['Aviso'].append(criterio)
                     a = a_min
+                    
                 saida['Area']['Area Adotada'].append(a)
                 bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
                 

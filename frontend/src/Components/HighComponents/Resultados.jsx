@@ -55,7 +55,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         },
         DiscretizacaoInicial:{
             titulo: `ys = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} cm`,
-            texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso-1]} barras. Substitua os valores na equação para barras de mesmo diâmetro`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
+            texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
             label:['']
 
         },
@@ -98,7 +98,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         },
         AreaAcoCalculada:(ignorar)?ignorarFrame:{
             titulo: `Ascalc = ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm²` ,
-            texto:['Substitua os valores na equação:',`\\(A_s = \\dfrac{M_{rdw}}{\\beta_{z}d} \\dfrac{1}{\\beta_s f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso]}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} \\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} \\ ${caracteristicas['fyk']/10}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
+            texto:['Substitua os valores na equação:',`\\(A_s = \\dfrac{M_{rdw}}{\\beta_{z}d} \\dfrac{1}{\\beta_s f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).replace('.',',')}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} \\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} \\ ${caracteristicas['fyk']/10}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
             label:['']
 
         },
@@ -164,12 +164,11 @@ const Resultados = (props)=>{
     let acoordeao = {}
     try {
         acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
-        if (props.metrigidez['Maximo'][1]===0){
-            escala = 1
-        }
-        else{
 
-        escala = (props.metrigidez['Maximo'][1]<0) ? 1.98-(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
+        escala = (props.metrigidez['Maximo'][1]<0) ? -(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
+
+        if(escala>1){
+            escala = escala/2
         }
         
     } catch (error) {
@@ -177,9 +176,6 @@ const Resultados = (props)=>{
     }
     
     // 147.4 = altura da viga| 15 = altura padrao do texto | 15 = altura das letras
-
-
-
 
     return(
         <div >
