@@ -185,7 +185,7 @@ def MetRigidez(request, data:MetRigidez):
         constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
         return (temp + constante)
     
-    def maxmomento(cortante,momento,el,padrao=8):
+    def maxmomento(cortante,momento,el,padrao=15):
         '''
         Funcao que retorna o momento maximo qque uma funcao tem para um intervalo
         cortante: funcao de cortanto do sympy
@@ -315,6 +315,7 @@ def MetRigidez(request, data:MetRigidez):
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
+            print(s)
 
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
             comb_atual = 1+ comb_atual
@@ -348,6 +349,9 @@ def MetRigidez(request, data:MetRigidez):
 
     
     saida['Maximo'] = maximo_momentona_secao(saida)
+    
+    print(saida)
+    
     return saida
 
 @api.post("/Dimensionamento")

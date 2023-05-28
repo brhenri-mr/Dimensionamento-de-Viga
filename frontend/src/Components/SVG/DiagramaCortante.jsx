@@ -81,7 +81,6 @@ const DiagramaCortante = (props) =>{
 
     }
 
-
     return(
         <>
             <svg style={{ width:"40rem",height:(props.metrigidez['Maximo'][1]<0)? "24rem":"12rem"}}>
@@ -90,7 +89,7 @@ const DiagramaCortante = (props) =>{
                         return 1
                     }
                     else{
-                        return (valor[0]<0) ?<text x={valor[1]+50} y={147.5+20-valor[0]*props.escala}>{`${valor[0]} kN.m`}</text>:<text x={valor[1]+50} y={147.5-valor[0]*props.escala-15}>{`${valor[0]} kN.m`}</text>
+                        return (valor[0]<0) ?<text x={valor[1]+25} y={147.5+20  -valor[0]*props.escala}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>:<text x={valor[1]+25} y={147.5-valor[0]*props.escala-15}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>
                     }
                     })}
                 {points.map((item,indice)=>{  
