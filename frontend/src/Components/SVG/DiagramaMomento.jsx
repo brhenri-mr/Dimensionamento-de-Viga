@@ -22,7 +22,8 @@ const DiagramaMomento= (props) =>{
     let temp = ''
     let maximo = [0,0] //maximo[0] = valor de momento , maximo[1] = posicao
     let texto = []
-    const escalajanela = -props.escala
+    const escalajanela = props.escala
+
 
     try{
         //rodando cada elemento
@@ -95,7 +96,7 @@ const DiagramaMomento= (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:(escalajanela<0)? "24rem":"15rem"}}>
+            <svg style={{ width:"40rem",height:(escalajanela<0)? "24rem":"14rem"}}>
                 {texto.map((valor,key)=>{
                     if(valor[0]==0){
                         return 1

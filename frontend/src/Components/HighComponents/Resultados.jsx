@@ -77,7 +77,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         Momento:(ignorar)?{
             titulo:'Necessidade de Armadura negativa',
             texto:[
-                `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo`,
+                `Compare o momento solicitante de devido as cargas de  \\(${db['Verificacao Momento']['Momento Carregamento'][0].toFixed(2).toString().replace('.',',')}\\ kN.cm\\) com o momento máximo`,
                 eqmomentomax,
                 'Como o valor do Momento Solicitante é maior que o Momento Máximo da seção, então deve-se utilizar Armadura Negativa'
             ],
@@ -171,7 +171,7 @@ const Resultados = (props)=>{
     
 
     const dispach = useDispatch()
-    const [combinacao,setCombinacao] = useState('Combinação 1')
+    const [combinacao,setCombinacao] = useState('Envoltória')
 
     const handlechange = (event) =>{
         event.preventDefault()
@@ -194,8 +194,9 @@ const Resultados = (props)=>{
     catch (error){
     }
 
-
     listacombinacoes.push('Envoltória')
+
+
 
     let escala = 1
     let acoordeao = {}
@@ -254,7 +255,7 @@ const Resultados = (props)=>{
                                         {listacombinacoes.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                         </Select>
                                     </FormControl>
-                                    {CARREGAMENTOS.map((item,chave)=>{
+                                    {(combinacao=="Envoltória")?'':CARREGAMENTOS.map((item,chave)=>{
                                         console.log(parseInt(combinacao[combinacao.length-1]))
                                         return <p>{`${item['name']}:${item['comb'][parseInt(combinacao[combinacao.length-1])-1]}`}</p>
                                     })}

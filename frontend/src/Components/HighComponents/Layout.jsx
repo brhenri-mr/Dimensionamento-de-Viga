@@ -102,18 +102,22 @@ const Layout = () => {
     const handleChange = (event, newValue) => {
         if (newValue===3 && cadastrocompleto){
             Combinacoes(CARREGAMENTOS,ED)
-            MetRigidez(CARREGAMENTOS,APOIOS)
-            //Dimensionamento(CARACTERISTICAS)
+            MetRigidez(CARREGAMENTOS,APOIOS,true)
+            if (Object.keys(dimensionamento).length===0){
+                Dimensionamento(CARACTERISTICAS)
+            }
+            else{
+                //Dimensionamento(CARACTERISTICAS)
+            }
         }
         setValue(newValue);
       };
     
     //seleção da combinação
-    if(COMBINACOES[0] !=="-" && COMBINACOES[1]){
+    if(COMBINACOES[1]){
         //Significa que mudou a combinação 
-        MetRigidez(CARREGAMENTOS,APOIOS)
+        MetRigidez(CARREGAMENTOS,APOIOS,false)
         dispatch(ACTIONScomb.atualizar(false))
-        //Dimensionamento(CARACTERISTICAS)
 
     }
 
@@ -142,7 +146,7 @@ const Layout = () => {
     }
 
     //API metodo da rigidez direta
-    async function MetRigidez(data,apoios){
+    async function MetRigidez(data,apoios,logico){
 
         const enviar = {
             carregamento:data, 
@@ -151,7 +155,7 @@ const Layout = () => {
             fck:CARACTERISTICAS['fck'],
             agregado:CARACTERISTICAS['agregado'],
             MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12,
-            combinacao: (COMBINACOES[0] ==='Envoltória'|| COMBINACOES[0]==='-')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
+            combinacao: (COMBINACOES[0] ==='Envoltória'|| logico)? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
         }
 
 

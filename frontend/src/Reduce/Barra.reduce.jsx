@@ -2,7 +2,7 @@ import actionType from "../Constants";
 
 const INITIAL_STATE = {
     BARRA: 0,
-    COMB:['-',false]
+    COMB:['Envoltória',false]
 
 }
 

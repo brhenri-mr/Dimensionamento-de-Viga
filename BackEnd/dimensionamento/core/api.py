@@ -208,6 +208,7 @@ def MetRigidez(request, data:MetRigidez):
         xs = sym.solve(cortante,x)
         momento_pronto = sym.lambdify(x,momento)
         cortante_pronto = sym.lambdify(x,cortante)
+        controlador = False
         
         #Iterador
         incrimento = (el['Trecho'][1]-el['Trecho'][0])/(padrao)
@@ -220,8 +221,10 @@ def MetRigidez(request, data:MetRigidez):
                 saida['Momento'].append(-1*round(float(momento_pronto(coordenada)),2))
                 saida['Trecho'].append(round(float(coordenada*100),2))
                 saida['Cortante'].append(round(float(cortante_pronto(coordenada)),2))
+                controlador =True
             else:
-                pass
+                controlador =False
+            
         if momento =='discartar':
             pass
         else:
@@ -231,11 +234,12 @@ def MetRigidez(request, data:MetRigidez):
                     saida['Cortante'].append(round(float(cortante_pronto(el['Trecho'][0]/100+incrimento*i/100)),2))
         
         #Tirando os valores minimos 
-        if saida['Momento'][0] != max(saida['Momento']):
-            saida['Momento'].pop(0)
-            saida['Trecho'].pop(0)
-            saida['Cortante'].pop(0)
-        
+        if controlador:
+            if saida['Momento'][0] != max(saida['Momento']):
+                saida['Momento'].pop(0)
+                saida['Trecho'].pop(0)
+                saida['Cortante'].pop(0)
+            
         return saida
     
     def maximo_momentona_secao(el):
@@ -342,7 +346,6 @@ def MetRigidez(request, data:MetRigidez):
 
             #previnindo equacoes inexistentes
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
-            
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
             print(saida['Esforcos Internos'][comb_atual][chave])
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
@@ -411,6 +414,7 @@ def dimensionamento(request,data:Caracteristicas):
              'Momento Minimo':[],
              'Momento Maximo':[],
              'Momento de Calculo':[],
+             'Momento Carregamento':[momento],
              'Aviso':[]
             },
         'Area':{
@@ -510,7 +514,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Discretizacao']['Barras por camada'].append(nc)
                 saida['Discretizacao']['Barras totais'].append(bn)
                 Asef = area_efeitiva(bn,bitolaL)
-                saida['Area']['Area Efetiva'].append(a)
+                saida['Area']['Area Efetiva'].append(Asef)
                     
                 
 
