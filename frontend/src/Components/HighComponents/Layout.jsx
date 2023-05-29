@@ -19,6 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 //redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
+import { actions as actionbarra} from "../../Actions/Momentomax";
 import {actions as ACTIONScomb} from "../../Actions/Combinacoes";
 import { useSelector } from "react-redux";
 
@@ -79,9 +80,9 @@ const Layout = () => {
     const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
     const ED = useSelector(state => state.botoesReducers.ED)
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
-
-    console.log(COMBINACOES)
-
+    const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
+    console.log('sou eu')
+    console.log(MOMENTOMAX)
 
     //useState
     const [value, setValue] = useState(0)
@@ -90,7 +91,7 @@ const Layout = () => {
     const [metRigidez, setMetrigidez] = useState({})
     const [dimensionamento, setDimensionamento] = useState({})
     const estabilidade = estabilidaded(APOIOS)
-
+    const[momentoatual, setMomentoatual] = useState(0)
 
     //validarores
     const cadastrocompleto = (APOIOS.length!==0 && CARREGAMENTOS.length!==0 && BARRA!==0 && CARACTERISTICAS['fck'] !==0)
@@ -104,10 +105,10 @@ const Layout = () => {
             Combinacoes(CARREGAMENTOS,ED)
             MetRigidez(CARREGAMENTOS,APOIOS,true)
             if (Object.keys(dimensionamento).length===0){
-                Dimensionamento(CARACTERISTICAS)
+                Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
             }
             else{
-                //Dimensionamento(CARACTERISTICAS)
+                Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
             }
         }
         setValue(newValue);
@@ -124,8 +125,6 @@ const Layout = () => {
 
     //Combinacoes
     async function Combinacoes (data,ed) {
-        console.log(...data)
-        console.log(ed)
         await fetch('http://127.0.0.1:8000/api/Combinacoes', {
                 method: 'POST', // or 'PUT'
                 headers: {
@@ -147,7 +146,7 @@ const Layout = () => {
 
     //API metodo da rigidez direta
     async function MetRigidez(data,apoios,logico){
-
+        console.log((logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1]))
         const enviar = {
             carregamento:data, 
             apoios:apoios, 
@@ -155,7 +154,7 @@ const Layout = () => {
             fck:CARACTERISTICAS['fck'],
             agregado:CARACTERISTICAS['agregado'],
             MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12,
-            combinacao: (COMBINACOES[0] ==='Envoltória'|| logico)? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
+            combinacao: (logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
         }
 
 
@@ -172,6 +171,8 @@ const Layout = () => {
                 .then((data) => {
                     console.log('Success:', data);
                     setMetrigidez(data)
+                    setMomentoatual(metRigidez['Maximo'][0])
+                    dispatch(actionbarra.salvar(metRigidez['Maximo']))
 
                 })
                 .catch((error) => {
@@ -180,17 +181,16 @@ const Layout = () => {
     }
 
      //API Dimensionamento
-     async function Dimensionamento(data) {
+     async function Dimensionamento(data,momentomax) {
 
-
+        console.log()
         await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
-        
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data,momento:metRigidez['Maximo']}),
+                body: JSON.stringify({...data,momento:momentomax}),
                 })
                 .then((response) => response.json())
                 .then((data) => {

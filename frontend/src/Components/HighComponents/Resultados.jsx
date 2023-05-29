@@ -226,8 +226,6 @@ const Resultados = (props)=>{
     // 147.4 = altura da viga| 15 = altura padrao do texto | 15 = altura das letras
 
 
-    console.log(escala)
-
     return(
         <div >
         <Grid container spacing={0} alignContent="center">
@@ -256,7 +254,6 @@ const Resultados = (props)=>{
                                         </Select>
                                     </FormControl>
                                     {(combinacao=="Envoltória")?'':CARREGAMENTOS.map((item,chave)=>{
-                                        console.log(parseInt(combinacao[combinacao.length-1]))
                                         return <p>{`${item['name']}:${item['comb'][parseInt(combinacao[combinacao.length-1])-1]}`}</p>
                                     })}
                                 
