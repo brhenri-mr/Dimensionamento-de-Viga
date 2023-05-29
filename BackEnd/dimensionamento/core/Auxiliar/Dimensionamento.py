@@ -196,6 +196,7 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
                 #é menor que a quantidade minima de barras na secao
                 if Sobra_para_proxima_camada+barras_por_camada+1 >barras_por_camada:
                     #acho que é um cenário impossivel, se é negativo é no minimo -1
+                    print('cai aqui')
                     pass
                 else:
                     barra.append(Sobra_para_proxima_camada+barras_por_camada+1)
@@ -207,7 +208,6 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
     for i in range(len(barra)):
         j = i*barra[i]*(av+bitolaL) +j
     
-    print(numero_de_barras)
     
     return j/numero_de_barras, numero_de_barras, barra
     

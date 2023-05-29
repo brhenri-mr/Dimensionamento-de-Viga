@@ -16,10 +16,10 @@ import Resultados from "./Resultados";
 import Geometria from "./Geometria";
 import LayoutCadastro from "./LayoutCadastro";
 import CircularProgress from '@mui/material/CircularProgress';
-import LinearProgress from '@mui/material/LinearProgress';
 //redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
+import {actions as ACTIONScomb} from "../../Actions/Combinacoes";
 import { useSelector } from "react-redux";
 
 
@@ -78,6 +78,9 @@ const Layout = () => {
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
     const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
     const ED = useSelector(state => state.botoesReducers.ED)
+    const COMBINACOES = useSelector(state => state.barraReducers.COMB)
+
+    console.log(COMBINACOES)
 
 
     //useState
@@ -92,11 +95,10 @@ const Layout = () => {
     //validarores
     const cadastrocompleto = (APOIOS.length!==0 && CARREGAMENTOS.length!==0 && BARRA!==0 && CARACTERISTICAS['fck'] !==0)
 
-    console.log(cadastrocompleto)
-
     //dispatch
     const dispatch = useDispatch()
 
+    //Chamar as APIs
     const handleChange = (event, newValue) => {
         if (newValue===3 && cadastrocompleto){
             Combinacoes(CARREGAMENTOS,ED)
@@ -105,7 +107,15 @@ const Layout = () => {
         }
         setValue(newValue);
       };
+    
+    //seleção da combinação
+    if(COMBINACOES[0] !=="-" && COMBINACOES[1]){
+        //Significa que mudou a combinação 
+        MetRigidez(CARREGAMENTOS,APOIOS)
+        dispatch(ACTIONScomb.atualizar(false))
+        Dimensionamento(CARACTERISTICAS)
 
+    }
 
 
     //Combinacoes
@@ -141,7 +151,7 @@ const Layout = () => {
             fck:CARACTERISTICAS['fck'],
             agregado:CARACTERISTICAS['agregado'],
             MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12,
-            combinacao: 1
+            combinacao: (COMBINACOES[0] ==='Envoltória'|| COMBINACOES[0]==='-')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
         }
 
 

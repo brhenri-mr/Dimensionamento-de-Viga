@@ -13,7 +13,8 @@ import DiagramaMomento from "../SVG/DiagramaMomento";
 import { useState } from "react";
 //reduz
 import { useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
+import { actions } from "../../Actions/Combinacoes";
 
 function textotentativa(db,caso,caracteristicas,momentomaximo){
 
@@ -167,34 +168,64 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 
 
 const Resultados = (props)=>{
+    
 
-    const [combinacao,setCombinacao] = useState('')
+    const dispach = useDispatch()
+    const [combinacao,setCombinacao] = useState('Combinação 1')
+
+    const handlechange = (event) =>{
+        event.preventDefault()
+        dispach(actions.adicionar(event.target.value))
+        setCombinacao(event.target.value)
+        return setCombinacao(event.target.value)
+        
+    }
+
     
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
 
     const listacombinacoes = []
-    for(let i=1;i<=CARREGAMENTOS[0].comb.length;i++){
-        listacombinacoes.push(`Combinação ${i}`)
+   
+    try{
+        for(let i=1;i<=CARREGAMENTOS[0].comb.length;i++){
+            listacombinacoes.push(`Combinação ${i}`)
+        }
     }
+    catch (error){
+    }
+
 
     listacombinacoes.push('Envoltória')
 
     let escala = 1
     let acoordeao = {}
-    try {
-        acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
 
+    try{
         escala = (props.metrigidez['Maximo'][1]<0) ? -(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
 
         if(escala>1){
             escala = escala/2
         }
-        
+    }
+    catch(error){
+        console.log('erro na escala')
+        console.log(error)
+    }
+
+    try {
+        acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
+
+    
+    
     } catch (error) {
+        console.log('erro no acordeao')
         console.log(error)
     }
     
     // 147.4 = altura da viga| 15 = altura padrao do texto | 15 = altura das letras
+
+
+    console.log(escala)
 
     return(
         <div >
@@ -218,7 +249,7 @@ const Resultados = (props)=>{
                                         value={combinacao}
                                         label='Classe Ambiental'
                                         sx={{backgroundColor:'white'}}
-                                        onChange={event =>{event.preventDefault();return setCombinacao(event.target.value)}}
+                                        onChange={handlechange}
                                             >
                                         {listacombinacoes.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                         </Select>

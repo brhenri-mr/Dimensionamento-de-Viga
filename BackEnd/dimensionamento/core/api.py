@@ -107,20 +107,26 @@ def MetRigidez(request, data:MetRigidez):
         else:
             quantidade_comb = [combinacao-1]
         
+    
+        
         for i in quantidade_comb:
+            if len(quantidade_comb) ==1:
+                i = quantidade_comb[0]
         #vetor de forças
-
+        
             elementos = copy.deepcopy(test)
             
             vetor_de_forcas = []
             for chave in test.keys():
+                '''
+                chave = el
+                '''
                 comprimento = test[chave]["Comprimento"]/100
                 temp = np.array([0,0,0,0])
                 for carregamento in test[chave]["Carregamento"].values():
                     incremento,elementos = vetor_local_forcas(carregamento["mag"]*carregamento["comb"][i],comprimento,carregamento["tipo"], trecho=test[chave]["Trecho"] , pos=carregamento["pos"], bd = elementos, chave=chave)
                     temp = temp + np.array(incremento)
                 vetor_de_forcas.append(temp.copy())
-            
             
             vetor_glob = vetor_global_forcas(*vetor_de_forcas)
             
@@ -143,17 +149,12 @@ def MetRigidez(request, data:MetRigidez):
             saida = {}
         
             for indice,chave in enumerate(elementos.keys()):
-            
                 saida.update({chave:{
                     "Trecho":parcial_posicoes[indice],
                     "Cortante":[parcial_esforcos[indice][0],parcial_esforcos[indice][2]],
                     "Momento":[parcial_esforcos[indice][1],parcial_esforcos[indice][3]]}})
             final.append(copy.deepcopy(saida))
-            
-        
-                    
-        
-        
+
         return {"Esforcos Internos":final, "Reacoes externas":reacoes_externas},test,quantidade_comb
 
     def cortante(tipo:str,mag: float, el:dict):
@@ -260,7 +261,6 @@ def MetRigidez(request, data:MetRigidez):
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
     
-    
     #Obtendo a funcao de momento para cada tramo
     #Rodando cada combinacao
     for i in range(len(quantidade_comb)):
@@ -318,12 +318,21 @@ def MetRigidez(request, data:MetRigidez):
         cortante_el.clear()
         momento_el.clear()
     generico = {}
+    
+    
     #acessar uma elemento, indice corresponde a combinacao
+    if len(quantidade_comb)==1:
+        quantidade_comb = quantidade_comb*len(entrada.keys())
+    
+    
+    
+    
     for indice,chave in zip(range(len(quantidade_comb)),entrada.keys()):
         '''
         chave: elemnto a ser pesquisado
         indice: combinacao a ser pesquisada
         '''
+
         
         for comb_momento, comb_cortante in zip(momento_eq,cortante_eq):
             '''
@@ -335,7 +344,6 @@ def MetRigidez(request, data:MetRigidez):
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
-
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
             comb_atual = 1+ comb_atual
             
@@ -383,6 +391,8 @@ def dimensionamento(request,data:Caracteristicas):
         bn = 2
         numero_barras = 0
         sair = False
+        
+        contador_qualquer = 0
         
         
         saida = {'Admensionais':[],
@@ -440,11 +450,15 @@ def dimensionamento(request,data:Caracteristicas):
     
     
         
-        while True:
+        while True or not contador_qualquer==100:
             while bn!=numero_barras:
                 
                 #Cg das armaduras
-                
+                contador_qualquer = contador_qualquer + 1
+                if contador_qualquer>=100:
+                    sair = True
+                    break
+                print('to aqui')
                 
                 ys, numero_barras, barra = incremento_cg_armaduras(bitolaL,parametros.av,h,numero_de_barras=bn,barras_por_camada=nc)
                 saida['Altura Util']['ys'].append(ys)
@@ -506,6 +520,8 @@ def dimensionamento(request,data:Caracteristicas):
                     print('Armadura efetiva insuficiente')
                     sair =True
                     break
+                
+                
                     
                     
                     
