@@ -344,7 +344,9 @@ def MetRigidez(request, data:MetRigidez):
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
+            print(saida['Esforcos Internos'][comb_atual][chave])
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
+            
             comb_atual = 1+ comb_atual
             
         generico[chave] = copy.deepcopy(s_global)

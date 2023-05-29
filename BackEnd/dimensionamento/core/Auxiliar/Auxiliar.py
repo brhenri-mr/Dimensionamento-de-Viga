@@ -22,10 +22,10 @@ def compatibilizacao(s_atual:dict,el_individual:dict,s_global:dict,sinal:str):
     #Conferindo pontos ja existentes entre s_global e el_individual
     for esforco_considerado in ['Momento','Cortante']:
         for i in [0,-1]:    
-            if sinal =="Positivo":
-                if esforco_considerado =="Momentos":
+            if sinal =='Positivo':
+                if esforco_considerado =="Momento":
                     #Pegando so valor De momento fletor positivo (comprime em cima ), que sao negativos para analise de integral
-                    if abs(el_individual[esforco_considerado][i])< abs(s_global[esforco_considerado][i]):
+                    if abs(el_individual[esforco_considerado][i])> abs(s_global[esforco_considerado][i]):
                         s_global[esforco_considerado][i] = el_individual[esforco_considerado][i]
                 else:
                     #Sempre pegar os valores mais extremos de cortante, indepetende de ser positivo ou negativo
@@ -33,7 +33,7 @@ def compatibilizacao(s_atual:dict,el_individual:dict,s_global:dict,sinal:str):
                         s_global[esforco_considerado][i] = el_individual[esforco_considerado][i]
     
             else:
-                if esforco_considerado =="Momentos":
+                if esforco_considerado =="Momento":
                     #Pegando so valor De momento fletor negativos (comprime em cima ), que sao positivos para analise de integral
                     if abs(el_individual[esforco_considerado][i])> abs(s_global[esforco_considerado][i]):
                         s_global[esforco_considerado][i] = el_individual[esforco_considerado][i]

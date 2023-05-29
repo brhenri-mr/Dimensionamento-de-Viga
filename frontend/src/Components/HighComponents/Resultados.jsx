@@ -254,6 +254,11 @@ const Resultados = (props)=>{
                                         {listacombinacoes.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                         </Select>
                                     </FormControl>
+                                    {CARREGAMENTOS.map((item,chave)=>{
+                                        console.log(parseInt(combinacao[combinacao.length-1]))
+                                        return <p>{`${item['name']}:${item['comb'][parseInt(combinacao[combinacao.length-1])-1]}`}</p>
+                                    })}
+                                
                     </Box>
             </Grid>
         </Grid>

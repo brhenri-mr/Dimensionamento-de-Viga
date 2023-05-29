@@ -103,7 +103,7 @@ const Layout = () => {
         if (newValue===3 && cadastrocompleto){
             Combinacoes(CARREGAMENTOS,ED)
             MetRigidez(CARREGAMENTOS,APOIOS)
-            Dimensionamento(CARACTERISTICAS)
+            //Dimensionamento(CARACTERISTICAS)
         }
         setValue(newValue);
       };
@@ -113,7 +113,7 @@ const Layout = () => {
         //Significa que mudou a combinação 
         MetRigidez(CARREGAMENTOS,APOIOS)
         dispatch(ACTIONScomb.atualizar(false))
-        Dimensionamento(CARACTERISTICAS)
+        //Dimensionamento(CARACTERISTICAS)
 
     }
 
