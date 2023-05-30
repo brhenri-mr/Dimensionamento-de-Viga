@@ -7,6 +7,7 @@ const CarregamentoDist = (props)=>{
     let espacos = 0
     let quantidade_arrow = []
     let temp = props.start
+    const posicao = (props.mag<0)?1.40:1.15
 
 
     const cotainicial = (props.mag>0)?147:147
@@ -24,10 +25,10 @@ const CarregamentoDist = (props)=>{
     }
 
     return (<>
-        <text x={props.start+(props.comprimento-3*12)/2} y={147.5-props.mag-5} fontSize={12}>{`${props.mag} kN/m`}</text>
-        <rect x={props.start} y={cotainicial-props.mag} width={props.comprimento} height={props.mag} className="cargaDistribuidaFundo"></rect>
-        <line x1={props.start} y1={cotainicial-props.mag} x2={comprimentoreal} y2={cotainicial-props.mag} className="cargaDistribuida"></line>
-        {quantidade_arrow.map((item,index)=>{return <Arrow key ={index} x1={item} y1={147} x2={item} y2={147-props.mag} mag={props.mag}></Arrow> })}
+        <text x={props.start+(props.comprimento-3*12)/2} y={147.5-props.mag*posicao*props.escala} fontSize={12}>{`${props.mag} kN/m`}</text>
+        <rect x={props.start} y={cotainicial-props.mag*props.escala} width={props.comprimento} height={props.mag*props.escala} className="cargaDistribuidaFundo"></rect>
+        <line x1={props.start} y1={cotainicial-props.mag*props.escala} x2={comprimentoreal} y2={cotainicial-props.mag*props.escala} className="cargaDistribuida"></line>
+        {quantidade_arrow.map((item,index)=>{return <Arrow key ={index} x1={item} y1={147} x2={item} y2={147-props.mag*props.escala} mag={props.mag*props.escala}></Arrow> })}
         
     </>
     )

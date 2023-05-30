@@ -51,13 +51,18 @@ function carregamentodistribuidounico(carregamentos){
                 tempMag = tempMag + valores['mag']
             }
         }
-        saida.push({'tipo':'Distribuido','mag':tempMag,'pos':trecho})
-        tempMag = 0
+        if (tempMag!==0){
+            saida.push({'tipo':'Distribuido','mag':tempMag,'pos':trecho})
+            tempMag = 0
+        }
+        
     }
     console.log(saida)
 
 
-
+    for(let ponto of pontuais){
+        saida.push(ponto)
+    }
 
 
     return saida
@@ -74,10 +79,19 @@ const Figura = (props) =>{
 
 
     for(let item of props.carregamentos){
-        if (magmax>=item['mag']){
+        if (Math.abs(magmax)<=Math.abs(item['mag'])){
             magmax = item['mag']
         }
     }
+
+    let escala = (100/magmax>1)? 1:100/magmax
+    
+    if (Math.abs(magmax)<=20){
+        escala = 2.5
+    }
+
+
+
     return (
         <div>
             <svg {...PadraoParaDesenho}>
@@ -86,12 +100,15 @@ const Figura = (props) =>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
                 })}
                 {CarregamentoParaDesenho.map((item,index) =>{
-                    if(item['tipo'] ==='Pontual'){
-                        return <CarregamentoPontual key={index} mag={item['mag']} start={item['pos'][0]+50}></CarregamentoPontual>
-                    }
-                    else if(item['tipo']==='Distribuido'){
+        
+                    if(item['tipo']==='Distribuido'){
 
-                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={item['mag']} start={item['pos'][0]+50}></CarregamentoDist>
+                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoDist>
+                    }
+                })}
+                {CarregamentoParaDesenho.map((item,index) =>{
+                    if(item['tipo'] ==='Pontual'){
+                        return <CarregamentoPontual key={index} mag={item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoPontual>
                     }
                 })}
             </svg>
