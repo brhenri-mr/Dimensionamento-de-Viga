@@ -177,26 +177,54 @@ def MetRigidez(request, data:MetRigidez):
                 case "Distribuido":
                     eq_car = w
                     temp = sym.integrate(eq_car,x)
-                    constante = el["Cortante"][0] - temp.subs({x:el["Trecho"][0]/100, w:-mag})
-                    return (temp + constante).subs({w:-mag})
+                    return (temp).subs({w:-mag})
                 case 'Nada':
                     return el["Cortante"][0]
-
-    def momento(eq_cortante,mag,el):
+    
+    def momento(eq_cortante):
         """
         Retorna a equacao do Momento
         tipo: Natureza do carregamento (pontual, distruibuido)
         mag: Maginitude do carregamento
         el: elementos discretizados
         """
-        if mag==0:
-            return 0 
-        else:
-            w = sym.Symbol("w")
-            x = sym.Symbol("x")
-            temp = sym.integrate(eq_cortante,x)
-            constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
-            return (temp + constante)
+        x = sym.Symbol("x")
+        temp = sym.integrate(eq_cortante,x)
+        return temp 
+    
+    def constante(eq,el,tipo):
+        """
+        Função que retorna a constante de integracao das eq.
+        """
+        x = sym.Symbol("x")
+        constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0 
+        return (eq+constante) 
+    
+    def equacao_esforco(entrada,chave,saida,var_auxiliar,i,tipo):
+        '''
+        eq: equação que será utilizada
+        '''
+        temp = []
+        retornar= 0
+        incremento = -1
+        
+        if len(entrada[chave]['Carregamento'].keys())>0:
+            for chave_carregamento in entrada[chave]['Carregamento'].keys():
+                incremento +=1
+                if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual":
+                        # por cortamos a um infitessimo a regiao do ponto, o carregamento pontual nao pode existir, mas sua energia esta nas reacoes
+                    temp.append('discartar')
+                else:
+                    #Decisao da equacao 
+                    temp.append(cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
+                    
+            else:
+                    temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
+
+        for eq in temp:
+            retornar = retornar +eq
+        
+        return retornar
     
     def maxmomento(cortante,momento,el,padrao=15):
         '''
@@ -262,13 +290,9 @@ def MetRigidez(request, data:MetRigidez):
         return maximo
     
     s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
-    momento_temp = []
     momento_el = []
     cortante_el = []
-    cortante_temp = []
     cortante_eq = []
-    j = 0
-    incremento = 0
     comb_atual = 0
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
@@ -276,60 +300,36 @@ def MetRigidez(request, data:MetRigidez):
     #Obtendo a funcao de momento para cada tramo
     #Rodando cada combinacao
     for i in range(len(quantidade_comb)):
+        #combinacao a ser pesquisadda
         if len(quantidade_comb)==1:
             var_auxiliar = quantidade_comb[0]
         else:
             var_auxiliar = i
-        #rodando cada elemento
+        #rodando cada elemento para uma combinacao
         for chave in entrada.keys():
             #Obtendo informacoes sobre cada carregamento
-            if len(entrada[chave]['Carregamento'].keys())>0:
-                for chave_carregamento in entrada[chave]['Carregamento'].keys():
-                    if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual":
-                        # por cortamos a um infitessimo a regiao do ponto, o carregamento pontual nao pode existir, mas sua energia esta nas reacoes
-                        cortante_temp.append('discartar')
-                        momento_temp.append('discartar')
-                    else:
-                        print()
-                        temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave])
-                        momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
-                        cortante_temp.append(temp)
-            else:
-                temp = cortante('Nada',1,saida['Esforcos Internos'][i][chave])
-                momento_temp.append(momento(temp,1,saida['Esforcos Internos'][i][chave]))
-                cortante_temp.append(temp)
-            #definicao das eqs de momento para uma elemento e uma combinacao
-            if len(momento_temp) >1:
-                #Somando os efeitos dos diversos momentos
-                #Discartando as ocorrencias de Discarte
-                [momento_temp.remove('discartar') for _ in range(momento_temp.count('discartar'))]
-                #Compondo o elemento final
-                for m in momento_temp:
-                    j = m + j
-                momento_el.append(j)
-                #Somando os efeitos dos diversos cortantes
-                j = 0
-                #Discartando as ocorrencias de Discarte
-                [cortante_temp.remove('discartar') for _ in range(cortante_temp.count('discartar'))]
-                #Compondo o elemento final
-                for m in cortante_temp:
-                    incremento = m + incremento
-                cortante_el.append(incremento)
-                incremento = 0
-
-                    
-            elif len(momento_temp)==1:
-                momento_el.append(momento_temp[0])
-                cortante_el.append(cortante_temp[0])
-            momento_temp.clear()
-            cortante_temp.clear()
-            
-        #vetor global das eq de momento para cada elemento com todas as combinacoes
-        #momento_eq = [[elementos comb1],[elementos 2],....]
+            temp_eq = equacao_esforco(entrada,chave,saida,var_auxiliar,i,'Cortante')
+            temp_eq = constante(temp_eq,saida['Esforcos Internos'][i][chave],'Cortante')
+            cortante_el.append(temp_eq)
+            for cortante_item in cortante_el:
+                
+                temp_eq = momento(cortante_item)
+                momento_el.append(constante(temp_eq,saida['Esforcos Internos'][i][chave],'Momento'))
+                
         momento_eq.append(momento_el.copy())
         cortante_eq.append(cortante_el.copy())
-        cortante_el.clear()
         momento_el.clear()
+        cortante_el.clear()
+        
+    
+
+           
+        #vetor global das eq de momento para cada elemento com todas as combinacoes
+        #momento_eq = [[elementos comb1],[elementos 2],....]
+        #momento_eq.append(momento_el.copy())
+        #cortante_eq.append(cortante_el.copy())
+
+
     generico = {}
     
     
@@ -355,7 +355,6 @@ def MetRigidez(request, data:MetRigidez):
             #previnindo equacoes inexistentes
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
-            print(saida['Esforcos Internos'][comb_atual][chave])
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
             
             comb_atual = 1+ comb_atual
