@@ -168,17 +168,19 @@ def MetRigidez(request, data:MetRigidez):
         
         w = sym.Symbol("w")
         x = sym.Symbol("x")
-
-        match tipo:
-            case "Pontual":
-                return -mag
-            case "Distribuido":
-                eq_car = w
-                temp = sym.integrate(eq_car,x)
-                constante = el["Cortante"][0] - temp.subs({x:el["Trecho"][0]/100, w:-mag})
-                return (temp + constante).subs({w:-mag})
-            case 'Nada':
-                return el["Cortante"][0]
+        if mag==0:
+            return 0
+        else:
+            match tipo:
+                case "Pontual":
+                    return -mag
+                case "Distribuido":
+                    eq_car = w
+                    temp = sym.integrate(eq_car,x)
+                    constante = el["Cortante"][0] - temp.subs({x:el["Trecho"][0]/100, w:-mag})
+                    return (temp + constante).subs({w:-mag})
+                case 'Nada':
+                    return el["Cortante"][0]
 
     def momento(eq_cortante,mag,el):
         """
@@ -187,11 +189,14 @@ def MetRigidez(request, data:MetRigidez):
         mag: Maginitude do carregamento
         el: elementos discretizados
         """
-        w = sym.Symbol("w")
-        x = sym.Symbol("x")
-        temp = sym.integrate(eq_cortante,x)
-        constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
-        return (temp + constante)
+        if mag==0:
+            return 0 
+        else:
+            w = sym.Symbol("w")
+            x = sym.Symbol("x")
+            temp = sym.integrate(eq_cortante,x)
+            constante = -el["Momento"][0] - temp.subs({x:el["Trecho"][0]/100})
+            return (temp + constante)
     
     def maxmomento(cortante,momento,el,padrao=15):
         '''
@@ -214,6 +219,7 @@ def MetRigidez(request, data:MetRigidez):
         incrimento = (el['Trecho'][1]-el['Trecho'][0])/(padrao)
 
         
+                
         for coordenada in xs:
 
             #Vendo o esforco esta no intervalo da barra
@@ -239,6 +245,8 @@ def MetRigidez(request, data:MetRigidez):
                 saida['Momento'].pop(0)
                 saida['Trecho'].pop(0)
                 saida['Cortante'].pop(0)
+        
+        print(saida)
             
         return saida
     
@@ -282,6 +290,7 @@ def MetRigidez(request, data:MetRigidez):
                         cortante_temp.append('discartar')
                         momento_temp.append('discartar')
                     else:
+                        print()
                         temp = cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave])
                         momento_temp.append(momento(temp,entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
                         cortante_temp.append(temp)
@@ -327,7 +336,6 @@ def MetRigidez(request, data:MetRigidez):
     #acessar uma elemento, indice corresponde a combinacao
     if len(quantidade_comb)==1:
         quantidade_comb = quantidade_comb*len(entrada.keys())
-    
     
     
     
