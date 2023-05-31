@@ -200,7 +200,7 @@ def MetRigidez(request, data:MetRigidez):
         constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0 
         return (eq+constante) 
     
-    def equacao_esforco(entrada,chave,saida,var_auxiliar,i,tipo):
+    def equacao_esforco(entrada,chave,saida,var_auxiliar,i):
         '''
         eq: equação que será utilizada
         '''
@@ -274,8 +274,6 @@ def MetRigidez(request, data:MetRigidez):
                 saida['Trecho'].pop(0)
                 saida['Cortante'].pop(0)
         
-        print(saida)
-            
         return saida
     
     def maximo_momentona_secao(el):
@@ -308,7 +306,7 @@ def MetRigidez(request, data:MetRigidez):
         #rodando cada elemento para uma combinacao
         for chave in entrada.keys():
             #Obtendo informacoes sobre cada carregamento
-            temp_eq = equacao_esforco(entrada,chave,saida,var_auxiliar,i,'Cortante')
+            temp_eq = equacao_esforco(entrada,chave,saida,var_auxiliar,i)
             temp_eq = constante(temp_eq,saida['Esforcos Internos'][i][chave],'Cortante')
             cortante_el.append(temp_eq)
             for cortante_item in cortante_el:

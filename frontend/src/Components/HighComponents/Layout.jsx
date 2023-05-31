@@ -190,7 +190,7 @@ const Layout = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data,momento:momentomax}),
+                body: JSON.stringify({...data,momento:(momentomax===0)?metRigidez['Maximo'][0]:momentomax}),
                 })
                 .then((response) => response.json())
                 .then((data) => {
