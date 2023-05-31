@@ -35,7 +35,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 
     return  {
         ConstantesNBR6118:{
-            titulo: 'Parametros NBR6118:2014 ',
+            titulo: 'Parâmetros NBR6118:2014 ',
             texto:[
                 'Parametros estabelecidos pela NBR6118:',
                 (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta']}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
@@ -64,13 +64,13 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             label:['ignorar']
         },
         DiscretizacaoInicial:{
-            titulo: `ys = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} cm`,
+            titulo: `\\(y_s = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} \\ cm\\)`,
             texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
             label:['']
 
         },
         Altura_Util:{
-            titulo:`d = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm`,
+            titulo:`\\(d = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}\\ cm\\)`,
             texto:['Substitua os valores na equação',`\\(d = h-c_{nom}-\\phi_T-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
             label:['']
         },
@@ -85,7 +85,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             label:['ignorar']
             }:
         {
-            titulo: `Msd = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm`,
+            titulo: `\\(M_{sd} = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm\\)`,
             texto:[`Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento mínimo:`,
             `\\(M_{mín} = 0,8 W0 f_{ckt,sup} = 0,8\\ ${db['Parametros']['w0'].toFixed(2).replace('.',',')}\\ ${db['Parametros']['fcktsup'].toFixed(2).replace('.',',')} = ${db['Verificacao Momento']['Momento Minimo'][caso].toFixed(2).replace('.',',')}\\ kN.cm\\)`,
             `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo:`,
@@ -94,7 +94,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         label:['Mmín','Mmáx']
         },
         Admensionais:(ignorar)?ignorarFrame:{
-            titulo: `bx = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}, by = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}, bs = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}`,
+            titulo: `\\(\\beta_x = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ \\beta_y = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,
             texto:[
                 'Substitua os valores na equação',
                 `\\(\\beta_x= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 \\ ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} \\ ${caracteristicas['bw']} \\ ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
@@ -107,7 +107,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 
         },
         AreaAcoCalculada:(ignorar)?ignorarFrame:{
-            titulo: `Ascalc = ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm²` ,
+            titulo: `\\(A_{s,calc} = ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)` ,
             texto:['Substitua os valores na equação:',`\\(A_s = \\dfrac{M_{rdw}}{\\beta_{z}d} \\dfrac{1}{\\beta_s f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).replace('.',',')}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} \\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} \\ ${caracteristicas['fyk']/10}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
             label:['']
 
@@ -131,7 +131,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 
         },
         AreaAcoEfetiva:(ignorar)?ignorarFrame:{
-            titulo: `Asef = ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm²`,
+            titulo: `\\(A_{sef} = ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)`,
             texto:[
                 'Substitua os valores na equação:',
                 `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras totais'][caso]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,

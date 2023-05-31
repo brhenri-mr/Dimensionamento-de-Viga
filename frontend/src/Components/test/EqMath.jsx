@@ -22,7 +22,7 @@ const EqMath = (props) => {
       return (
         <MathJaxContext version={3} config={config}>
             <MathJax hideUntilTypeset={"first"}>{props.text}</MathJax>
-            <br></br>
+            {props.controle? <></>:<br></br>}
         </MathJaxContext>
       );
     }
