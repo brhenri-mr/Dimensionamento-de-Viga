@@ -103,12 +103,12 @@ const Figura = (props) =>{
         
                     if(item['tipo']==='Distribuido'){
 
-                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoDist>
+                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={-item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoDist>
                     }
                 })}
                 {CarregamentoParaDesenho.map((item,index) =>{
                     if(item['tipo'] ==='Pontual'){
-                        return <CarregamentoPontual key={index} mag={item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoPontual>
+                        return <CarregamentoPontual key={index} mag={-item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoPontual>
                     }
                 })}
             </svg>

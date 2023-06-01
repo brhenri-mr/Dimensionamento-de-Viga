@@ -96,13 +96,14 @@ const Layout = () => {
 
     //dispatch
     const dispatch = useDispatch()
+    
 
     //Chamar as APIs
     async function handleChange (event, newValue) {
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
-            Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+            await Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
             
         }
         setValue(newValue);
