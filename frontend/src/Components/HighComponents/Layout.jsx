@@ -100,16 +100,12 @@ const Layout = () => {
     const dispatch = useDispatch()
 
     //Chamar as APIs
-    const handleChange = (event, newValue) => {
+    async function handleChange (event, newValue) {
         if (newValue===3 && cadastrocompleto){
-            Combinacoes(CARREGAMENTOS,ED)
-            MetRigidez(CARREGAMENTOS,APOIOS,true)
-            if (Object.keys(dimensionamento).length===0){
-                Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
-            }
-            else{
-                Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
-            }
+            await Combinacoes(CARREGAMENTOS,ED)
+            await MetRigidez(CARREGAMENTOS,APOIOS,true)
+            await Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+            
         }
         setValue(newValue);
       };
@@ -178,6 +174,7 @@ const Layout = () => {
                 .catch((error) => {
                     console.error('Error:', error);
                 });
+
     }
 
      //API Dimensionamento

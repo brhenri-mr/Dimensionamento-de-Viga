@@ -205,7 +205,7 @@ const Resultados = (props)=>{
         escala = (props.metrigidez['Maximo'][1]<0) ? -(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
 
         if(escala>1){
-            escala = escala/2
+            escala = 10
         }
     }
     catch(error){
@@ -224,7 +224,6 @@ const Resultados = (props)=>{
     }
     
     // 147.4 = altura da viga| 15 = altura padrao do texto | 15 = altura das letras
-
 
     return(
         <div >

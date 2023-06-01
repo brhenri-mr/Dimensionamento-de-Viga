@@ -309,23 +309,18 @@ def MetRigidez(request, data:MetRigidez):
             temp_eq = equacao_esforco(entrada,chave,saida,var_auxiliar,i)
             temp_eq = constante(temp_eq,saida['Esforcos Internos'][i][chave],'Cortante')
             cortante_el.append(temp_eq)
-            for cortante_item in cortante_el:
+            
                 
-                temp_eq = momento(cortante_item)
-                momento_el.append(constante(temp_eq,saida['Esforcos Internos'][i][chave],'Momento'))
-                
+            temp_m = momento(temp_eq)
+            momento_el.append(constante(temp_m,saida['Esforcos Internos'][i][chave],'Momento'))
+          
         momento_eq.append(momento_el.copy())
         cortante_eq.append(cortante_el.copy())
         momento_el.clear()
         cortante_el.clear()
         
-    
-
-           
-        #vetor global das eq de momento para cada elemento com todas as combinacoes
-        #momento_eq = [[elementos comb1],[elementos 2],....]
-        #momento_eq.append(momento_el.copy())
-        #cortante_eq.append(cortante_el.copy())
+    #print(cortante_eq)
+    #print(momento_eq)
 
 
     generico = {}
@@ -386,6 +381,7 @@ def MetRigidez(request, data:MetRigidez):
 
     
     saida['Maximo'] = maximo_momentona_secao(saida)
+    print(saida)
     return saida
 
 @api.post("/Dimensionamento")
@@ -559,6 +555,7 @@ def dimensionamento(request,data:Caracteristicas):
     
     caracteristicas = data.dict()
     momento = caracteristicas['momento']
+    print(momento)
     print(momento)
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
