@@ -199,7 +199,7 @@ def MetRigidez(request, data:MetRigidez):
         x = sym.Symbol("x")
         constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0 
         return (eq+constante) 
-    
+
     def equacao_esforco(entrada,chave,saida,var_auxiliar,i):
         '''
         eq: equação que será utilizada
@@ -222,7 +222,12 @@ def MetRigidez(request, data:MetRigidez):
                     temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
 
         for eq in temp:
-            retornar = retornar +eq
+            if eq=='discartar':
+                pass
+            else:
+                retornar = retornar + eq
+    
+        
         
         return retornar
     
@@ -348,6 +353,7 @@ def MetRigidez(request, data:MetRigidez):
             #previnindo equacoes inexistentes
             #s = {'Momento':saida['Esforcos Internos'][comb_atual][chave]['Momento'],'Trecho':saida['Esforcos Internos'][comb_atual][chave]['Trecho'],'Cortante':saida['Esforcos Internos'][comb_atual][chave]['Cortante']}
             s = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
+            print(s)
             s_global = compatibilizacao(s,saida['Esforcos Internos'][comb_atual][chave],s_global,'Positivo')
             
             comb_atual = 1+ comb_atual
@@ -381,7 +387,6 @@ def MetRigidez(request, data:MetRigidez):
 
     
     saida['Maximo'] = maximo_momentona_secao(saida)
-    print(saida['Maximo'])
     return saida
 
 @api.post("/Dimensionamento")

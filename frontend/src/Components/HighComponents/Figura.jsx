@@ -83,12 +83,13 @@ const Figura = (props) =>{
         }
     }
 
-    let escala = (100/magmax>1)? 1:100/magmax
+    let escala = (Math.abs(100/magmax)>1)? 1:Math.abs(100/magmax)
+
+
     
     if (Math.abs(magmax)<=20){
         escala = 2.5
     }
-
 
 
     return (

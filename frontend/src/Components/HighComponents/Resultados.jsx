@@ -205,7 +205,7 @@ const Resultados = (props)=>{
         escala = (props.metrigidez['Maximo'][1]<0) ? -(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
 
         if(escala>1){
-            escala = 10
+            escala = 1
         }
     }
     catch(error){

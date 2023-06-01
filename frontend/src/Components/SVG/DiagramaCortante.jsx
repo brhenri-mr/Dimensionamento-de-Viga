@@ -64,9 +64,9 @@ const DiagramaCortante = (props) =>{
             }
 
             //verificando se o elemento é o ultimo e se nao é igual ao momento maximo na secao 
-            if (chave === Object.keys(props.metrigidez['Esforcos Internos'])[[Object.keys(props.metrigidez['Esforcos Internos']).length-1]] && maximo[1]!==props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1]){
+            if (chave === Object.keys(props.metrigidez['Esforcos Internos'])[[Object.keys(props.metrigidez['Esforcos Internos']).length-1]] && maximo[1]!==props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Cortante'].length-1]){
                 //Ultimo elemento
-                texto.push([props.metrigidez["Esforcos Internos"][chave]["Momento"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1],props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1]])
+                texto.push([props.metrigidez["Esforcos Internos"][chave]["Cortante"][props.metrigidez['Esforcos Internos'][chave]['Cortante'].length-1],props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Cortante'].length-1]])
             }
 
             //limpando os iteradores
@@ -81,6 +81,8 @@ const DiagramaCortante = (props) =>{
         console.log(erro)
 
     }
+
+
 
     return(
         <>
