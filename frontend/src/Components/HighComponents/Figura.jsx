@@ -57,7 +57,6 @@ function carregamentodistribuidounico(carregamentos){
         }
         
     }
-    console.log(saida)
 
 
     for(let ponto of pontuais){

@@ -381,7 +381,7 @@ def MetRigidez(request, data:MetRigidez):
 
     
     saida['Maximo'] = maximo_momentona_secao(saida)
-    print(saida)
+    print(saida['Maximo'])
     return saida
 
 @api.post("/Dimensionamento")

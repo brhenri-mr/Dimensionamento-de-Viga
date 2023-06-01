@@ -81,8 +81,6 @@ const Layout = () => {
     const ED = useSelector(state => state.botoesReducers.ED)
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
-    console.log('sou eu')
-    console.log(MOMENTOMAX)
 
     //useState
     const [value, setValue] = useState(0)
@@ -104,7 +102,7 @@ const Layout = () => {
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
-            await Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+            Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
             
         }
         setValue(newValue);
@@ -142,7 +140,6 @@ const Layout = () => {
 
     //API metodo da rigidez direta
     async function MetRigidez(data,apoios,logico){
-        console.log((logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1]))
         const enviar = {
             carregamento:data, 
             apoios:apoios, 
@@ -167,7 +164,8 @@ const Layout = () => {
                 .then((data) => {
                     console.log('Success:', data);
                     setMetrigidez(data)
-                    setMomentoatual(metRigidez['Maximo'][0])
+                    setMomentoatual(metRigidez['Maximo'][1])
+                    console.log(metRigidez['Maximo'][1])
                     dispatch(actionbarra.salvar(metRigidez['Maximo']))
 
                 })
