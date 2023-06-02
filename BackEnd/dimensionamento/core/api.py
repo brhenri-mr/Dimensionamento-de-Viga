@@ -462,7 +462,7 @@ def dimensionamento(request,data:Caracteristicas):
     
     
         
-        while True or not contador_qualquer==100:
+        while True  :
             while bn!=numero_barras:
                 
                 #Cg das armaduras
@@ -526,15 +526,13 @@ def dimensionamento(request,data:Caracteristicas):
                 if verificacao_area(Asef,Ac)[1]:
                     saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
                     Asef = Asef
+                    break
                 else:
                     saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
                     print('Armadura efetiva insuficiente')
                     sair =True
                     break
-                
-                
-                    
-                    
+            
                     
             if sair:
                 saida['Verificacao Linha Neutra']['Admensionais'].append(['ignorar','ignorar'])

@@ -103,7 +103,9 @@ const Layout = () => {
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
-            await Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+            await MOMENTOMAX
+            //metRigidez['Maximo'][1]
+            Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
             
         }
         setValue(newValue);
@@ -186,7 +188,7 @@ const Layout = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data,momento:(momentomax===0)?metRigidez['Maximo'][0]:momentomax}),
+                body: JSON.stringify({...data,momento:(momentomax===0)?metRigidez['Maximo'][1]:momentomax}),
                 })
                 .then((response) => response.json())
                 .then((data) => {

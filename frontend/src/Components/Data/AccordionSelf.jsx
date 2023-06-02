@@ -92,7 +92,7 @@ const AccordionSelf = (props)=>{
                     <Grid xs>
                         <Collapse in={props.label==='Discretização'}>
                             <svg>
-                                <Discretizacao h={CARACTERISTICAS['h']} bw={CARACTERISTICAS['bw']}  fi={CARACTERISTICAS['dL']}></Discretizacao>
+                                
                             </svg>
                         </Collapse>
                     </Grid>

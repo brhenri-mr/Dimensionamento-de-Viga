@@ -150,7 +150,7 @@ const Secao  = (props)=> {
         
             <Grid container spacing={4}>
                 <Grid item>
-                    <Box Class='Seção Transversal' >
+                    <Box className='Seção Transversal' >
                     <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
                         <p style={{fontSize:25,fontFamily:'Helvetica,Arial', border:1}}>Seção Transversal</p>
                         <Grid container spacing={2} alignItems="center" justifyContent="space-between">
@@ -230,7 +230,7 @@ const Secao  = (props)=> {
                     </Box>
                 </Grid>
                 <Grid item >
-                    <Box Class='Armadura Transversal' >
+                    <Box className='Armadura Transversal' >
                         <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
                         <p style={{fontSize:25}}>Armadura Transversal</p>
                         <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{marginLeft:0.25}}>
@@ -271,7 +271,7 @@ const Secao  = (props)=> {
                     </Box>
                 </Grid>
                 <Grid item>
-                    <Box Class='Agressividade Ambiental' >
+                    <Box className='Agressividade Ambiental' >
                         <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
                         <p style={{fontSize:25}}>Classe Ambiental</p>
                         <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{marginLeft:0.25}}>

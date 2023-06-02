@@ -96,13 +96,13 @@ const DiagramaMomento= (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:(escalajanela<0)? "24rem":"14rem"}}>
+            <svg style={{ width:"40rem",height:(escalajanela<0)? "24rem":"15rem"}}>
                 {texto.map((valor,key)=>{
                     if(valor[0]==0){
                         return 1
                     }
                     else{
-                        return (valor[0]<0) ?<text x={valor[1]+25} y={147.5+20-valor[0]*props.escala}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>:<text x={valor[1]+25} y={147.5-valor[0]*props.escala-15}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>
+                        return (valor[0]<0) ?<text key={key} x={valor[1]+25} y={147.5+20-valor[0]*props.escala}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>:<text key={key} x={valor[1]+25} y={147.5-valor[0]*props.escala-15}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>
                     }
                     })}
                 {points.map((item,indice)=>{  
@@ -112,7 +112,7 @@ const DiagramaMomento= (props) =>{
                 {props.apoios.map((item,index)=>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
                 })}
-                <circle cx={parseFloat(props.barra)+135} cy="147.5" r="20" stroke="black" stroke-width="3" className="graficomomento" />
+                <circle cx={parseFloat(props.barra)+135} cy="147.5" r="20" stroke="black" strokeWidth="3" className="graficomomento" />
                 <text x={parseFloat(props.barra)+128} y='152'>M</text>
             </svg>
         </>

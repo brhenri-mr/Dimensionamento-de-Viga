@@ -95,7 +95,7 @@ const Figura = (props) =>{
     return (
         <div>
             <svg {...PadraoParaDesenho}>
-                <Viga value={props.barra} mag={magmax} apoios={props.apoios}></Viga>
+                <Viga value={props.barra} mag={-magmax} apoios={props.apoios}></Viga>
                 {props.apoios.map((item,index)=>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
                 })}
