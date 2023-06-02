@@ -17,7 +17,7 @@ def compatibilizacao(s_atual:dict,el_individual:dict,s_global:dict,sinal:str):
     
     if tamanho == 0:
         s_global = el_individual.copy()
-    
+
 
     #Conferindo pontos ja existentes entre s_global e el_individual
     for esforco_considerado in ['Momento','Cortante']:
@@ -114,6 +114,10 @@ def compatibilizacao(s_atual:dict,el_individual:dict,s_global:dict,sinal:str):
         s_global.update({
             'Trecho':s,
             })
+   
+    
+    
+        #print(s_global)
    
     
         return s_global

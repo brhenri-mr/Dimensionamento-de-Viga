@@ -191,10 +191,10 @@ const InputCar = (props) =>{
                                 ></TextField>
                             </FormControl>
                             <FormControl>
-                                <InputLabel>Persistência do Carregamento</InputLabel>
+                                <InputLabel>Classificação do Carregamento</InputLabel>
                                 <Select
                                 value={patter}
-                                label='Persistência do Carregamento'
+                                label='Classificação do Carregamento'
                                 sx={{backgroundColor:'white'}}
                                 onChange={event =>{event.preventDefault();return setPatter(event.target.value)}}
                                     >

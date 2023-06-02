@@ -7,7 +7,11 @@ const INITIAL_STATE = {
         h:0,
         dmax:0,
         bw:0,
-        dL:0
+        dL:0,
+        dT:0,
+        classeambiental:0,
+        fykt:0,
+        agregado:0
     }
 }
 

@@ -15,32 +15,35 @@ import Alert from '@mui/material/Alert';
 import { AlertTitle } from "@mui/material";
 //Redux
 import { useDispatch} from "react-redux";
+import { useSelector } from "react-redux";
 //Componentes
 import actions from "../../Actions/Caracteristicas";
 //constantes
 import { ambiente } from "../../Constants/classeAmbiental";
 import { NomesAgregados,ClasseConcreto,ClasseAço } from "../../Constants/classSecao";
+import { Britas,diametroparabrita } from "../../Constants/DiametrosAgregado";
 
 
 const Secao  = (props)=> {
 
     //Dispatch
     const dispatch = useDispatch()
-
-    const [fck,setFck] = useState('')
-    const [fyk,setFyk] = useState('')
-    const [alturaSecao,setAlturasecao]= useState('')
+    const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
+    console.log(CARACTERISTICAS['fyk'])
+    const [fck,setFck] = useState(CARACTERISTICAS['fck']===0?'':'C'+CARACTERISTICAS['fck'])
+    const [fyk,setFyk] = useState(CARACTERISTICAS['fyk']===0?'':'CA'+CARACTERISTICAS['fyk']/10)
+    const [alturaSecao,setAlturasecao]= useState((CARACTERISTICAS['h']===0)?'':CARACTERISTICAS['h'].toString().replace('.',','))
     //const [diametromax,setDiametromax] = useState('')
-    const [bw,setBw] = useState('')
-    const [diametroL,setDiametroL] = useState('')
-    const [bitolaT, setBitolaT] = useState('')
-    const [fykt, setFykt] = useState('')
-    const [classeAmbiental, setClasseambiental] = useState('')
+    const [bw,setBw] = useState(CARACTERISTICAS['bw']===0?'':CARACTERISTICAS['bw'].toString().replace('.',','))
+    const [diametroL,setDiametroL] = useState(CARACTERISTICAS['dL']===0?'':CARACTERISTICAS['dL'].toString().replace('.',','))
+    const [bitolaT, setBitolaT] = useState(CARACTERISTICAS['dT']===0?'':CARACTERISTICAS['dT'].toString().replace('.',','))
+    const [fykt, setFykt] = useState(CARACTERISTICAS['fykt']===0?'':'CA'+CARACTERISTICAS['fykt']/10)
+    const [classeAmbiental, setClasseambiental] = useState(CARACTERISTICAS['classeambiental']===0?'':CARACTERISTICAS['classeambiental'])
     const [alerta,setAlerta] = useState(false)
     const [sucesso, setSucesso] = useState(false)
     const [mensagem, setMensagem] = useState('')
-    const [agregado,setAgregado] = useState('')
-    const [dmax,setDmax] = useState('')
+    const [agregado,setAgregado] = useState(CARACTERISTICAS['agregado']===0?'':CARACTERISTICAS['agregado'])
+    const [dmax,setDmax] = useState(CARACTERISTICAS['dmax']===0?'':diametroparabrita[CARACTERISTICAS['dmax']])
 
     const caracteristcas = (event)=>{
         event.preventDefault()
@@ -48,7 +51,7 @@ const Secao  = (props)=> {
         let buginfernal = alerta //o setAlert nao funciona, nao adianta
         let temp = 0
 
-        for(let i of [alturaSecao,bw,diametroL,bitolaT,classeAmbiental,dmax]){
+        for(let i of [alturaSecao,bw,diametroL,bitolaT,classeAmbiental]){
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -61,7 +64,7 @@ const Secao  = (props)=> {
         }
 
 
-        for(let i of [alturaSecao,bw,diametroL,bitolaT,dmax]){
+        for(let i of [alturaSecao,bw,diametroL,bitolaT]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
                     break
@@ -106,7 +109,7 @@ const Secao  = (props)=> {
                 dL:parseFloat(diametroL.replace(',','.')),
                 dT: parseFloat(bitolaT.replace(',','.')),
                 fykt: ClasseAço[fykt],
-                dmax:parseFloat(dmax.replace(',','.')),
+                dmax:Britas[dmax],
                 classeambiental:classeAmbiental
             }
             dispatch(actions.adicionar(item))
@@ -208,7 +211,7 @@ const Secao  = (props)=> {
                                         <TextField 
                                         value={bw} 
                                         onChange={(event) =>{event.preventDefault();return setBw(event.target.value)}} 
-                                        label="Largura comprimida " 
+                                        label="Largura da seção " 
                                         variant="outlined"
                                         error={erro(bw,'numeros')}
                                         helperText = {erro(bw,'numeros')?'Insira somente números':''}
@@ -288,14 +291,18 @@ const Secao  = (props)=> {
                                     {ambiente.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                     </Select>
                                 </FormControl>
-                            <TextField 
-                                    value={dmax} 
-                                    onChange={(event) =>{event.preventDefault();return setDmax(event.target.value)}} 
-                                    label="Diâmetro Máximo de Agreagado" 
+                            <FormControl>
+                                    <InputLabel>Diâmetro máximo de Agregado</InputLabel>
+                                    <Select
+                                    value={dmax}
+                                    label='Diâmetro máximo de Agregadol'
                                     variant="outlined"
-                                    error={erro(dmax,'numeros')}
-                                    helperText = {erro(dmax,'numeros')?'Insira somente números':''}
-                                    sx={{backgroundColor:'white'}} />
+                                    sx={{backgroundColor:'white'}}
+                                    onChange={(event) =>{event.preventDefault();return setDmax(event.target.value)}} 
+                                        >
+                                    {Object.keys(Britas).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                    </Select>
+                            </FormControl>
                             </Box>
                             </Grid>
                         </Grid>
