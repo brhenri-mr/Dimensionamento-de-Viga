@@ -22,6 +22,7 @@ import { actions } from "../../Actions/Carregamento";
 import { actions as actionbarra} from "../../Actions/Momentomax";
 import {actions as ACTIONScomb} from "../../Actions/Combinacoes";
 import { useSelector } from "react-redux";
+import Discretizacao from "../SVG/Discretizacao";
 
 
 
@@ -279,10 +280,15 @@ const Layout = () => {
                 </Collapse>
                 <Collapse in={!cadastrocompleto}>
                     <Alert severity="error"> <strong>Faltam Cadastrar Informações</strong></Alert>
+         
                 </Collapse>
                 
                 
             </TabPanel>
+            <svg>
+                <Discretizacao h={50} bw={40} cnom={2.5} bitolaT={0.8} barras={[[4],[2]]} av={2} ah={2} bitola={1} limite={5}></Discretizacao>
+            </svg>
+                    
             </Box>
         </Box>
         </div>
