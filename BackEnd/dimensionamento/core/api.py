@@ -197,8 +197,11 @@ def MetRigidez(request, data:MetRigidez):
         Função que retorna a constante de integracao das eq.
         """
         x = sym.Symbol("x")
-        constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0 
-        return (eq+constante) 
+        try:
+            constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0 
+            return (eq+constante) 
+        except:
+            return eq
 
     def equacao_esforco(entrada,chave,saida,var_auxiliar,i):
         '''
@@ -251,10 +254,6 @@ def MetRigidez(request, data:MetRigidez):
         
         #Iterador
         incrimento = (el['Trecho'][1]-el['Trecho'][0])/(padrao)
-
-        
-                
-      
         
         if elemento:
             
@@ -272,6 +271,7 @@ def MetRigidez(request, data:MetRigidez):
                 saida['Trecho'].append(round(float(coordenada),2))
                 saida['Cortante'].append(round(float(cortante_pronto(coordenada/100)),2))
             
+
             return saida
         else:
             for coordenada in xs:
@@ -359,7 +359,8 @@ def MetRigidez(request, data:MetRigidez):
                 '''
 
                 if _ =='x complementar':
-                    xs.append(*maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave]))
+                    temp_x = maxmomento(comb_cortante[indice],comb_momento[indice],saida['Esforcos Internos'][comb_atual][chave])
+                    xs.append(*temp_x) if len(temp_x)!=0 else 0
                     comb_atual = 1+ comb_atual
                 else:
                      #previnindo equacoes inexistentes
