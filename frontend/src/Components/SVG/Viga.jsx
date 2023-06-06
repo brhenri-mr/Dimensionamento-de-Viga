@@ -6,6 +6,8 @@ const Viga = (props) => {
     let temp = []
     let comprimentos = []
 
+    console.log(props.apoios)
+
 
     for(let i=0;i<=props.apoios.length-1;i++){
         temp.push(props.apoios[i].value)
@@ -54,9 +56,7 @@ const Viga = (props) => {
                         {comprimentos.map((item,key)=>{
                             return (<>
                             <rect x={item[1]+50} y={200-parseFloat(props.mag)/2} rx="2" ry="2" width={item[0]} height="1"></rect>
-                            
                             <text x={item[0]/2+30+item[1]} y={240-parseFloat(props.mag)/2}>{`${item[0]} cm`}</text>
-
                             <rect x={item[1]+50} y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
                             <rect x={item[1]+item[0]+50} y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
                             </>
