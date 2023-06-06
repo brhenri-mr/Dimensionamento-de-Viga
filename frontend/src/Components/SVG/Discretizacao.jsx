@@ -14,17 +14,16 @@ const Discretizacao = (props)=>{
     //Calculo posicao em y das armaduras
     // Sempre utilizarei como incremento em x o valor para uma secao cheia
 
-    for(let camada of [...Array(props.barras.length).keys()]){
+
+    for(let camada of [...Array(props.barras[0].length).keys()]){
         posicoesY.push([(
             props.h-props.bitolaT-props.cnom-props.bitola/2-props.av*camada-props.bitola*camada)*escala,
-            props.barras[camada]
+            props.barras[0][camada]
         ],
             )
 
+
     }
-    
-    
-    console.log(posicoesY)
 
 
     return(
@@ -33,7 +32,18 @@ const Discretizacao = (props)=>{
 
         <rect x={2.5+props.cnom*escala} y={2.5+props.cnom*escala} width={props.bw*escala-props.cnom*2*escala} height={props.h*escala-props.cnom*2*escala} style={{fill:'none',strokeWidth:`${props.bitolaT*escala}`,stroke:'rgb(0,0,0)',}}></rect>
         {posicoesY.map((item,chave)=>{
-            return <Barras  escala ={escala} key={chave} barras={item[1][0]} ah={props.ah*escala} y={item[0]} limite={props.limite} cnom={props.cnom*escala} bitolaT={props.bitolaT*escala} bitola={props.bitola} x={incrementoX}></Barras>
+            return <Barras  
+                escala ={escala}
+                key={chave} 
+                barras={item[1]} 
+                ah={props.ah*escala} 
+                y={item[0]} 
+                limite={props.limite} 
+                cnom={props.cnom*escala} 
+                bitolaT={props.bitolaT*escala} 
+                bitola={props.bitola} 
+                x={incrementoX}
+            ></Barras>
         })}
         </>
     )

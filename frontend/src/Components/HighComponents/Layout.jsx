@@ -83,14 +83,26 @@ const Layout = () => {
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
 
+
     //useState
+    const [pagina,setPagina] = useState(0)
     const [value, setValue] = useState(0)
     const [patter,setPatter] = useState()
     const [describe, setDescribe] = useState()
     const [metRigidez, setMetrigidez] = useState({})
-    const [dimensionamento, setDimensionamento] = useState({})
+    const [dimensionamento, setDimensionamento] = useState({
+        'Discretizacao':{
+            'Barras por camada':[],
+            'Barras calculadas':[]
+        },
+        Parametros:{
+        Cobrimento:0,
+        av:0,
+        ah:0,
+    }})
     const estabilidade = estabilidaded(APOIOS)
     const[momentoatual, setMomentoatual] = useState(0)
+
 
     //validarores
     const cadastrocompleto = (APOIOS.length!==0 && CARREGAMENTOS.length!==0 && BARRA!==0 && CARACTERISTICAS['fck'] !==0)
@@ -101,6 +113,7 @@ const Layout = () => {
 
     //Chamar as APIs
     async function handleChange (event, newValue) {
+        
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
@@ -109,6 +122,7 @@ const Layout = () => {
             Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
             
         }
+        setPagina(newValue)
         setValue(newValue);
       };
     
@@ -275,7 +289,11 @@ const Layout = () => {
                         <CircularProgress />
                     </Collapse>
                     <Collapse in={!(Object.keys(dimensionamento).length===0)}>
-                        <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
+                    <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
+
+                        
+
+                       
                     </Collapse>
                 </Collapse>
                 <Collapse in={!cadastrocompleto}>
@@ -285,10 +303,25 @@ const Layout = () => {
                 
                 
             </TabPanel>
-            <svg>
-                <Discretizacao h={50} bw={40} cnom={2.5} bitolaT={0.8} barras={[[4],[2]]} av={2} ah={2} bitola={1} limite={5}></Discretizacao>
-            </svg>
-                    
+            {[pagina].map((item,chave)=>{
+                if (item===3 &&!(Object.keys(dimensionamento).length===0)){
+                    return(
+                        <svg>
+                            <Discretizacao 
+                            h={CARACTERISTICAS['h']} 
+                            bw={CARACTERISTICAS['bw']} 
+                            cnom={dimensionamento["Parametros"]["Cobrimento"]} 
+                            bitolaT={CARACTERISTICAS["dT"]} 
+                            barras={dimensionamento["Discretizacao"]["Barras calculadas"].slice(-1)} 
+                            av={dimensionamento["Parametros"]["av"]}
+                            ah={dimensionamento["Parametros"]["ah"]} 
+                            bitola={CARACTERISTICAS["dL"]} 
+                            limite={dimensionamento["Discretizacao"]["Barras por camada"].slice(-1)[0]}></Discretizacao>
+                        </svg>)
+                }
+               
+            })}
+            
             </Box>
         </Box>
         </div>

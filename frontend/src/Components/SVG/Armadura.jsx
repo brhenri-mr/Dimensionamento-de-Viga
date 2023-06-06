@@ -20,17 +20,16 @@ const Barras = (props) =>{
 
 
     incremento_real =[...incremento.slice(0,props.barras/2),...incremento.slice(-props.barras/2)]
-    
+
 
     if(props.barras%2===0){
 
     }
     else{
         incremento_real.push(incremento[(props.barras-1)/2])
+        
     }
         
-       
-    console.log(incremento_real)
 
 
     return (

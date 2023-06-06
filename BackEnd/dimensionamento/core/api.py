@@ -447,7 +447,7 @@ def dimensionamento(request,data:Caracteristicas):
         },
         'Discretizacao':{
             'Barras por camada':[],
-            'Barras':[],
+            'Barras calculadas':[],
             'Barras totais':[],
             'Arredondamento de Bn':[]
         },
@@ -478,7 +478,7 @@ def dimensionamento(request,data:Caracteristicas):
     
         
         while True  :
-            while bn!=numero_barras:
+            while bn>numero_barras:
                 
                 #Cg das armaduras
                 contador_qualquer = contador_qualquer + 1
@@ -488,7 +488,7 @@ def dimensionamento(request,data:Caracteristicas):
                 
                 ys, numero_barras, barra = incremento_cg_armaduras(bitolaL,parametros.av,h,numero_de_barras=bn,barras_por_camada=nc)
                 saida['Altura Util']['ys'].append(ys)
-                saida['Discretizacao']['Barras'].append(barra)
+                saida['Discretizacao']['Barras calculadas'].append(barra)
                 #Altura util
                 d = h - cnom - bitolaT - ys
                 saida['Altura Util']['Valor'].append(d)
@@ -523,6 +523,7 @@ def dimensionamento(request,data:Caracteristicas):
                     
                 saida['Area']['Area Adotada'].append(a)
                 bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+
                 
                 #armadura minima
                 if bn ==1:
@@ -532,8 +533,9 @@ def dimensionamento(request,data:Caracteristicas):
                     saida['Discretizacao']['Arredondamento de Bn'] = 'Não'
                 
                 saida['Discretizacao']['Barras por camada'].append(nc)
-                saida['Discretizacao']['Barras totais'].append(bn)
-                Asef = area_efeitiva(bn,bitolaL)
+                saida['Discretizacao']['Barras totais'].append(numero_barras)
+                
+                Asef = area_efeitiva(numero_barras,bitolaL)
                 saida['Area']['Area Efetiva'].append(Asef)
                     
                 
@@ -541,7 +543,6 @@ def dimensionamento(request,data:Caracteristicas):
                 if verificacao_area(Asef,Ac)[1]:
                     saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
                     Asef = Asef
-                    break
                 else:
                     saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
                     print('Armadura efetiva insuficiente')
@@ -573,7 +574,6 @@ def dimensionamento(request,data:Caracteristicas):
     
     caracteristicas = data.dict()
     momento = abs(caracteristicas['momento'])
-    print(momento)
     print(momento)
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
