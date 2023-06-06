@@ -285,10 +285,10 @@ const Layout = () => {
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <Collapse in={cadastrocompleto}>
-                    <Collapse in={Object.keys(dimensionamento).length===0}>
+                    <Collapse in={Object.keys(dimensionamento).length===2}>
                         <CircularProgress />
                     </Collapse>
-                    <Collapse in={!(Object.keys(dimensionamento).length===0)}>
+                    <Collapse in={!(Object.keys(dimensionamento).length===2)}>
                     <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
 
                         
@@ -304,7 +304,7 @@ const Layout = () => {
                 
             </TabPanel>
             {[pagina].map((item,chave)=>{
-                if (item===3 &&!(Object.keys(dimensionamento).length===0)){
+                if (item===3 &&!(Object.keys(dimensionamento).length===2)){
                     return(
                         <svg>
                             <Discretizacao 
