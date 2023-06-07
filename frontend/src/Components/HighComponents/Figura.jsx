@@ -74,7 +74,7 @@ const Figura = (props) =>{
     let magmax = 0
 
     const CarregamentoParaDesenho = carregamentodistribuidounico(props.carregamentos)
-
+    let escalabarra = (500/props.barra>1)? 1:500/props.barra
 
 
     for(let item of props.carregamentos){
@@ -95,15 +95,15 @@ const Figura = (props) =>{
     return (
         <div>
             <svg {...PadraoParaDesenho}>
-                <Viga value={props.barra} mag={magmax*escala-50} apoios={props.apoios}></Viga>
+                <Viga value={props.barra*escalabarra} mag={magmax*escala-50} apoios={props.apoios} escala={escalabarra}></Viga>
                 {props.apoios.map((item,index)=>{
-                    return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
+                    return <Apoio key= {index} tipo = {item.tipo} value={item.value*escalabarra} escala={escalabarra}></Apoio>
                 })}
                 {CarregamentoParaDesenho.map((item,index) =>{
         
                     if(item['tipo']==='Distribuido'){
 
-                        return <CarregamentoDist key={index} comprimento={item['pos'][1]-item['pos'][0]} mag={item['mag']} start={item['pos'][0]+50} escala={escala}></CarregamentoDist>
+                        return <CarregamentoDist key={index} comprimento={(item['pos'][1]-item['pos'][0])*escalabarra} mag={item['mag']} start={(item['pos'][0]*escalabarra)+50} escala={escala} ></CarregamentoDist>
                     }
                 })}
                 {CarregamentoParaDesenho.map((item,index) =>{

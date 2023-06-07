@@ -17,6 +17,9 @@ const CarregamentoDist = (props)=>{
             espacos = props.comprimento/i
             break
         }
+        else{
+            espacos = props.comprimento/7
+        }
     }
 
     while(temp<=comprimentoreal){
