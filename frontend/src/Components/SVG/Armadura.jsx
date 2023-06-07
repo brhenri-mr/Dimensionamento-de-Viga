@@ -13,7 +13,7 @@ const Barras = (props) =>{
 
     let incremento_real = 0
 
-    for(let i = 0; i<props.limite; i++ ){
+    for(let i = 0; i<props.barras; i++ ){
         incremento.push(i)
     }
 

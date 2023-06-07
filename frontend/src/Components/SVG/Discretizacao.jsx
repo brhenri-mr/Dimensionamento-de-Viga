@@ -6,13 +6,13 @@ import Barras from "./Armadura";
 
 const Discretizacao = (props)=>{
 
-    const escala = 1
+    const escala = 2.5
     const posicoesY = []
-    const incrementoX =  ((props.bw - 2*props.cnom - 2*props.bitolaT -props.limite*props.bitola)/(props.limite-1))*escala
+    const incrementoX =  ((props.bw - 2*props.cnom - 2*props.bitolaT -props.barras[0][0]*props.bitola)/(props.barras[0][0]-1))*escala
 
 
     //Calculo posicao em y das armaduras
-    // Sempre utilizarei como incremento em x o valor para uma secao cheia
+    // Sempre utilizarei como incremento em x o valor para a mais secao cheia, no caso, sempre a primeira
 
 
     for(let camada of [...Array(props.barras[0].length).keys()]){
@@ -24,7 +24,6 @@ const Discretizacao = (props)=>{
 
 
     }
-
 
 
     return(

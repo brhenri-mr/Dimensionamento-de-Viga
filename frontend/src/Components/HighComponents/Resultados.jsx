@@ -205,10 +205,11 @@ const Resultados = (props)=>{
     const escalabarra = (Math.abs(300/props.barra)>1)?1:Math.abs(300/props.barra)
     let escala = 1
     let acoordeao = {}
+    let momentomax = 1
 
     try{
         escala = (props.metrigidez['Maximo'][1]<0) ? -(147.5+15+15)*100/props.metrigidez['Maximo'][1]:1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
-
+        momentomax = props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]
         if(escala>1){
             escala = 1
         }
@@ -236,13 +237,13 @@ const Resultados = (props)=>{
             <Grid xs={4}>
                 <Box>
                     <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala} escalabarra={escalabarra} 
-                    mommento={props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]}></DiagramaCortante>
+                    mommento={momentomax}></DiagramaCortante>
 
                 </Box>
             </Grid>
             <Grid xs={4}>
                 <Box>
-                    <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala} escalabarra={escalabarra} mommento={props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]}></DiagramaMomento>
+                    <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala} escalabarra={escalabarra} mommento={momentomax}></DiagramaMomento>
                 </Box>
             </Grid>
             <Grid xs={4}>
