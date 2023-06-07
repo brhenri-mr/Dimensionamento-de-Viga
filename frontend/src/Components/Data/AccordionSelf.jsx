@@ -48,7 +48,7 @@ const AccordionSelf = (props)=>{
                     </Tabs>
                     {[...Array(quantidade).keys()].map((valor,index)=>{
                         return <TabPanel value={value} index={valor} key={index}>
-                                    <AccordionDetails sx={{height: (props.label==='Discretização')?`${CARACTERISTICAS['h']*1.25}px`:'',fontFamily: 'Helvetica'}}>
+                                    <AccordionDetails sx={{height:'',fontFamily: 'Helvetica'}}>
                                         {texto.slice((0+valor)*2,(valor*2+2)).map((item,index) => {return <EqMath key={index} text={item} controle={false}></EqMath>})}
                                     </AccordionDetails>
                                 </TabPanel>
@@ -58,7 +58,7 @@ const AccordionSelf = (props)=>{
         }
         else{
             return(
-            <AccordionDetails sx={{height: (props.label==='Discretização')?`${CARACTERISTICAS['h']*1.25}px`:'',fontFamily: 'Helvetica'}}>
+            <AccordionDetails sx={{height:'',fontFamily: 'Helvetica'}}>
                 {texto.map((item,index) => {return <EqMath key={index} text={item} controle={false}></EqMath>})}
             </AccordionDetails>
             )
@@ -86,15 +86,8 @@ const AccordionSelf = (props)=>{
                         </Typography>
                 </AccordionSummary>
                 <Grid container spacing={1}>
-                    <Grid item xs={(props.label==='Discretização')?8:12}>
+                    <Grid item xs={12}>
                         {multiplaspaginas(props.text,props.labesecundario)}
-                    </Grid>
-                    <Grid xs>
-                        <Collapse in={props.label==='Discretização'}>
-                            <svg>
-                                
-                            </svg>
-                        </Collapse>
                     </Grid>
                 </Grid>
                 

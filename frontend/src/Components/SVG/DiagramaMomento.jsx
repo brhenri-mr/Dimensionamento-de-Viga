@@ -22,7 +22,9 @@ const DiagramaMomento= (props) =>{
     let temp = ''
     let maximo = [0,0] //maximo[0] = valor de momento , maximo[1] = posicao
     let texto = []
-    const escalajanela = props.escala
+    const escalajanela = -props.escala
+
+    console.log(escalajanela)
 
 
     try{

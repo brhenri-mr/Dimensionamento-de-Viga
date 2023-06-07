@@ -113,6 +113,7 @@ def distruibuicao_camadas(area:float,bitolaL:float,bw:int,cnom:float,bitolaT:flo
     return: Barra necessárias, Barras por camada 
     '''
     #Dado
+    
     barras_necessarias = int(ceil((4*area)/(3.1415*bitolaL**2)))
     barra_por_camada = int(floor((bw-2*cnom-2*bitolaT+ah)/(bitolaL+ah)))
     

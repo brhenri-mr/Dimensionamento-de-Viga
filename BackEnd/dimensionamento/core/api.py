@@ -478,6 +478,7 @@ def dimensionamento(request,data:Caracteristicas):
     
         
         while True  :
+            #enquanto o numero de barras necessarias for maior que numero de barras calculadas, refazer o calculo
             while bn>numero_barras:
                 
                 #Cg das armaduras
@@ -522,7 +523,10 @@ def dimensionamento(request,data:Caracteristicas):
                     a = a_min
                     
                 saida['Area']['Area Adotada'].append(a)
+                #bn = barras necessarias
+                #nc barras por cama
                 bn, nc = distruibuicao_camadas(a,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+                
 
                 
                 #armadura minima
@@ -535,7 +539,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Discretizacao']['Barras por camada'].append(nc)
                 saida['Discretizacao']['Barras totais'].append(numero_barras)
                 
-                Asef = area_efeitiva(numero_barras,bitolaL)
+                Asef = area_efeitiva(barra[0],bitolaL)
                 saida['Area']['Area Efetiva'].append(Asef)
                     
                 
@@ -546,8 +550,6 @@ def dimensionamento(request,data:Caracteristicas):
                 else:
                     saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
                     print('Armadura efetiva insuficiente')
-                    sair =True
-                    break
             
                     
             if sair:
@@ -574,12 +576,12 @@ def dimensionamento(request,data:Caracteristicas):
     
     caracteristicas = data.dict()
     momento = abs(caracteristicas['momento'])
-    print(momento)
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo)
-    '''
+
     for item in saida.items():
         print(item)
-    '''
+
+
     return saida

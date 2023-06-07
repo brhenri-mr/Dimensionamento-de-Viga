@@ -37,24 +37,24 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         ConstantesNBR6118:{
             titulo: 'Parâmetros NBR6118:2014 ',
             texto:[
-                'Parametros estabelecidos pela NBR6118:',
+                'Parâmetro estabelecidos pela NBR6118:',
                 (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta']}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
-                'Parametros estabelecidos pela NBR6118:',
+                'Parâmetro estabelecidos pela NBR6118:',
                 (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
-                'Parametros estabelecidos pela NBR6118:',
+                'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
                 (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
-                'Parametros estabelecidos pela NBR6118 distância vertical entre armaduras:',
+                'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
                 `\\(a_v ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 0,5\\ d_{max} \\\\
                 \\end{cases} \\therefore \\ a_v = ${db['Parametros']['av'].toFixed(2).toString().replace('.',',')}\\ cm \\)`,
-                'Parametros estabelecidos pela NBR6118 distância horizontal entre armaduras:',
+                'Parametro espaçamento transversal longitudinal entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
                 `\\(a_h ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 1,2\\ d_{max} \\\\
                     \\end{cases} \\therefore \\ a_v = ${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')} \\ cm \\)`,
-                'Parametros estabelecidos pela NBR6118:',
+                'Parâmetro de redistribuição máxima da ductilidade estabelecidos pela NBR6118/2014 no item 14.6.4.3:',
                 (caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)',
-                'Parametros estabelecidos pela NBR6118:',
+                'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                 `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
             ],
-            label:['ζ','ηc','εcu','av','ah','bxmáx','cnom']
+            label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
         },
         Quantidade:{
             titulo:'Quantidade de Barras por cada',
@@ -126,15 +126,20 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         
         Discretizacao:(ignorar)?ignorarFrame:{
             titulo: 'Discretização',
-            texto:['Substitua os valores na equação:',`\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`],
-            label:['']
+            texto:[
+                'Substitua os valores na equação:',
+                `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
+                (db['Discretizacao']['Barras totais'][caso]%2 !==0)? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
+                (db['Discretizacao']['Barras totais'][caso]%2 !==0)? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:0
+            ],
+            label:['ignorar']
 
         },
         AreaAcoEfetiva:(ignorar)?ignorarFrame:{
             titulo: `\\(A_{sef} = ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)`,
             texto:[
                 'Substitua os valores na equação:',
-                `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras totais'][caso]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,
+                `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras calculadas'][caso][0]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,
             
             ],
             label:['']
