@@ -26,11 +26,13 @@ const Barras = (props) =>{
 
     }
     else{
-        incremento_real.push(incremento[(props.barras-1)/2])
+        //incremento medio
+        incremento_real.push(incremento[((incremento.length-1))/2])
         
     }
-        
 
+        
+    console.log(incremento_real)
 
     return (
     

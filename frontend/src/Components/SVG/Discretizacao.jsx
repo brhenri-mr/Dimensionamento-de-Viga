@@ -6,7 +6,7 @@ import Barras from "./Armadura";
 
 const Discretizacao = (props)=>{
 
-    const escala = 5
+    const escala = 1
     const posicoesY = []
     const incrementoX =  ((props.bw - 2*props.cnom - 2*props.bitolaT -props.limite*props.bitola)/(props.limite-1))*escala
 
@@ -26,11 +26,15 @@ const Discretizacao = (props)=>{
     }
 
 
+
     return(
         <>
          <rect x={2.5} y={2.5} width={props.bw*escala} height={props.h*escala} style={{fill:'#D9D9D9',strokeWidth:0.8,stroke:'rgb(0,0,0)',}}></rect>
 
+        
         <rect x={2.5+props.cnom*escala} y={2.5+props.cnom*escala} width={props.bw*escala-props.cnom*2*escala} height={props.h*escala-props.cnom*2*escala} style={{fill:'none',strokeWidth:`${props.bitolaT*escala}`,stroke:'rgb(0,0,0)',}}></rect>
+
+
         {posicoesY.map((item,chave)=>{
             return <Barras  
                 escala ={escala}

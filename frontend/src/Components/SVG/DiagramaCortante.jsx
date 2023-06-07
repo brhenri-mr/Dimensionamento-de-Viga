@@ -12,7 +12,7 @@ const DiagramaCortante = (props) =>{
     let temp = ''
     let maximo = [0,0] //maximo[0] = valor de momento , maximo[1] = posicao
     let texto = []
-    const escalajanela = -props.escala
+    const escalajanela = props.momento
 
 
     try{
@@ -25,14 +25,14 @@ const DiagramaCortante = (props) =>{
 
                 //garantindo o primeiro ponto na altura da viga, para poder ter um solido
                 if (i===0){
-                    graficomomento.push(`${trecho[0]+50},147.5`)
+                    graficomomento.push(`${trecho[0]*props.escalabarra+50},147.5`)
                 }
 
-                graficomomento.push(`${trecho[i]+50},${147.5-momento[i]*props.escala}`)
+                graficomomento.push(`${trecho[i]*props.escalabarra+50},${147.5-momento[i]*props.escala}`)
 
                 //garantirndo o ultimo ponto na altura da viga, para pode ter um solido
                 if (i===props.metrigidez['Esforcos Internos'][chave]['Cortante'].length-1){
-                    graficomomento.push(`${trecho[i]+50},${147.5}`)
+                    graficomomento.push(`${trecho[i]*props.escalabarra+50},${147.5}`)
 
                 }
 
@@ -92,18 +92,18 @@ const DiagramaCortante = (props) =>{
                         return 1
                     }
                     else{
-                        return (valor[0]<0) ?<text key={key} x={valor[1]+25} y={147.5+20  -valor[0]*props.escala}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>:<text key={key} x={valor[1]+25} y={147.5-valor[0]*props.escala-15}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>
+                        return (valor[0]<0) ?<text key={key} x={valor[1]*props.escalabarra+25} y={147.5+20  -valor[0]*props.escala}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>:<text key={key} x={valor[1]*props.escalabarra+25} y={147.5-valor[0]*props.escala-15}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>
                     }
                     })}
                 {points.map((item,indice)=>{  
                     return <polygon points={item} key={indice} className="graficocorte"></polygon>
                 })}
-                <Viga value={props.barra} ignorar={true} apoios={[]}></Viga>
+                <Viga value={props.barra*props.escalabarra} ignorar={true} apoios={[]}></Viga>
                 {props.apoios.map((item,index)=>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
                 })}
-                <circle cx={parseFloat(props.barra)+135} cy="147.5" r="20" stroke="black" strokeWidth="3" className="graficocorte" />
-                <text x={parseFloat(props.barra)+130} y='152'>V</text>
+                <circle cx={parseFloat(props.barra)*props.escalabarra+135} cy="147.5" r="20" stroke="black" strokeWidth="3" className="graficocorte" />
+                <text x={parseFloat(props.barra)*props.escalabarra+130} y='152'>V</text>
             </svg>
         </>
     )

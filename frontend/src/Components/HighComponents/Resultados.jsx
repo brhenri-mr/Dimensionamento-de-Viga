@@ -130,7 +130,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 'Substitua os valores na equação:',
                 `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
                 (db['Discretizacao']['Barras totais'][caso]%2 !==0)? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
-                (db['Discretizacao']['Barras totais'][caso]%2 !==0)? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:0
+                (db['Discretizacao']['Barras totais'][caso]%2 !==0)? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
             ],
             label:['ignorar']
 
@@ -202,7 +202,7 @@ const Resultados = (props)=>{
     listacombinacoes.push('Envoltória')
 
 
-
+    const escalabarra = (Math.abs(300/props.barra)>1)?1:Math.abs(300/props.barra)
     let escala = 1
     let acoordeao = {}
 
@@ -235,13 +235,14 @@ const Resultados = (props)=>{
         <Grid container spacing={0} alignContent="center">
             <Grid xs={4}>
                 <Box>
-                    <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala}></DiagramaCortante>
+                    <DiagramaCortante barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala} escalabarra={escalabarra} 
+                    mommento={props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]}></DiagramaCortante>
 
                 </Box>
             </Grid>
             <Grid xs={4}>
                 <Box>
-                    <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala}></DiagramaMomento>
+                    <DiagramaMomento barra={props.barra} apoios={props.apoios} metrigidez={props.metrigidez} escala={escala} escalabarra={escalabarra} mommento={props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]}></DiagramaMomento>
                 </Box>
             </Grid>
             <Grid xs={4}>
