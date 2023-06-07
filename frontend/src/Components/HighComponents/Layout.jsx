@@ -117,9 +117,12 @@ const Layout = () => {
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
-            await MOMENTOMAX
+            await Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+
             //metRigidez['Maximo'][1]
-            Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+            
+
+            
             
         }
         setPagina(newValue)
@@ -146,9 +149,7 @@ const Layout = () => {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Success:', data);
                     dispatch(actions.adicionar_comb(data))
-                    console.log(CARREGAMENTOS)
 
                 })
                 .catch((error) => {
@@ -168,35 +169,55 @@ const Layout = () => {
             combinacao: (logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
         }
 
-
-        await fetch('http://127.0.0.1:8000/api/MetRigidez', {
+        if(logico){
+            const api = fetch('http://127.0.0.1:8000/api/MetRigidez', {
 
         
-                method: 'POST', // or 'PUT'
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(enviar),
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log('Success:', data);
-                    setMetrigidez(data)
-                    setMomentoatual(metRigidez['Maximo'][1])
-                    console.log(metRigidez['Maximo'][1])
-                    dispatch(actionbarra.salvar(metRigidez['Maximo']))
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(enviar),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                setMetrigidez(data)
+                setMomentoatual(metRigidez['Maximo'][1])
+                dispatch(actionbarra.salvar(metRigidez['Maximo']))
 
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+            await api
+        }
+        else{
+            await fetch('http://127.0.0.1:8000/api/MetRigidez', {
+
+        
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(enviar),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                setMetrigidez(data)
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+       
 
     }
 
      //API Dimensionamento
      async function Dimensionamento(data,momentomax) {
 
-        console.log()
         await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
                 method: 'POST', // or 'PUT'
@@ -207,7 +228,6 @@ const Layout = () => {
                 })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log('Success:', data);
                     setDimensionamento(data)
 
                 })

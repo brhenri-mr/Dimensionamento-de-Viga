@@ -16,6 +16,8 @@ import copy
 
 api = NinjaAPI()
 
+momento_maximo = 0
+
 @api.get("/hello")
 def hello(request):
     return "Hello world"
@@ -250,7 +252,7 @@ def MetRigidez(request, data:MetRigidez):
         xs_usados = []
         momento_pronto = sym.lambdify(x,momento)
         cortante_pronto = sym.lambdify(x,cortante)
-        controlador = False
+        
         
         #Iterador
         incrimento = (el['Trecho'][1]-el['Trecho'][0])/(padrao)
@@ -281,11 +283,8 @@ def MetRigidez(request, data:MetRigidez):
                     saida['Momento'].append(-1*round(float(momento_pronto(coordenada)),2))
                     saida['Trecho'].append(round(float(coordenada*100),2))
                     saida['Cortante'].append(round(float(cortante_pronto(coordenada)),2))
-                    controlador =True
                     xs_usados.append(round(coordenada*100,2))
                     
-                else:
-                    controlador =False
             return xs_usados
     
     def maximo_momentona_secao(el):
@@ -306,6 +305,8 @@ def MetRigidez(request, data:MetRigidez):
     comb_atual = 0
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
+    global momento_maximo
+
     
     #Obtendo a funcao de momento para cada tramo
     #Rodando cada combinacao
@@ -374,6 +375,7 @@ def MetRigidez(request, data:MetRigidez):
             else:
                 generico[chave] = copy.deepcopy(s_global)
                 comb_atual = 0
+                xs = []
                 s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
     
 
@@ -402,6 +404,7 @@ def MetRigidez(request, data:MetRigidez):
 
     
     saida['Maximo'] = maximo_momentona_secao(saida)
+    momento_maximo = saida['Maximo']  if len(quantidade_comb)>1 else 0
     return saida
 
 @api.post("/Dimensionamento")
@@ -575,13 +578,16 @@ def dimensionamento(request,data:Caracteristicas):
     
     
     caracteristicas = data.dict()
-    momento = abs(caracteristicas['momento'])
+    momento = abs(momento_maximo[1])
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo)
-
+    '''
     for item in saida.items():
         print(item)
+    '''
 
 
     return saida
+
+

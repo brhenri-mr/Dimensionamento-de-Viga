@@ -24,7 +24,6 @@ const DiagramaMomento= (props) =>{
     let texto = []
     const escalajanela = props.momento
 
-    console.log(escalajanela)
 
 
     try{

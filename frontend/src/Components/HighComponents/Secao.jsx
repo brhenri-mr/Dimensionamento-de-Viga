@@ -29,7 +29,6 @@ const Secao  = (props)=> {
     //Dispatch
     const dispatch = useDispatch()
     const CARACTERISTICAS = useSelector(state =>state.caracteristicasReducers.CARACTERISTICAS)
-    console.log(CARACTERISTICAS['fyk'])
     const [fck,setFck] = useState(CARACTERISTICAS['fck']===0?'':'C'+CARACTERISTICAS['fck'])
     const [fyk,setFyk] = useState(CARACTERISTICAS['fyk']===0?'':'CA'+CARACTERISTICAS['fyk']/10)
     const [alturaSecao,setAlturasecao]= useState((CARACTERISTICAS['h']===0)?'':CARACTERISTICAS['h'].toString().replace('.',','))

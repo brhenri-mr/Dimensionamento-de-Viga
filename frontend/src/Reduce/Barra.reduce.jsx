@@ -16,7 +16,9 @@ const reducers  =(state = INITIAL_STATE, action) => {
         case actionType.COMB_LOGICO:
                 return {COMB: [state.COMB[0],false],BARRA:state.BARRA,MOMENTOMAX:state.MOMENTOMAX}
         case actionType.SALVAR:
-            return {COMB: state.COMB,BARRA:state.BARRA,MOMENTOMAX:((state.MOMENTOMAX<action.payload[1])?action.payload[1]:state.MOMENTOMAX)}
+            console.log(state.MOMENTOMAX)
+            console.log(action.payload[1])
+            return {COMB: state.COMB,BARRA:state.BARRA,MOMENTOMAX:action.payload[1]}
         default:
             return state
     }

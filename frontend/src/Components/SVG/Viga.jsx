@@ -45,7 +45,6 @@ const Viga = (props) => {
         }
     }
 
-    console.log(comprimentominimo)
 
     if(zero){
         comprimentos.push([comprimentominimo,0])
@@ -60,7 +59,6 @@ const Viga = (props) => {
         }
     }
 
-    console.log(comprimentos)
 
     //adicionando o balanco
     ///if(Math.abs(props.value/props.escala-comprimentomax)>0){
@@ -70,7 +68,6 @@ const Viga = (props) => {
      
    
 
-    console.log(comprimentos)
 
 
     if (props.value===''){

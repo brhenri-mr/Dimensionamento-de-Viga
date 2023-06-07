@@ -32,7 +32,6 @@ const Barras = (props) =>{
     }
 
         
-    console.log(incremento_real)
 
     return (
     
