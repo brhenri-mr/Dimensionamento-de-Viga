@@ -83,8 +83,7 @@ const Layout = () => {
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
 
-    console.log(ED)
-    console.log(CARREGAMENTOS)
+    console.log(CARACTERISTICAS)
 
     //useState
     const [pagina,setPagina] = useState(0)

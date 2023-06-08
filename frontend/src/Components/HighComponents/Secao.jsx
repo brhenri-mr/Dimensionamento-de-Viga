@@ -13,6 +13,8 @@ import Select from '@mui/material/Select';
 import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
 import { AlertTitle } from "@mui/material";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 //Redux
 import { useDispatch} from "react-redux";
 import { useSelector } from "react-redux";
@@ -43,6 +45,7 @@ const Secao  = (props)=> {
     const [mensagem, setMensagem] = useState('')
     const [agregado,setAgregado] = useState(CARACTERISTICAS['agregado']===0?'':CARACTERISTICAS['agregado'])
     const [dmax,setDmax] = useState(CARACTERISTICAS['dmax']===0?'':diametroparabrita[CARACTERISTICAS['dmax']])
+    const [ductilidade,setDuctilidade] = useState((CARACTERISTICAS['ductilidade']===0?true:CARACTERISTICAS['ductilidade']))
 
     const caracteristcas = (event)=>{
         event.preventDefault()
@@ -99,6 +102,7 @@ const Secao  = (props)=> {
 
             //dmax:parseFloat(diametromax.replace(',','.')),
 
+
             const item = {
                 fck:ClasseConcreto[fck],
                 fyk:ClasseAço[fyk],
@@ -109,7 +113,8 @@ const Secao  = (props)=> {
                 dT: parseFloat(bitolaT.replace(',','.')),
                 fykt: ClasseAço[fykt],
                 dmax:Britas[dmax],
-                classeambiental:classeAmbiental
+                classeambiental:classeAmbiental,
+                ductilidade:ductilidade
             }
             dispatch(actions.adicionar(item))
             setAlerta(false)
@@ -133,6 +138,8 @@ const Secao  = (props)=> {
         }
         return true
     }
+
+    console.log(ductilidade)
 
     return(
         <>
@@ -303,6 +310,31 @@ const Secao  = (props)=> {
                                     </Select>
                             </FormControl>
                             </Box>
+                            
+                            </Grid>
+                        </Grid>
+                        </Paper>
+                    </Box>
+                    
+                </Grid>
+                <Grid item >
+                    <Box className='Opções de Dimensionamento' >
+                        <Paper elevation={3} sx={{paddingBottom:3,paddingLeft:3,paddingRight:3,border:'1px solid #2d383a', backgroundColor:'#FBFAFA'}}>
+                        <p style={{fontSize:25}}>Opções de Dimensionamento</p>
+                        <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{marginLeft:0.25}}>
+                            <Grid>
+                                <item>
+
+                              
+                                    <FormControlLabel
+                                        label="Garantir Ductilidade"
+                                        control={<Checkbox checked={ductilidade} onChange={(event)=>{return setDuctilidade(event.target.checked)}}/>}
+                                    />
+                                    
+         
+                                  
+            
+                                </item>
                             </Grid>
                         </Grid>
                         </Paper>

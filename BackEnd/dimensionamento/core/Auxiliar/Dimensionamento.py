@@ -12,7 +12,7 @@ def modulo_de_resistencia_transversal(bw,h,tipo):
             return "Ainda não implementado"
     return "Seção não cadastrada"
     
-def verificacao_momentos(momento: float,fctksup: float,w0: float,bw: float,d: float,fcd: float,zeta: float, c: int)->list[float,float,float,str]:
+def verificacao_momentos(momento: float,fctksup: float,w0: float,bw: float,d: float,fcd: float,zeta: float, c: int, ductilidade:bool)->list[float,float,float,str]:
     """
     Verifica o momento solicitante se está no intervalo de mínimo e máximo 
     estabelecido pela norma 
@@ -29,18 +29,21 @@ def verificacao_momentos(momento: float,fctksup: float,w0: float,bw: float,d: fl
     momentomin = 0.8*w0*fctksup
     momentomax = 0.251*bw*(d**2)*fcd if 50<=50 else zeta*bw*d**2*(0.298-0.052*zeta)*(1-(c-50)/200)*fcd
     aviso = 'Status para verificação do momento OK'
-    
-    #Verificacao do intervalo
-    if momento<momentomin:
-        momentocalc = momentomin
-        aviso = 'Status momento adotado como minimo'
-        
-    elif momento>momentomax:
-        momentocalc = -1
-        aviso = 'Viga Ultrapassa o Momento máximo para a seção'
-        
+    if ductilidade:
+        #Verificacao do intervalo
+        if momento<momentomin:
+            momentocalc = momentomin
+            aviso = 'Status momento adotado como minimo'
+            
+        elif momento>momentomax:
+            momentocalc = -1
+            aviso = 'Viga Ultrapassa o Momento máximo para a seção'
+            
+        else:
+            momentocalc = momento
     else:
         momentocalc = momento
+        aviso ='Desconsidera-se os limites de momento'
     
     return momentocalc, momentomin, momentomax, aviso
     
@@ -164,9 +167,7 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
     Sobra_para_proxima_camada = numero_de_barras
     j =0 
     cri = False
-    
     while Sobra_para_proxima_camada!=0:
-        
         #iterador
         Sobra_para_proxima_camada = Sobra_para_proxima_camada-barras_por_camada
         
@@ -190,9 +191,12 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
                 
         elif Sobra_para_proxima_camada == 0:
             barra.append(barras_por_camada)
+            
             break
         else:
-            #significa que tenho mais espaco do que barras, logo ta tudo certo
+            barra.append(Sobra_para_proxima_camada+barras_por_camada)
+            break
+            '''#significa que tenho mais espaco do que barras, logo ta tudo certo
             if Sobra_para_proxima_camada+barras_por_camada%2 !=0:
                 #é menor que a quantidade minima de barras na secao
                 if Sobra_para_proxima_camada+barras_por_camada+1 >barras_por_camada:
@@ -204,7 +208,8 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
                     break
             elif Sobra_para_proxima_camada+barras_por_camada%2 ==0:
                 barra.append(Sobra_para_proxima_camada+barras_por_camada)
-                break
+                break'''
+
     
     for i in range(len(barra)):
         j = i*barra[i]*(av+bitolaL) +j

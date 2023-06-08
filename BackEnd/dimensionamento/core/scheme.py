@@ -49,4 +49,5 @@ class Caracteristicas(Schema):
     classeambiental:str
     dmax:float
     momento:float
+    ductilidade: bool
    

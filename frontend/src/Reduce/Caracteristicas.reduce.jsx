@@ -11,7 +11,8 @@ const INITIAL_STATE = {
         dT:0,
         classeambiental:0,
         fykt:0,
-        agregado:0
+        agregado:0,
+        ductilidade:0
     }
 }
 

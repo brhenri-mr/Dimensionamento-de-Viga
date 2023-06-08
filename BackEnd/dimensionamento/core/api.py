@@ -332,8 +332,6 @@ def MetRigidez(request, data:MetRigidez):
         momento_el.clear()
         cortante_el.clear()
         
-    #print(cortante_eq)
-    #print(momento_eq)
 
 
     generico = {}
@@ -380,7 +378,7 @@ def MetRigidez(request, data:MetRigidez):
     
 
     saida["Esforcos Internos"] = generico
-    print(xs)
+
 
     '''
     for chave,eq in zip(entrada.keys(),momento_eq):
@@ -412,7 +410,7 @@ def dimensionamento(request,data:Caracteristicas):
     """
     Api para dimensionamento da secao trasnversal retangular
     """
-    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0,bxmaximo,sinal):
+    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0,bxmaximo,sinal,ductilidade):
         '''
         Funcao para dimensionar a secao: areas de armadura 
         '''
@@ -477,7 +475,6 @@ def dimensionamento(request,data:Caracteristicas):
     
         #parametros utilizados 
         
-        
     
     
         
@@ -499,7 +496,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Altura Util']['Valor'].append(d)
                 
                 #verificao momento
-                momento, momentomin, momentomax, aviso = verificacao_momentos(momento, parametros.fctksup,w0,bw,d,fcd,parametros.zeta,c)
+                momento, momentomin, momentomax, aviso = verificacao_momentos(momento, parametros.fctksup,w0,bw,d,fcd,parametros.zeta,c,ductilidade)
                 saida['Verificacao Momento']['Momento Minimo'].append(momentomin)
                 saida['Verificacao Momento']['Momento Maximo'].append(momentomax)
                 saida['Verificacao Momento']['Momento de Calculo'].append(momento)
@@ -519,12 +516,15 @@ def dimensionamento(request,data:Caracteristicas):
                 a_min, verificacao, criterio = verificacao_area(a,Ac)
                 saida['Area']['Area Necessaria'].append(a)
                 #verificacao das areas
-                if verificacao:
-                    saida['Area']['Aviso'].append(criterio)
-                   
+                if ductilidade:
+                    if verificacao:
+                        saida['Area']['Aviso'].append(criterio)
+                    
+                    else:
+                        saida['Area']['Aviso'].append(criterio)
+                        a = a_min
                 else:
-                    saida['Area']['Aviso'].append(criterio)
-                    a = a_min
+                     saida['Area']['Aviso'].append("ignorar")
                     
                 saida['Area']['Area Adotada'].append(a)
                 #bn = barras necessarias
@@ -547,13 +547,14 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Area']['Area Efetiva'].append(Asef)
                     
                 
+                if ductilidade:
+                    if verificacao_area(Asef,Ac)[1]:
+                        saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
+                        Asef = Asef
+                        saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
 
-                if verificacao_area(Asef,Ac)[1]:
-                    saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
-                    Asef = Asef
                 else:
-                    saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
-                    print('Armadura efetiva insuficiente')
+                    saida['Area']['Aviso_arredondado'].append('ignorar')
             
                     
             if sair:
@@ -563,13 +564,15 @@ def dimensionamento(request,data:Caracteristicas):
             
             verifica,bx_veri,bs_veri = verificacao_admensional(fyd,parametros.eta,parametros.zeta,d,bw,fcd,Asef,Es,parametros.ecu)
             saida['Verificacao Linha Neutra']['Admensionais'].append([bx_veri,bs_veri])
-            if verifica and bx_veri<bxmaximo:
-                saida['Verificacao Linha Neutra']['Aviso'].append(True)
-                print(f'linha Neutra verificada')
-                break
+            if ductilidade:
+                if verifica and bx_veri<bxmaximo:
+                    saida['Verificacao Linha Neutra']['Aviso'].append(True)
+                    break
+                else:
+                    saida['Verificacao Linha Neutra']['Aviso'].append(False)
+                    break
             else:
-                saida['Verificacao Linha Neutra']['Aviso'].append(False)
-                print('erro')
+                saida['Verificacao Linha Neutra']['Aviso'].append('ignorar')
                 break
         
 
@@ -579,15 +582,13 @@ def dimensionamento(request,data:Caracteristicas):
     
     
     caracteristicas = data.dict()
-    momento = abs(momento_maximo)
-    sinal = -1 if momento_maximo<0 else 1
+    momento = abs(momento_maximo[1])
+    sinal = -1 if momento_maximo[1]<0 else 1
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
-    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal)
-    '''
-    for item in saida.items():
-        print(item)
-    '''
+    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal,caracteristicas['ductilidade'])
+    
+    
 
 
     return saida
