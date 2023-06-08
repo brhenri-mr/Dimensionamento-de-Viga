@@ -18,6 +18,7 @@ import { AlertTitle } from "@mui/material";
 
 const Geometria = (props) =>{
 
+    console.log(props.APOIOS)
 
     return (
     <>
@@ -42,7 +43,6 @@ const Geometria = (props) =>{
         </Box>
 
             <LayoutCadastro Apoios= {props.APOIOS} label={['Tipo','Posição','Ação']} rotulos={['tipo','value']}></LayoutCadastro>
-
         </Grid>
         </Grid>
     </>

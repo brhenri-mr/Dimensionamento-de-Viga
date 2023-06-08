@@ -15,11 +15,12 @@ const InputBarra = (props)=>{
 
     const handlechange = (event) =>{
         event.preventDefault()
+        console.log(erro(event.target.value))
         if (erro(event.target.value)){
             
         }
         else{
-            dispach(actions.modificar(event.target.value))
+            dispach(actions.modificar(event.target.value.replace(',','.')))
             return setComprimento(event.target.value)
         }
         
@@ -36,7 +37,10 @@ const InputBarra = (props)=>{
         else if (variavel.includes('-')){
             return true
         }
-        else if ('1234567890'.includes(variavel[variavel.length-1])){
+        else if (variavel.split("").filter(palavra=> palavra==="." || palavra===",").length >1){
+            return true
+        }
+        else if ('1234567890.,'.includes(variavel[variavel.length-1])){
             return false
         }
 

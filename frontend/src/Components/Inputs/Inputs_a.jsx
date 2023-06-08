@@ -45,7 +45,7 @@ const Inputs_a = (props) => {
             const apoio ={
                 id: new Date(),
                 tipo: tipo,
-                value: parseFloat(pos),
+                value: parseFloat(pos.replace(',','.')),
             }
     
             dispatch(actions.adicionar(apoio))
@@ -67,12 +67,16 @@ const Inputs_a = (props) => {
         if (variavel[0] === undefined){
             return false
         }
+        else if (variavel.split("").filter(palavra=> palavra==="." || palavra===",").length >1){
+            return true
+        }
         else if (variavel.includes('-')){
             return true
         }
-        else if ('1234567890'.includes(variavel[variavel.length-1])){
+        else if ('1234567890.,'.includes(variavel[variavel.length-1])){
             return false
         }
+        
 
 
 
