@@ -14,6 +14,7 @@ const Discretizacao = (props)=>{
     //Calculo posicao em y das armaduras
     // Sempre utilizarei como incremento em x o valor para a mais secao cheia, no caso, sempre a primeira
 
+    console.log(props.momento)
 
     for(let camada of [...Array(props.barras[0].length).keys()]){
         posicoesY.push([(

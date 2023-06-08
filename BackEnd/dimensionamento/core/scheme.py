@@ -4,7 +4,7 @@ from typing import List
 class Apoios(Schema):
     id:str
     tipo: str
-    value: int
+    value: float
 
 class APoiosTrue(Schema):
     apoios:List[Apoios]
@@ -13,9 +13,9 @@ class APoiosTrue(Schema):
 class Carregamento(Schema):
     describe: str
     name:str
-    mag: int
+    mag: float
     patter:str
-    pos:list[int,int]
+    pos:list[float,float]
     tipo:str
     comb:list
 

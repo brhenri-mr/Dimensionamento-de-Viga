@@ -107,6 +107,7 @@ class Combine():
         #contador
         contador = 0
         #divisão de dados
+        print(self.caracteristicas)
         for key, el in self.carregamento.items():
             if el['patter'] == "Carregamento permanente":
                 desfav, fav = CP[el['describe']][modo]
@@ -216,7 +217,6 @@ class Combine():
                         except:
                             print(f'o valor adicionado não corresponde a numeros {s}')
         
-        print(saida)
                             
         return saida
     

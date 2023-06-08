@@ -83,6 +83,8 @@ const Layout = () => {
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
 
+    console.log(ED)
+    console.log(CARREGAMENTOS)
 
     //useState
     const [pagina,setPagina] = useState(0)
@@ -336,7 +338,9 @@ const Layout = () => {
                             av={dimensionamento["Parametros"]["av"]}
                             ah={dimensionamento["Parametros"]["ah"]} 
                             bitola={CARACTERISTICAS["dL"]} 
-                            limite={dimensionamento["Discretizacao"]["Barras por camada"].slice(-1)[0]}></Discretizacao>
+                            limite={dimensionamento["Discretizacao"]["Barras por camada"].slice(-1)[0]}
+                            momento = {dimensionamento["Verificacao Momento"]["Momento de Calculo"].slice(-1)[0]*dimensionamento["Verificacao Momento"]["Sinal"]}
+                            ></Discretizacao>
                         </svg>)
                 }
                

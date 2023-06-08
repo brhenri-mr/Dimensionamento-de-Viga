@@ -15,7 +15,7 @@ const reducers  =(state = INITIAL_STATE, action) => {
         case actionType.ADD_CAR:
             return {CARREGAMENTOS: [...state.CARREGAMENTOS, {...action.payload}],APOIOS:state.APOIOS,ED:state.ED}
         case actionType.REMOVER_CAR:
-            return {CARREGAMENTOS: state.CARREGAMENTOS.filter(x => x.name !== action.payload.name),APOIOS:state.APOIOS,ED:state.ED}
+            return {CARREGAMENTOS: state.CARREGAMENTOS.filter(x => x.name !== action.payload.name),APOIOS:state.APOIOS,ED:state.ED.filter(x => x.name !== action.payload.name)}
         case actionType.ADD_COMB:
             //Adiciona a combinacao ao carregamento respectivo
             const temp = state.CARREGAMENTOS

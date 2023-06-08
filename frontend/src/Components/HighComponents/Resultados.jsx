@@ -209,7 +209,7 @@ const Resultados = (props)=>{
 
     try{
         escala = (props.metrigidez['Maximo'][1]<0) ? -1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100)):1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
-        momentomax = -props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]
+        momentomax = props.dimensionamento["Verificacao Momento"]["Sinal"]
         if(escala>1){
             escala = 1
         }

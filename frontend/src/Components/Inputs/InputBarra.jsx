@@ -15,7 +15,6 @@ const InputBarra = (props)=>{
 
     const handlechange = (event) =>{
         event.preventDefault()
-        console.log(erro(event.target.value))
         if (erro(event.target.value)){
             
         }

@@ -41,6 +41,7 @@ const InputCar = (props) =>{
     const [mensagem, setMensagem] = useState('')
 
     const CARREGAMENTOS = useSelector(state => state.botoesReducers.CARREGAMENTOS)
+    const BARRA = useSelector(state => state.barraReducers.BARRA)
 
     let describeop = (patter===patterConst[0]) ? CP:CV
     let TipodeCarregamento = (patter===patterConst[0]) ? true:false // diz qual o tipo de carregamento CP (true) ou Cv (false)
@@ -56,7 +57,6 @@ const InputCar = (props) =>{
         let grupo = ((tipocar ==="Pontual"))? [nome,tipocar,patter,describe,mag,startpos]:[nome,tipocar,patter,describe,mag,startpos,finalpos]
         
         for(let i of grupo){
-            console.log(i)
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -111,19 +111,50 @@ const InputCar = (props) =>{
         setMensagem('Carregamento Distribuido precisa ter pontos de inicio e final Diferentes')
     }
 
+    if(tipocar==="Distribuido" && parseFloat(startpos.replace(',','.'))>parseFloat(finalpos.replace(',','.'))){
+        setAlerta(true)
+        buginfernal = true
+        setMensagem('Carregamento Distribuido que o ponto inicial fora da barra')
+    }
+    
+    if(tipocar==="Distribuido" && parseFloat(finalpos.replace(',','.'))>parseFloat(BARRA.replace(',','.'))){
+        setAlerta(true)
+        buginfernal = true
+        setMensagem('Ponto de inicial do carregamento fora da barra')
+    }
+    if(tipocar==="Distribuido" && parseFloat(startpos.replace(',','.'))>parseFloat(BARRA.replace(',','.'))){
+        setAlerta(true)
+        buginfernal = true
+        setMensagem('Ponto de inicial do carregamento fora da barra')
+    }
+
+    if(tipocar==="Pontual" && parseFloat(startpos.replace(',','.'))>parseFloat(BARRA.replace(',','.'))){
+        setAlerta(true)
+        buginfernal = true
+        setMensagem('Carregamento fora da barra')
+    }
+    if(tipocar==="Pontual" && parseFloat(startpos.replace(',','.'))<0){
+        setAlerta(true)
+        buginfernal = true
+        setMensagem('Carregamento fora da barra')
+    }
+
+
+
         if (!buginfernal && !alerta){
             const item = {
                 name: nome,
                 tipo:tipocar,
                 patter:patter,
                 describe:describe,
-                mag:parseInt(mag.replace(',','.')),
-                pos:[parseInt(startpos.replace(',','.')),(tipocar ==="Pontual")? parseInt(startpos.replace(',','.')):parseInt(finalpos.replace(',','.'))],
+                mag:parseFloat(mag.replace(',','.')),
+                pos:[parseFloat(startpos.replace(',','.')),(tipocar ==="Pontual")? parseFloat(startpos.replace(',','.')):parseFloat(finalpos.replace(',','.'))],
                 comb:[]
             }
             dispatch(actions.adicionar(item))
     
             const informacoesadicionais = {
+                name: nome,
                 Local:descricao,
                 informacao:descricaosecundaria
             }

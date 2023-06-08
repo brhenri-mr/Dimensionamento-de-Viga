@@ -92,7 +92,7 @@ const Viga = (props) => {
                         {comprimentos.map((item,key)=>{
                             return (<>
                             <rect x={(item[1]*props.escala+50)} y={200-parseFloat(props.mag)/2} rx="2" ry="2" width={(item[0])*props.escala} height="1"></rect>
-                            <text x={(item[0]*props.escala/2+30+item[1]*props.escala)} y={240-parseFloat(props.mag)/2}>{`${item[0]} cm`}</text>
+                            <text x={(item[0]*props.escala/2+30+item[1]*props.escala)} y={240-parseFloat(props.mag)/2}>{`${item[0].toString().replace(".",",")} cm`}</text>
                             <rect x={(item[1]*props.escala+50)} y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
                             <rect x={(item[1]*props.escala+item[0]*props.escala+50)} y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
                             </>
@@ -108,7 +108,7 @@ const Viga = (props) => {
                             <title>Viga</title>
                         </rect>
                         <rect x="50" y={200-parseFloat(props.mag)/2} rx="2" ry="2" width={(props.value)} height="1"></rect>
-                        <text x={parseFloat(props.value)/2+30} y={240-parseFloat(props.mag)/2}>{`${props.value/props.escala} cm`}</text>
+                        <text x={parseFloat(props.value)/2+30} y={240-parseFloat(props.mag)/2}>{`${(props.value/props.escala).toString().replace(".",",")} cm`}</text>
                         <rect x="50" y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
                         <rect x={(parseFloat(props.value)+50)} y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
                     </g>

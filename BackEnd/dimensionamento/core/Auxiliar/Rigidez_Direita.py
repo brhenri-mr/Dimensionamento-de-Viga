@@ -20,7 +20,7 @@ def entrada_test(data: dict, apoio: dict, comprimentoTotal:float):
         #Definicao elementos pelo carregamentos
         for chave in carregamento.keys():
             temp = carregamento[chave]['pos']
-            if isinstance(temp,int):
+            if isinstance(temp,float):
                 temp = [temp]
             else:
                 temp = [*temp]
@@ -73,7 +73,7 @@ def entrada_test(data: dict, apoio: dict, comprimentoTotal:float):
     for chave_data in data.keys():
         temp = data[chave_data]['pos']
         #Verificar se é esforço pontual
-        if isinstance(temp,int):
+        if isinstance(temp,float):
             for chave_el in elementos.keys():
                 if temp in elementos[chave_el]['Trecho']:
                     contador = 1 + len(elementos[chave_el]['Carregamento'])

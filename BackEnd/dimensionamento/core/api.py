@@ -412,7 +412,7 @@ def dimensionamento(request,data:Caracteristicas):
     """
     Api para dimensionamento da secao trasnversal retangular
     """
-    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0,bxmaximo):
+    def secao_transversal(momento,bitolaL,parametros,h,fcd,c,bw,Es,fyd,bitolaT,Ac,cnom,w0,bxmaximo,sinal):
         '''
         Funcao para dimensionar a secao: areas de armadura 
         '''
@@ -439,7 +439,8 @@ def dimensionamento(request,data:Caracteristicas):
              'Momento Maximo':[],
              'Momento de Calculo':[],
              'Momento Carregamento':[momento],
-             'Aviso':[]
+             'Aviso':[],
+             'Sinal':sinal
             },
         'Area':{
             'Area Efetiva':[],
@@ -578,10 +579,11 @@ def dimensionamento(request,data:Caracteristicas):
     
     
     caracteristicas = data.dict()
-    momento = abs(momento_maximo[1])
+    momento = abs(momento_maximo)
+    sinal = -1 if momento_maximo<0 else 1
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
-    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo)
+    saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal)
     '''
     for item in saida.items():
         print(item)
