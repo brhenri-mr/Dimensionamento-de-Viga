@@ -3,16 +3,8 @@ import React from "react";
 import Viga from "../SVG/Viga";
 import Apoio from "../SVG/Apoios";
 //Constante
-import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
 
 
-
-function escrever(valores,posicoes){
-    //textos: valores e posicoes dos textos
-    return (
-        <text x={posicoes+50} y={147.5-valores}>{`${valores} kN.m`}</text>
-    )
-}
 
 
 const DiagramaMomento= (props) =>{
@@ -97,24 +89,25 @@ const DiagramaMomento= (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:(escalajanela<0)? "24rem":"15rem"}}>
-                {texto.map((valor,key)=>{
-                    if(valor[0]==0){
+            <svg style={{ width:"40rem",height:(escalajanela<0)? "18rem":"15rem"}}>
+               
+                {points.map((item,indice)=>{  
+                    return <polygon points={item} key={indice} className="graficomomento"></polygon>
+                })}
+                <Viga value={props.barra*props.escalabarra} ignorar={true} apoios={[]}></Viga>
+                {props.apoios.map((item,index)=>{
+                    return <Apoio key= {index} tipo = {item.tipo} value={item.value*props.escalabarra}></Apoio>
+                })}
+                <circle cx={parseFloat(props.barra)*props.escalabarra+135} cy="147.5" r="20" stroke="black" strokeWidth="3" className="graficomomento" />
+                <text x={parseFloat(props.barra)*props.escalabarra+128} y='152'>M</text>
+                 {texto.map((valor,key)=>{
+                    if(valor[0]===0){
                         return 1
                     }
                     else{
                         return (valor[0]<0) ?<text key={key} x={valor[1]*props.escalabarra+25} y={147.5+20-valor[0]*props.escala}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>:<text key={key} x={valor[1]*props.escalabarra+25} y={147.5-valor[0]*props.escala-15}>{`${valor[0].toString().replace('.',',')} kN.m`}</text>
                     }
                     })}
-                {points.map((item,indice)=>{  
-                    return <polygon points={item} key={indice} className="graficomomento"></polygon>
-                })}
-                <Viga value={props.barra*props.escalabarra} ignorar={true} apoios={[]}></Viga>
-                {props.apoios.map((item,index)=>{
-                    return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
-                })}
-                <circle cx={parseFloat(props.barra)*props.escalabarra+135} cy="147.5" r="20" stroke="black" strokeWidth="3" className="graficomomento" />
-                <text x={parseFloat(props.barra)*props.escalabarra+128} y='152'>M</text>
             </svg>
         </>
     )

@@ -15,16 +15,27 @@ const Discretizacao = (props)=>{
     // Sempre utilizarei como incremento em x o valor para a mais secao cheia, no caso, sempre a primeira
 
     console.log(props.momento)
-
-    for(let camada of [...Array(props.barras[0].length).keys()]){
-        posicoesY.push([(
-            props.h-props.bitolaT-props.cnom-props.bitola/2-props.av*camada-props.bitola*camada)*escala,
-            props.barras[0][camada]
-        ],
-            )
-
-
+    if(props.momento<0){
+        for(let camada of [...Array(props.barras[0].length).keys()]){
+            posicoesY.push([
+                2.5+(props.bitolaT+props.cnom+props.bitola/2+(props.av*camada+props.bitola*camada))*escala,
+                props.barras[0][camada]
+            ],
+                )
+        }
     }
+    else{
+        for(let camada of [...Array(props.barras[0].length).keys()]){
+            posicoesY.push([
+                2.5+(props.h-props.bitolaT-props.cnom-props.bitola/2-props.av*camada-props.bitola*camada)*escala,
+                props.barras[0][camada]
+            ],
+                )
+    
+    
+        }
+    }
+   
 
 
     return(

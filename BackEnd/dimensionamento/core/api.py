@@ -212,19 +212,23 @@ def MetRigidez(request, data:MetRigidez):
         temp = []
         retornar= 0
         incremento = -1
-        
         if len(entrada[chave]['Carregamento'].keys())>0:
+            '''
+            i = combinação a ser pesquisada
+            chave = elemento discretizado a ser pesquisado 
+            saida = dici9onario vindo do método da rigidez direita
+            '''
             for chave_carregamento in entrada[chave]['Carregamento'].keys():
                 incremento +=1
                 if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual":
-                        # por cortamos a um infitessimo a regiao do ponto, o carregamento pontual nao pode existir, mas sua energia esta nas reacoes
-                    temp.append('discartar')
+                   
+                    temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
                 else:
                     #Decisao da equacao 
                     temp.append(cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
                     
-            else:
-                    temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
+        else:
+            temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
 
         for eq in temp:
             if eq=='discartar':
@@ -287,15 +291,16 @@ def MetRigidez(request, data:MetRigidez):
                     
             return xs_usados
     
-    def maximo_momentona_secao(el):
+    def maximo_momentona_secao(el,esforco):
         
         maximo = [0,0]
-        
+
         for chave in el['Esforcos Internos'].keys():
-            for elemento,posicao in zip(el['Esforcos Internos'][chave]['Momento'],el['Esforcos Internos'][chave]['Trecho']):
+            for elemento,posicao in zip(el['Esforcos Internos'][chave][esforco],el['Esforcos Internos'][chave]['Trecho']):
                 if abs(elemento*100)>abs(maximo[1]):
                     maximo[1] = elemento*100
                     maximo[0] = posicao
+        maximo[1] = maximo[1]*(1/100 if esforco =='Cortante' else 1)
         return maximo
     
     s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
@@ -338,13 +343,10 @@ def MetRigidez(request, data:MetRigidez):
     xs =[]
     
     
-    #acessar uma elemento, indice corresponde a combinacao
-    if len(quantidade_comb)==1:
-        quantidade_comb = quantidade_comb*len(entrada.keys())
+
     
     
-    
-    for indice,chave in zip(range(len(quantidade_comb)),entrada.keys()):
+    for indice,chave in zip(range(len(entrada.keys())),entrada.keys()):
         '''
         chave: elemnto a ser pesquisado
         indice: combinacao a ser pesquisada
@@ -352,9 +354,10 @@ def MetRigidez(request, data:MetRigidez):
 
         for _ in ['x complementar','normal',]:
             for comb_momento, comb_cortante in zip(momento_eq,cortante_eq):
+
                 '''
-                comb_momento: equacao de momento a ser utilizada
-                comb_cortante: equacao de cortante a ser utilizada
+                comb_momento: lista de equacoes de momento para toda barra e para uma combinacao
+                comb_cortante: lista de equacoes de cortante para toda barra e para uma combinacao
                 '''
 
                 if _ =='x complementar':
@@ -377,32 +380,14 @@ def MetRigidez(request, data:MetRigidez):
                 s_global = {'Trecho':[],'Momento':[],'Cortante':[]}
     
 
-    saida["Esforcos Internos"] = generico
-
-
-    '''
-    for chave,eq in zip(entrada.keys(),momento_eq):
-        posicoes_temp.append(saida['Esforcos Internos'][chave]['Trecho'][0])
-        momento_temp.append(float(-saida['Esforcos Internos'][chave]['Momento'][0]))
-
-        intervalo = (saida['Esforcos Internos'][chave]['Trecho'][1]-posicoes_temp[0])/(padrao)
-        #aplicando valores
-        for i in range(1,padrao+1,1):
-            eq_temp = eq.subs({x:(posicoes_temp[0] +intervalo*i)/100})
-            momento_temp.append(round(float(eq_temp),2))
-            posicoes_temp.append((posicoes_temp[0] +intervalo*i))
-        
-        saida["Esforcos Internos"][chave]['Trecho'] = posicoes_temp.copy()
-        saida["Esforcos Internos"][chave]['Momento'] = momento_temp.copy()
-        
-        posicoes_temp.clear()
-        momento_temp.clear()
-                
-    '''         
+    saida["Esforcos Internos"] = generico       
 
     
-    saida['Maximo'] = maximo_momentona_secao(saida)
+    saida['Maximo'] = maximo_momentona_secao(saida,'Momento')
+    saida['Cortante Maximo'] = maximo_momentona_secao(saida,'Cortante')
+
     momento_maximo = saida['Maximo']  if len(quantidade_comb)>1 else 0
+    momento_maximo = saida['Cortante Maximo']  if len(quantidade_comb)>1 else 0
     return saida
 
 @api.post("/Dimensionamento")

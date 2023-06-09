@@ -161,7 +161,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'O arredondamento da área de aço cálculada para área de aço efetiva, pode modificar a posição da linha neutra. Verifica-se a linha neutra com a equação iterativa abaixo',
                     `\\(x/d = \\dfrac{f_{yd}}{\\eta_c \\zeta_c \\ b_w d \\ f_cd} A_s \\beta_s \\)`, 
                     'Aplicando os resultados da equação a cima em',
-                    `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d}{\} \\epsilon_{cu} ≤ 1 \\)`,
+                    `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d} \\epsilon_{cu} ≤ 1 \\)`,
                     `Convergindo para os valores de \\(\\beta_s = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][1]} e \\(x/d = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][0].toFixed(2).toString().replace('.',',')}. Como o valor de \\(x/d\\) convergiu para um número ${(verificacaoadm ==='Linha Neutra não verifica')?'maior':'menor'} que o limite ${(caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)'}, então a ${verificacaoadm}`,     
                     (db['Verificacao Linha Neutra']['Aviso'][0]) ? '':'Recomenda-se aumentar o valor da altura (h) da seção'
                 ],
@@ -314,10 +314,12 @@ const Resultados = (props)=>{
     let escala = 1
     let acoordeao = {}
     let momentomax = 1
+    let maximoesforco = 1
 
     try{
-        escala = (props.metrigidez['Maximo'][1]<0) ? -1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100)):1/(props.metrigidez['Maximo'][1]/((147.5-15-15)*100))
-        momentomax = props.dimensionamento["Verificacao Momento"]["Sinal"]
+        maximoesforco = (Math.abs(props.metrigidez['Maximo'][1]/100)>Math.abs(props.metrigidez['Cortante Maximo'][1]))?props.metrigidez['Maximo'][1]/100:props.metrigidez['Cortante Maximo'][1]
+        escala = (maximoesforco<0) ? -1/(maximoesforco/((147.5-15-15))):1/(maximoesforco/((147.5-15-15)))
+        momentomax = (Math.abs(props.metrigidez['Maximo'][1]/100)>Math.abs(props.metrigidez['Cortante Maximo'][1])) ? props.dimensionamento["Verificacao Momento"]["Sinal"]:Math.abs(props.metrigidez['Cortante Maximo'][1])/props.metrigidez['Cortante Maximo'][1]
         if(escala>1){
             escala = 1
         }
@@ -367,7 +369,7 @@ const Resultados = (props)=>{
                                         {listacombinacoes.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                         </Select>
                                     </FormControl>
-                                    {(combinacao=="Envoltória")?'':CARREGAMENTOS.map((item,chave)=>{
+                                    {(combinacao==="Envoltória")?'':CARREGAMENTOS.map((item,chave)=>{
                                         return <p>{`${item['name']}:${item['comb'][parseInt(combinacao[combinacao.length-1])-1]}`}</p>
                                     })}
                                 

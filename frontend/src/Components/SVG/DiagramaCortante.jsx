@@ -3,7 +3,6 @@ import React from "react";
 import Viga from "../SVG/Viga";
 import Apoio from "../SVG/Apoios";
 //Constante
-import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
 
 const DiagramaCortante = (props) =>{
 
@@ -86,9 +85,9 @@ const DiagramaCortante = (props) =>{
 
     return(
         <>
-            <svg style={{ width:"40rem",height:(escalajanela<0)? "24rem":"15rem"}}>
+            <svg style={{ width:"40rem",height:(escalajanela<0)? "18rem":"15rem"}}>
                 {texto.map((valor,key)=>{
-                    if(valor[0]==0){
+                    if(valor[0]===0){
                         return 1
                     }
                     else{
@@ -100,7 +99,7 @@ const DiagramaCortante = (props) =>{
                 })}
                 <Viga value={props.barra*props.escalabarra} ignorar={true} apoios={[]}></Viga>
                 {props.apoios.map((item,index)=>{
-                    return <Apoio key= {index} tipo = {item.tipo} value={item.value}></Apoio>
+                    return <Apoio key= {index} tipo = {item.tipo} value={item.value*props.escalabarra}></Apoio>
                 })}
                 <circle cx={parseFloat(props.barra)*props.escalabarra+135} cy="147.5" r="20" stroke="black" strokeWidth="3" className="graficocorte" />
                 <text x={parseFloat(props.barra)*props.escalabarra+130} y='152'>V</text>
