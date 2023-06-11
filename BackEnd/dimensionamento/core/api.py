@@ -543,10 +543,15 @@ def dimensionamento(request,data:Caracteristicas):
                     
                 
                 if ductilidade:
-                    if verificacao_area(Asef,Ac)[1]:
+                    a_min, verificacao, criterio = verificacao_area(Asef,Ac)
+                    if verificacao:
                         saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
                         Asef = Asef
+                        
+                    else:
                         saida['Area']['Aviso_arredondado'].append('Armadura insuficiente')
+                        Asef = a_min
+                        
 
                 else:
                     saida['Area']['Aviso_arredondado'].append('ignorar')
