@@ -6,6 +6,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Discretizacao from "../SVG/Discretizacao";
 import { useSelector } from "react-redux";
@@ -35,6 +36,7 @@ const AccordionSelf = (props)=>{
         const quantidade = texto.length/2
 
 
+
         if(quantidade>1 && !label.includes('ignorar')){
             return (
                 <>
@@ -55,6 +57,37 @@ const AccordionSelf = (props)=>{
                     })}
                 </>
         )
+        }
+        else if(label.includes('Discretização')){
+            return(
+                <>
+                <Grid container>
+                    <Grid xs={6}>
+                        <AccordionDetails sx={{height:'',fontFamily: 'Helvetica'}}>
+                            {texto.map((item,index) => {return <EqMath key={index} text={item} controle={false}></EqMath>})}
+                        </AccordionDetails>
+                    </Grid>
+                    <Grid xs={6}>
+                    <svg style={{ width:"40rem",height:"25rem"}}>
+                        <text>Corte A</text>
+                            <Discretizacao 
+                            h={CARACTERISTICAS['h']} 
+                            bw={CARACTERISTICAS['bw']} 
+                            cnom={props.dimensionamento["Parametros"]["Cobrimento"]} 
+                            bitolaT={CARACTERISTICAS["dT"]} 
+                            barras={props.dimensionamento["Discretizacao"]["Barras calculadas"].slice(-1)} 
+                            av={props.dimensionamento["Parametros"]["av"]}
+                            ah={props.dimensionamento["Parametros"]["ah"]} 
+                            bitola={CARACTERISTICAS["dL"]} 
+                            limite={props.dimensionamento["Discretizacao"]["Barras por camada"].slice(-1)[0]}
+                            momento = {props.dimensionamento["Verificacao Momento"]["Momento de Calculo"].slice(-1)[0]*props.dimensionamento["Verificacao Momento"]["Sinal"]}
+                            ></Discretizacao>
+                        </svg>
+                    </Grid>
+                </Grid>
+                </>
+            )
+
         }
         else{
             return(

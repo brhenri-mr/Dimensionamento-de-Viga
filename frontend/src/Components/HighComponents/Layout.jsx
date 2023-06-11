@@ -83,8 +83,6 @@ const Layout = () => {
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
 
-    console.log(CARACTERISTICAS)
-
     //useState
     const [pagina,setPagina] = useState(0)
     const [value, setValue] = useState(0)
@@ -324,27 +322,7 @@ const Layout = () => {
                 
                 
             </TabPanel>
-            {[pagina].map((item,chave)=>{
-                if (item===3 &&!(Object.keys(dimensionamento).length===2)){
-                    return(
-                        <svg>
-                            <Discretizacao 
-                            h={CARACTERISTICAS['h']} 
-                            bw={CARACTERISTICAS['bw']} 
-                            cnom={dimensionamento["Parametros"]["Cobrimento"]} 
-                            bitolaT={CARACTERISTICAS["dT"]} 
-                            barras={dimensionamento["Discretizacao"]["Barras calculadas"].slice(-1)} 
-                            av={dimensionamento["Parametros"]["av"]}
-                            ah={dimensionamento["Parametros"]["ah"]} 
-                            bitola={CARACTERISTICAS["dL"]} 
-                            limite={dimensionamento["Discretizacao"]["Barras por camada"].slice(-1)[0]}
-                            momento = {dimensionamento["Verificacao Momento"]["Momento de Calculo"].slice(-1)[0]*dimensionamento["Verificacao Momento"]["Sinal"]}
-                            ></Discretizacao>
-                        </svg>)
-                }
-               
-            })}
-            
+          
             </Box>
         </Box>
         </div>

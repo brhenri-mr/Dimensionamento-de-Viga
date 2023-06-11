@@ -21,12 +21,15 @@ const Barras = (props) =>{
 
     for(let i = 0; i<props.barras/2; i++ ){
         incremento_real.push(incremento[i])
-        incremento_real.push(incremento.slice(-i-1)[0])
+        if (incremento[i]===incremento.slice(-i-1)[0]){
+
+        }
+        else{
+            incremento_real.push(incremento.slice(-i-1)[0])
+        }
+        
 
     }
-    
-    console.log(incremento_real)
-
     return (
     
         <>

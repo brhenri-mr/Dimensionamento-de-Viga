@@ -589,8 +589,6 @@ def dimensionamento(request,data:Caracteristicas):
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal,caracteristicas['ductilidade'])
     
-    
-
     return saida
 
 

@@ -6,15 +6,15 @@ import Barras from "./Armadura";
 
 const Discretizacao = (props)=>{
 
-    const escala = 2.5
+    const escala = 350/props.h
     const posicoesY = []
     const incrementoX =  ((props.bw - 2*props.cnom - 2*props.bitolaT -props.barras[0][0]*props.bitola)/(props.barras[0][0]-1))*escala
+    let totalbarras = 0
 
 
     //Calculo posicao em y das armaduras
     // Sempre utilizarei como incremento em x o valor para a mais secao cheia, no caso, sempre a primeira
 
-    console.log(props.momento)
     if(props.momento<0){
         for(let camada of [...Array(props.barras[0].length).keys()]){
             posicoesY.push([
@@ -35,7 +35,10 @@ const Discretizacao = (props)=>{
     
         }
     }
-   
+    
+   for(let barras of props.barras[0]){
+    totalbarras = totalbarras + barras
+   }
 
 
     return(
@@ -61,6 +64,9 @@ const Discretizacao = (props)=>{
                 x={incrementoX}
             ></Barras>
         })}
+
+        <line x1={(props.bw-props.cnom)*escala} x2={200} y1={(props.h-props.bitolaT-props.cnom)*escala} y2={(props.h-props.bitolaT-props.cnom)*escala}  style={{stroke:'black',strokeDasharray:2}}></line>
+        <text x={200+5}  y={(props.h-props.bitolaT-props.cnom)*escala+5} fontSize={15}>{`${totalbarras} Ø ${props.bitola*10} mm`}</text>
         </>
     )
 }

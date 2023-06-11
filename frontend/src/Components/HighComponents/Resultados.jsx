@@ -18,12 +18,10 @@ import { actions } from "../../Actions/Combinacoes";
 
 function textotentativa(db,caso,caracteristicas,momentomaximo){
 
-    const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
-    const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
-    const ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
+    let verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
+    let eqmomentomax = ''
+    let ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
     console.log(db)
-
-
     const ignorarFrame = {
         titulo:'ignorar',
         texto:['ignorar','ignorar'],
@@ -31,8 +29,24 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     }
 
 
+    if (caracteristicas['ductilidade']  && db['Altura Util']['Aviso'][caso]){
+       
+        eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
+    
+    }
 
+   
+
+   
     if (caracteristicas["ductilidade"] && db['Altura Util']['Aviso'][caso]){
+        const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
+        const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
+        const ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
+        const ignorarFrame = {
+            titulo:'ignorar',
+            texto:['ignorar','ignorar'],
+            label:['ignorar']
+        }
         return  {
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
@@ -129,17 +143,17 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação:',
                     `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
-                    (db['Discretizacao']['Barras totais'][caso]%2 !==0)? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
-                    (db['Discretizacao']['Barras totais'][caso]%2 !==0)? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
+                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
+                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
                 ],
-                label:['ignorar']
+                label:['Discretização','ignorar']
     
             },
             AreaAcoEfetiva:(ignorar)?ignorarFrame:{
                 titulo: `\\(A_{sef} = ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)`,
                 texto:[
                     'Substitua os valores na equação:',
-                    `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras calculadas'][caso][0]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,
+                    `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras totais'][caso]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,
                 
                 ],
                 label:['']
@@ -198,7 +212,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo:'Quantidade de Barras por cada',
                 texto:[
                     'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
+                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'].slice(-1)[0]}\\ barras \\ por \\ camada\\) `],
                 label:['ignorar']
             },
             DiscretizacaoInicial:{
@@ -374,17 +388,17 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação:',
                     `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
-                    (db['Discretizacao']['Barras totais'][caso]%2 !==0)? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
-                    (db['Discretizacao']['Barras totais'][caso]%2 !==0)? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
+                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
+                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
                 ],
-                label:['ignorar']
+                label:['Discretização','ignorar']
     
             },
             AreaAcoEfetiva:(ignorar)?ignorarFrame:{
                 titulo: `\\(A_{sef} = ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)`,
                 texto:[
                     'Substitua os valores na equação:',
-                    `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras calculadas'][caso][0]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,
+                    `\\(A_{sef} = n \\pi \\dfrac{\\phi_l^2}{4} = ${db['Discretizacao']['Barras totais'][caso]} \\pi \\dfrac{${caracteristicas['dL'].toString().replace('.',',')}^2}{4} \\)`,
                 
                 ],
                 label:['']
@@ -442,8 +456,6 @@ const Resultados = (props)=>{
         }
     }
     catch(error){
-        console.log('erro na escala')
-        console.log(error)
     }
 
     try {
@@ -452,7 +464,6 @@ const Resultados = (props)=>{
     
     
     } catch (error) {
-        console.log('erro no acordeao')
         console.log(error)
     }
     
@@ -495,7 +506,7 @@ const Resultados = (props)=>{
         </Grid>
         {Object.keys(acoordeao).map((valor,indice)=>{
             try{
-                return <AccordionSelf label={acoordeao[valor]['titulo']} text={acoordeao[valor]['texto']} labesecundario={acoordeao[valor]["label"]}></AccordionSelf>
+                return <AccordionSelf label={acoordeao[valor]['titulo']} text={acoordeao[valor]['texto']} labesecundario={acoordeao[valor]["label"]} dimensionamento={props.dimensionamento}></AccordionSelf>
             }
             catch{
                 return <div/>
