@@ -51,6 +51,7 @@ const Discretizacao = (props)=>{
                 escala ={escala}
                 key={chave} 
                 barras={item[1]} 
+                espacos = {props.barras[0][0]}
                 ah={props.ah*escala} 
                 y={item[0]} 
                 limite={props.limite} 

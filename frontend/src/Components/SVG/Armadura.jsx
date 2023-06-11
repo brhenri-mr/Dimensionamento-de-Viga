@@ -11,27 +11,21 @@ const Barras = (props) =>{
     const raio = props.bitola*props.escala
     const patternSize = Math.ceil(Math.sqrt(2) * raio * 2); // Calcula o tamanho do padrão
 
-    let incremento_real = 0
+    let incremento_real = []
 
-    for(let i = 0; i<props.barras; i++ ){
+    for(let i = 0; i<props.espacos; i++ ){
         incremento.push(i)
     }
 
 
 
-    incremento_real =[...incremento.slice(0,props.barras/2),...incremento.slice(-props.barras/2)]
-
-
-    if(props.barras%2===0){
+    for(let i = 0; i<props.barras/2; i++ ){
+        incremento_real.push(incremento[i])
+        incremento_real.push(incremento.slice(-i-1)[0])
 
     }
-    else{
-        //incremento medio
-        incremento_real.push(incremento[((incremento.length-1))/2])
-        
-    }
-
-        
+    
+    console.log(incremento_real)
 
     return (
     
