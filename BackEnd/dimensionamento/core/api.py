@@ -17,6 +17,7 @@ import copy
 api = NinjaAPI()
 
 momento_maximo = 0
+cortante_max = 0
 
 @api.get("/hello")
 def hello(request):
@@ -311,6 +312,7 @@ def MetRigidez(request, data:MetRigidez):
     momento_eq = []
     saida,entrada,quantidade_comb = interno(data)
     global momento_maximo
+    global cortante_max
 
     
     #Obtendo a funcao de momento para cada tramo
@@ -387,7 +389,7 @@ def MetRigidez(request, data:MetRigidez):
     saida['Cortante Maximo'] = maximo_momentona_secao(saida,'Cortante')
 
     momento_maximo = saida['Maximo']  if len(quantidade_comb)>1 else 0
-    momento_maximo = saida['Cortante Maximo']  if len(quantidade_comb)>1 else 0
+    cortante_max = saida['Cortante Maximo']  if len(quantidade_comb)>1 else 0
     return saida
 
 @api.post("/Dimensionamento")
@@ -410,7 +412,8 @@ def dimensionamento(request,data:Caracteristicas):
         saida = {'Admensionais':[],
          'Altura Util':{
             'Valor':[],
-            'ys':[]
+            'ys':[],
+            'Aviso':[]
         },
         'Verificacao Linha Neutra':{
              'Aviso':[],
@@ -479,6 +482,10 @@ def dimensionamento(request,data:Caracteristicas):
                 #Altura util
                 d = h - cnom - bitolaT - ys
                 saida['Altura Util']['Valor'].append(d)
+                saida['Altura Util']['Aviso'].append(ys<=0.1*h)
+                if not (ys<=0.1*h) and ductilidade  :
+                    sair=True
+                    break
                 
                 #verificao momento
                 momento, momentomin, momentomax, aviso = verificacao_momentos(momento, parametros.fctksup,w0,bw,d,fcd,parametros.zeta,c,ductilidade)
@@ -492,9 +499,12 @@ def dimensionamento(request,data:Caracteristicas):
                     break
                 
                 #admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,ecu)
-                bx, bz, bs = admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,parametros.ecu)
-                saida['Admensionais'].append([bx,bz,bs])
-
+                bx, bz, bs,aviso = admensionais(parametros.zeta,momento,parametros.eta,bw,d,fcd,Es,fyd,parametros.ecu)
+                saida['Admensionais'].append([bx,bz,bs,aviso])
+                if aviso =='Impossivel Calcular a posição da linha Neutra':
+                    '''Foi impossivel Calcular a linha neutra, necessário aumentar a altura da viga'''
+                    sair =True
+                    break
 
                 #Area de aco 
                 a = area_aco(momento,bz,d,bs,fyd)
@@ -527,8 +537,8 @@ def dimensionamento(request,data:Caracteristicas):
                 
                 saida['Discretizacao']['Barras por camada'].append(nc)
                 saida['Discretizacao']['Barras totais'].append(numero_barras)
+                Asef = area_efeitiva(numero_barras,bitolaL)
                 
-                Asef = area_efeitiva(barra[0],bitolaL)
                 saida['Area']['Area Efetiva'].append(Asef)
                     
                 
@@ -568,13 +578,13 @@ def dimensionamento(request,data:Caracteristicas):
     
     caracteristicas = data.dict()
     momento = abs(momento_maximo[1])
+    cortante= abs(cortante_max[1])
     sinal = -1 if momento_maximo[1]<0 else 1
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal,caracteristicas['ductilidade'])
     
     
-
 
     return saida
 
