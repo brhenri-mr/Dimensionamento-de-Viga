@@ -4,13 +4,15 @@ import TextField from '@mui/material/TextField';
 import { FormControl } from "@mui/material";
 import Box from '@mui/material/Box';
 //Redux
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { actions } from "../../Actions/Barra";
 
 const InputBarra = (props)=>{
 
-    const [comprimento, setComprimento] = useState('')
+    const BARRA = useSelector(state => state.barraReducers.BARRA)
 
+    const [comprimento, setComprimento] = useState(BARRA ===0 ? '':BARRA)
+    
     const dispach = useDispatch()
 
     const handlechange = (event) =>{
