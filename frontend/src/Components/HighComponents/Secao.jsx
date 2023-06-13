@@ -51,7 +51,7 @@ const Secao  = (props)=> {
     const [agregado,setAgregado] = useState(CARACTERISTICAS['agregado']===0?'':CARACTERISTICAS['agregado'])
     const [dmax,setDmax] = useState(CARACTERISTICAS['dmax']===0?'':diametroparabrita[CARACTERISTICAS['dmax']])
     const [ductilidade,setDuctilidade] = useState((CARACTERISTICAS['ductilidade']===0?true:CARACTERISTICAS['ductilidade']))
-    const [open,setOpen] = useState(ductilidade)
+    const [open,setOpen] = useState(false)
 
     const handleClose = () => {
         setOpen(false);
