@@ -15,6 +15,12 @@ import Alert from '@mui/material/Alert';
 import { AlertTitle } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 //Redux
 import { useDispatch} from "react-redux";
 import { useSelector } from "react-redux";
@@ -24,7 +30,6 @@ import actions from "../../Actions/Caracteristicas";
 import { ambiente } from "../../Constants/classeAmbiental";
 import { NomesAgregados,ClasseConcreto,ClasseAço } from "../../Constants/classSecao";
 import { Britas,diametroparabrita } from "../../Constants/DiametrosAgregado";
-
 
 const Secao  = (props)=> {
 
@@ -46,6 +51,16 @@ const Secao  = (props)=> {
     const [agregado,setAgregado] = useState(CARACTERISTICAS['agregado']===0?'':CARACTERISTICAS['agregado'])
     const [dmax,setDmax] = useState(CARACTERISTICAS['dmax']===0?'':diametroparabrita[CARACTERISTICAS['dmax']])
     const [ductilidade,setDuctilidade] = useState((CARACTERISTICAS['ductilidade']===0?true:CARACTERISTICAS['ductilidade']))
+    const [open,setOpen] = useState(ductilidade)
+
+    const handleClose = () => {
+        setOpen(false);
+      };
+
+    const Naocontinuar = () => {
+        setOpen(false)
+        setDuctilidade(true)
+      };
 
     const caracteristcas = (event)=>{
         event.preventDefault()
@@ -139,7 +154,6 @@ const Secao  = (props)=> {
         return true
     }
 
-    console.log(ductilidade)
 
     return(
         <>
@@ -301,7 +315,7 @@ const Secao  = (props)=> {
                                     <InputLabel>Diâmetro máximo de Agregado</InputLabel>
                                     <Select
                                     value={dmax}
-                                    label='Diâmetro máximo de Agregadol'
+                                    label='Diâmetro máximo de Agregado'
                                     variant="outlined"
                                     sx={{backgroundColor:'white'}}
                                     onChange={(event) =>{event.preventDefault();return setDmax(event.target.value)}} 
@@ -324,13 +338,39 @@ const Secao  = (props)=> {
                         <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{marginLeft:0.25}}>
                             <Grid>
                                 <item>
-
+                                    
                               
                                     <FormControlLabel
                                         label="Garantir Ductilidade"
-                                        control={<Checkbox checked={ductilidade} onChange={(event)=>{return setDuctilidade(event.target.checked)}}/>}
+                                        control={<Checkbox checked={ductilidade} onChange={(event)=>{
+                                            setOpen(!event.target.checked)
+                                            return setDuctilidade(event.target.checked)
+                                        }}/>}
                                     />
                                     
+                                    <Dialog
+                                        open={open}
+                                        onClose={handleClose}
+                                        aria-labelledby="alert-dialog-title" 
+                                        aria-describedby="alert-dialog-description"
+                                    >
+                                        <DialogTitle id="alert-dialog-title">
+                                        {"Não dimensionario seção dúctil?"}
+                                        </DialogTitle>
+                                        <DialogContent>
+                                        <DialogContentText id="alert-dialog-description">
+                                            Não garantir a ducitidade fará com que a seção fique frági, descrumprindo normas
+                                            e pondendo causar acidentes
+                                        </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                        <Button onClick={Naocontinuar}>Não Continuar</Button>
+                                        <Button onClick={handleClose} autoFocus>
+                                            Continuar
+                                        </Button>
+                                        </DialogActions>
+                                    </Dialog>
+
          
                                   
             
