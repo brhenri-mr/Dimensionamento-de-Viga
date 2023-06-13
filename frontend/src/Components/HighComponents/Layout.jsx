@@ -27,6 +27,7 @@ import Discretizacao from "../SVG/Discretizacao";
 
 
 
+
 function estabilidaded(el){
     ///vetor com o tipo de apoios
     let restricao= 0
