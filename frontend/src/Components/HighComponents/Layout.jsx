@@ -139,7 +139,7 @@ const Layout = () => {
 
     //Combinacoes
     async function Combinacoes (data,ed) {
-        await fetch('http://127.0.0.1:8000/api/Combinacoes', {
+        await fetch('https://zoomlunar.pythonanywhere.com/api/Combinacoes', {
                 method: 'POST', // or 'PUT'
                 headers: {
                     'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ const Layout = () => {
         }
 
         if(logico){
-            const api = fetch('http://127.0.0.1:8000/api/MetRigidez', {
+            const api = fetch('https://zoomlunar.pythonanywhere.com/api//MetRigidez', {
 
         
             method: 'POST', // or 'PUT'
@@ -192,7 +192,7 @@ const Layout = () => {
             await api
         }
         else{
-            await fetch('http://127.0.0.1:8000/api/MetRigidez', {
+            await fetch('https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
 
         
             method: 'POST', // or 'PUT'
@@ -217,7 +217,7 @@ const Layout = () => {
      //API Dimensionamento
      async function Dimensionamento(data,momentomax) {
 
-        await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
+        await fetch('https://zoomlunar.pythonanywhere.com/api/Dimensionamento', {
 
                 method: 'POST', // or 'PUT'
                 headers: {
