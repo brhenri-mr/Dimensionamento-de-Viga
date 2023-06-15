@@ -6,6 +6,7 @@ import CarregamentoDist from "../SVG/CarregamentosDist";
 import Viga from "../SVG/Viga";
 //Constante
 import PadraoParaDesenho from "../../Constants/PadraoParaDesenho";
+import Eixos from "../SVG/Eixos";
 
 
 
@@ -95,6 +96,7 @@ const Figura = (props) =>{
     return (
         <div>
             <svg {...PadraoParaDesenho}>
+                <Eixos></Eixos>
                 <Viga value={props.barra*escalabarra} mag={magmax*escala-50} apoios={props.apoios} escala={escalabarra}></Viga>
                 {props.apoios.map((item,index)=>{
                     return <Apoio key= {index} tipo = {item.tipo} value={item.value*escalabarra} escala={escalabarra}></Apoio>
@@ -111,6 +113,7 @@ const Figura = (props) =>{
                         return <CarregamentoPontual key={index} mag={item['mag']} start={item['pos'][0]*escalabarra+50} escala={escala}></CarregamentoPontual>
                     }
                 })}
+                
             </svg>
         </div>
     )
