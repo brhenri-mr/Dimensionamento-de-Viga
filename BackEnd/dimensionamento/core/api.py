@@ -508,7 +508,7 @@ def dimensionamento(request,data:Caracteristicas):
 
                 #Area de aco 
                 a = area_aco(momento,bz,d,bs,fyd)
-                a_min, verificacao, criterio = verificacao_area(a,Ac)
+                a_min, verificacao, criterio = verificacao_area(a,Ac,str(fcd*14))
                 saida['Area']['Area Necessaria'].append(a)
                 #verificacao das areas
                 if ductilidade:
@@ -543,7 +543,7 @@ def dimensionamento(request,data:Caracteristicas):
                     
                 
                 if ductilidade:
-                    a_min, verificacao, criterio = verificacao_area(Asef,Ac)
+                    a_min, verificacao, criterio = verificacao_area(Asef,Ac,str(fcd*14))
                     if verificacao:
                         saida['Area']['Aviso_arredondado'].append('Armadura suficiente')
                         Asef = Asef

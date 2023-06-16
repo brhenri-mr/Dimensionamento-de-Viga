@@ -82,7 +82,7 @@ def area_aco(momento:float,bz:float,d:float,bs:float,fyd:float) -> float:
     area = (momento)/(d*bz*bs*fyd)
     return area
 
-def verificacao_area(a,Ac) -> list[float,bool]:
+def verificacao_area(a,Ac,fck) -> list[float,bool]:
     '''
     Verificacao da armadura minima da secao
     a: area de aco
@@ -90,7 +90,26 @@ def verificacao_area(a,Ac) -> list[float,bool]:
     return: Armadura min e Aviso(True tudo certo)
     '''
     #dados
-    armadura_min = Ac *0.0015
+    
+    area = {
+        '20':0.150,
+        '25':0.150,
+        '30':0.150,
+        '35':0.164,
+        '40':0.179,
+        '45':0.194,
+        '50':0.208,
+        '55':0.211,
+        '60':0.219,
+        '65':0.226,
+        '70':0.233,
+        '75':0.239,
+        '80':0.245,
+        '85':0.251,
+        '90':0.256
+    }
+    
+    armadura_min = Ac *area[fck]/100
     armadura_max = Ac * 0.04
     criterio = 'Armadura Suficiente'
     #verificacao da aramdura

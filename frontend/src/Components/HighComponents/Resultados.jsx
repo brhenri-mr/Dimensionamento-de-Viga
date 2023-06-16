@@ -28,7 +28,23 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         label:['ignorar']
     }
 
-
+    const area={
+        '20':0.150,
+        '25':0.150,
+        '30':0.150,
+        '35':0.164,
+        '40':0.179,
+        '45':0.194,
+        '50':0.208,
+        '55':0.211,
+        '60':0.219,
+        '65':0.226,
+        '70':0.233,
+        '75':0.239,
+        '80':0.245,
+        '85':0.251,
+        '90':0.256
+    }
     if (caracteristicas['ductilidade']  && db['Altura Util']['Aviso'][caso]){
        
         eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
@@ -100,8 +116,8 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 }:
             {
                 titulo: `\\(M_{sd} = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm\\)`,
-                texto:[`Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento mínimo:`,
-                `\\(M_{mín} = 0,8 W0 f_{ckt,sup} = 0,8* ${db['Parametros']['w0'].toFixed(2).replace('.',',')}* ${db['Parametros']['fcktsup'].toFixed(2).replace('.',',')} = ${db['Verificacao Momento']['Momento Minimo'][caso].toFixed(2).replace('.',',')}\\ kN.cm\\)`,
+                texto:[`Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento mínimo (NBR 6118:2014 item 17.3.5.2.1):`,
+                `\\(M_{mín} = 0,8 W_0 f_{ckt,sup} = 0,8* ${db['Parametros']['w0'].toFixed(2).replace('.',',')}* ${db['Parametros']['fcktsup'].toFixed(2).replace('.',',')} = ${db['Verificacao Momento']['Momento Minimo'][caso].toFixed(2).replace('.',',')}\\ kN.cm\\)`,
                 `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo:`,
                 eqmomentomax,
             ],
@@ -129,8 +145,8 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             VerificacaoAreaAco:(ignorar)?ignorarFrame:{
                 titulo: `Verificação aço: ${db['Area']['Aviso'][caso]}`,
                 texto:[
-                `Substitua os valores na equação e compare com o valor de área de amadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm² `
-                ,`\\(A_{mín} = 0,15\\% \\ A_c  = 0,15\\% ${db['Parametros']['Ac']} = ${(db['Parametros']['Ac']*0.15/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
+                `Substitua os valores na equação (NBR6118:2014 tabela 17.3) e compare com o valor de área de amadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm² `
+                ,`\\(A_{mín} = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% \\ A_c  = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% ${db['Parametros']['Ac']} = ${(db['Parametros']['Ac']*area[caracteristicas['fck']]/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
                 ,`Substitua os valores na equação e compare com o valor de área armadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
             ],
@@ -162,7 +178,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo: `Verificação aço: ${db['Area']['Aviso_arredondado'][caso]}`,
                 texto:[
                     `Substitua os valores na equação e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
-                ,`\\(A_{mín} = 0,15\\% \\ A_c  = 0,15\\% ${db['Parametros']['Ac']} = ${(db['Parametros']['Ac']*0.15/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
+                ,`\\(A_{mín} = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% \\ A_c  = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% ${db['Parametros']['Ac']} = ${(db['Parametros']['Ac']*area[caracteristicas['fck']]/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
                 ,`Substitua os valores na equação e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
             ],
