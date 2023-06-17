@@ -87,7 +87,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por cada',
+                titulo:'Quantidade de Barras por camada',
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
@@ -182,7 +182,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 ,`Substitua os valores na equação e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
             ],
-                label:['Amáx','Amín']
+                label:['Amín','Amáx']
     
             },
             VerificacaoAdmensionais:(ignorar)?ignorarFrame:{
@@ -225,7 +225,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por cada',
+                titulo:'Quantidade de Barras por camada',
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'].slice(-1)[0]}\\ barras \\ por \\ camada\\) `],
@@ -269,7 +269,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por cada',
+                titulo:'Quantidade de Barras por camada',
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
