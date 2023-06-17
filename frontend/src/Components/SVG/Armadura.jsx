@@ -37,7 +37,7 @@ const Barras = (props) =>{
             <line x1="0" y1="0" x2="0" y2={patternSize/2} style={{ stroke: 'black', strokeWidth: 1.2 }} />
         </pattern>
         {incremento_real.map((item,chave)=>{
-            return <circle key={chave}cx={-2.5+(raio+props.cnom+props.bitolaT)+(props.x+raio)*item} cy={props.y} r={raio} style={{ fill: 'url(#hachura)', stroke:'black' }}></circle>
+            return <circle key={chave}cx={(raio+props.cnom+props.bitolaT)+(props.x+raio)*item} cy={props.y} r={raio} style={{ fill: 'url(#hachura)', stroke:'black' }}></circle>
         })}
         </>
     )

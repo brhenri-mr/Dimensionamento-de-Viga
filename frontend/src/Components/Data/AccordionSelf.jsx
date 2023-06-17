@@ -35,8 +35,7 @@ const AccordionSelf = (props)=>{
 
         const quantidade = texto.length/2
 
-
-
+    
         if(quantidade>1 && !label.includes('ignorar')){
             return (
                 <>
@@ -80,7 +79,7 @@ const AccordionSelf = (props)=>{
                             ah={props.dimensionamento["Parametros"]["ah"]} 
                             bitola={CARACTERISTICAS["dL"]} 
                             limite={props.dimensionamento["Discretizacao"]["Barras por camada"].slice(-1)[0]}
-                            momento = {props.dimensionamento["Verificacao Momento"]["Momento de Calculo"].slice(-1)[0]*props.dimensionamento["Verificacao Momento"]["Sinal"]}
+                            momento = {props.dimensionamento["Verificacao Momento"]["Momento de Calculo"].slice(-1)[0]*-props.dimensionamento["Verificacao Momento"]["Sinal"]}
                             ></Discretizacao>
                         </svg>
                     </Grid>
