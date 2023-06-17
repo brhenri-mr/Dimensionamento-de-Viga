@@ -361,12 +361,12 @@ const Secao  = (props)=> {
                                         aria-describedby="alert-dialog-description"
                                     >
                                         <DialogTitle id="alert-dialog-title">
-                                        {"Não dimensionario seção dúctil?"}
+                                        {"Não dimensionar a seção como dúctil?"}
                                         </DialogTitle>
                                         <DialogContent>
                                         <DialogContentText id="alert-dialog-description">
-                                            Não garantir a ducitidade fará com que a seção fique frági, descrumprindo normas
-                                            e pondendo causar acidentes
+                                            Não garantir a ducitidade fará com que a seção fique frági, descrumprindo itens normativos
+                                            e pondendo causar fatalidades, continuar?
                                         </DialogContentText>
                                         </DialogContent>
                                         <DialogActions>
