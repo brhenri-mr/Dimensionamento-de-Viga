@@ -389,6 +389,7 @@ def MetRigidez(request, data:MetRigidez):
     saida['Cortante Maximo'] = maximo_momentona_secao(saida,'Cortante')
 
     momento_maximo = saida['Maximo']  if len(quantidade_comb)>1 else 0
+    print(saida['Maximo'])
     cortante_max = saida['Cortante Maximo']  if len(quantidade_comb)>1 else 0
     return saida
 
@@ -582,9 +583,13 @@ def dimensionamento(request,data:Caracteristicas):
     
     
     caracteristicas = data.dict()
-    momento = abs(momento_maximo[1])
-    cortante= abs(cortante_max[1])
-    sinal = -1 if momento_maximo[1]<0 else 1
+    try:
+        momento = abs(momento_maximo[1])
+        sinal = -1 if momento_maximo[1]<0 else 1
+    except:
+        momento = abs(momento_maximo)
+        sinal = -1 if momento_maximo<0 else 1
+        
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal,caracteristicas['ductilidade'])

@@ -108,8 +108,7 @@ def verificacao_area(a,Ac,fck) -> list[float,bool]:
         '85':0.251,
         '90':0.256
     }
-    
-    armadura_min = Ac *area[fck]/100
+    armadura_min = Ac *area[fck[:2]]/100
     armadura_max = Ac * 0.04
     criterio = 'Armadura Suficiente'
     #verificacao da aramdura

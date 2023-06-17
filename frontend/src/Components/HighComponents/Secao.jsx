@@ -30,6 +30,7 @@ import actions from "../../Actions/Caracteristicas";
 import { ambiente } from "../../Constants/classeAmbiental";
 import { NomesAgregados,ClasseConcreto,ClasseAço } from "../../Constants/classSecao";
 import { Britas,diametroparabrita } from "../../Constants/DiametrosAgregado";
+import { diametros } from "../../Constants/classSecao";
 
 const Secao  = (props)=> {
 
@@ -41,8 +42,8 @@ const Secao  = (props)=> {
     const [alturaSecao,setAlturasecao]= useState((CARACTERISTICAS['h']===0)?'':CARACTERISTICAS['h'].toString().replace('.',','))
     //const [diametromax,setDiametromax] = useState('')
     const [bw,setBw] = useState(CARACTERISTICAS['bw']===0?'':CARACTERISTICAS['bw'].toString().replace('.',','))
-    const [diametroL,setDiametroL] = useState(CARACTERISTICAS['dL']===0?'':CARACTERISTICAS['dL'].toString().replace('.',','))
-    const [bitolaT, setBitolaT] = useState(CARACTERISTICAS['dT']===0?'':CARACTERISTICAS['dT'].toString().replace('.',','))
+    const [diametroL,setDiametroL] = useState(CARACTERISTICAS['dL']===0?'':`Ø${(CARACTERISTICAS['dL']*10).toString().replace('.',',')}`)
+    const [bitolaT, setBitolaT] = useState(CARACTERISTICAS['dT']===0?'':`Ø${(CARACTERISTICAS['dT']*10).toString().replace('.',',')}`)
     const [fykt, setFykt] = useState(CARACTERISTICAS['fykt']===0?'':'CA'+CARACTERISTICAS['fykt']/10)
     const [classeAmbiental, setClasseambiental] = useState(CARACTERISTICAS['classeambiental']===0?'':CARACTERISTICAS['classeambiental'])
     const [alerta,setAlerta] = useState(false)
@@ -68,7 +69,7 @@ const Secao  = (props)=> {
         let buginfernal = alerta //o setAlert nao funciona, nao adianta
         let temp = 0
 
-        for(let i of [alturaSecao,bw,diametroL,bitolaT,classeAmbiental]){
+        for(let i of [alturaSecao,bw,classeAmbiental]){
             if (i === ''){
                 setAlerta(true)
                 buginfernal = true
@@ -81,7 +82,7 @@ const Secao  = (props)=> {
         }
 
 
-        for(let i of [alturaSecao,bw,diametroL,bitolaT]){
+        for(let i of [alturaSecao,bw]){
             for(let letra of i){
                 if ('1234567890'.includes(letra)){
                     break
@@ -124,8 +125,8 @@ const Secao  = (props)=> {
                 h:parseFloat(alturaSecao.replace(',','.')),
                 agregado:agregado,
                 bw:parseFloat(bw.replace(',','.')),
-                dL:parseFloat(diametroL.replace(',','.')),
-                dT: parseFloat(bitolaT.replace(',','.')),
+                dL:diametros[diametroL],
+                dT: diametros[bitolaT],
                 fykt: ClasseAço[fykt],
                 dmax:Britas[dmax],
                 classeambiental:classeAmbiental,
@@ -209,7 +210,7 @@ const Secao  = (props)=> {
                                         <TextField 
                                         value={alturaSecao} 
                                         onChange={(event) =>{event.preventDefault();return setAlturasecao(event.target.value)}} 
-                                        label="Altura da seção" 
+                                        label="Altura da seção [cm]" 
                                         variant="outlined"
                                         error={erro(alturaSecao,'numeros')}
                                         helperText = {erro(alturaSecao,'numeros')?'Insira somente números':''}
@@ -231,20 +232,23 @@ const Secao  = (props)=> {
                                         <TextField 
                                         value={bw} 
                                         onChange={(event) =>{event.preventDefault();return setBw(event.target.value)}} 
-                                        label="Largura da seção " 
+                                        label="Largura da seção [cm]" 
                                         variant="outlined"
                                         error={erro(bw,'numeros')}
                                         helperText = {erro(bw,'numeros')?'Insira somente números':''}
                                         sx={{backgroundColor:'white'}}/>
 
-                                        <TextField  
-                                        value={diametroL} 
-                                        onChange={(event) =>{event.preventDefault();return setDiametroL(event.target.value)}} 
-                                        label="Diâmetro das Armaduras Logitudinais" 
-                                        variant="outlined"
-                                        error={erro(diametroL,'numeros')}
-                                        helperText = {erro(diametroL,'numeros')?'Insira somente números':''}
-                                        sx={{backgroundColor:'white'}} />
+                                    <FormControl>
+                                            <InputLabel>Diâmetro armadura Longitudinal</InputLabel>
+                                            <Select 
+                                            value={diametroL} 
+                                            onChange={(event) =>{event.preventDefault();return setDiametroL(event.target.value)}} 
+                                            label="Diâmetro armadura Longitudinal"  
+                                            variant="outlined"  
+                                            sx={{backgroundColor:'white'}}>
+                                                {Object.keys(diametros).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                            </Select> 
+                                        </FormControl>
                                     </Box>
                                 </item>
                             </Grid>
@@ -274,15 +278,17 @@ const Secao  = (props)=> {
                                         </Box>
                                         
                                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
-                                            <TextField 
-                                                value={bitolaT} 
-                                                onChange={(event) =>{event.preventDefault();return setBitolaT(event.target.value)}} 
-                                                label="diâmetro do estribo" 
-                                                variant="outlined"
-                                                error={erro(bitolaT,'numeros')}
-                                                helperText = {erro(bitolaT,'numeros')?'Insira somente números':''}
-                                                sx={{backgroundColor:'white'}}
-                                            />
+                                        <FormControl>
+                                            <InputLabel>Diâmetro armadura Transversal</InputLabel>
+                                            <Select 
+                                            value={bitolaT} 
+                                            onChange={(event) =>{event.preventDefault();return setBitolaT(event.target.value)}} 
+                                            label="Diâmetro armadura Transversal"  
+                                            variant="outlined"  
+                                            sx={{backgroundColor:'white'}}>
+                                                {Object.keys(diametros).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
+                                            </Select> 
+                                        </FormControl>
                                         </Box>
                                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
                                             <Button onClick={caracteristcas}>Adicionar</Button>
