@@ -481,7 +481,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Altura Util']['ys'].append(ys)
                 saida['Discretizacao']['Barras calculadas'].append(barra)
                 #Altura util
-                d = h - cnom - bitolaT - ys
+                d = h - cnom - bitolaT -0.5*bitolaL- ys
                 saida['Altura Util']['Valor'].append(d)
                 saida['Altura Util']['Aviso'].append(ys<=0.1*h)
                 if not (ys<=0.1*h) and ductilidade  :

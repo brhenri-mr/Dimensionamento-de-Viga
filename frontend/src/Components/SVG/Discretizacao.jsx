@@ -10,6 +10,7 @@ const Discretizacao = (props)=>{
     const posicoesY = []
     const incrementoX =  ((props.bw - 2*props.cnom - 2*props.bitolaT -props.barras[0][0]*props.bitola)/(props.barras[0][0]-1))*escala
     let totalbarras = 0
+    let ytexto = 0
 
 
     //Calculo posicao em y das armaduras
@@ -18,6 +19,7 @@ const Discretizacao = (props)=>{
     console.log(props.momento)
 
     if(props.momento<0){
+        ytexto = (props.bitolaT+props.cnom)*escala+10
         for(let camada of [...Array(props.barras[0].length).keys()]){
             posicoesY.push([
                 2.5+(props.bitolaT+props.cnom+props.bitola/2+(props.av*camada+props.bitola*camada))*escala,
@@ -27,6 +29,8 @@ const Discretizacao = (props)=>{
         }
     }
     else{
+
+        ytexto = (props.h-props.bitolaT-props.cnom)*escala+5
         for(let camada of [...Array(props.barras[0].length).keys()]){
             posicoesY.push([
                 2.5+(props.h-props.bitolaT-props.cnom-props.bitola/2-props.av*camada-props.bitola*camada)*escala,
@@ -48,7 +52,7 @@ const Discretizacao = (props)=>{
          <rect x={2.5} y={2.5} width={props.bw*escala} height={props.h*escala} style={{fill:'#D9D9D9',strokeWidth:0.8,stroke:'rgb(0,0,0)',}}></rect>
 
         
-        <rect x={2.5+props.cnom*escala} y={2.5+props.cnom*escala} width={props.bw*escala-props.cnom*2*escala+2.5} height={props.h*escala-props.cnom*2*escala} style={{fill:'none',strokeWidth:`${props.bitolaT*escala}`,stroke:'rgb(0,0,0)',}}></rect>
+        <rect x={2.5+props.cnom*escala} y={2.5+props.cnom*escala} width={props.bw*escala-props.cnom*2*escala} height={props.h*escala-props.cnom*2*escala} style={{fill:'none',strokeWidth:`${props.bitolaT*escala}`,stroke:'rgb(0,0,0)',}}></rect>
 
 
         {posicoesY.map((item,chave)=>{
@@ -67,8 +71,8 @@ const Discretizacao = (props)=>{
             ></Barras>
         })}
 
-        <line x1={(props.bw-props.cnom)*escala} x2={200} y1={(props.h-props.bitolaT-props.cnom)*escala} y2={(props.h-props.bitolaT-props.cnom)*escala}  style={{stroke:'black',strokeDasharray:2}}></line>
-        <text x={200+5}  y={(props.h-props.bitolaT-props.cnom)*escala+5} fontSize={15}>{`${totalbarras} Ø ${props.bitola*10} mm`}</text>
+        <line x1={(props.bw-props.cnom)*escala} x2={200} y1={ytexto-5} y2={ytexto-5}  style={{stroke:'black',strokeDasharray:2}}></line>
+        {<text x={200+5}  y={ytexto} fontSize={15}>{`${totalbarras} Ø ${props.bitola*10} mm`}</text>}
         </>
     )
 }
