@@ -5,7 +5,6 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import { Alert, Collapse } from "@mui/material";
 //compoments
 import Figura from "./Figura";
@@ -22,7 +21,6 @@ import { actions } from "../../Actions/Carregamento";
 import { actions as actionbarra} from "../../Actions/Momentomax";
 import {actions as ACTIONScomb} from "../../Actions/Combinacoes";
 import { useSelector } from "react-redux";
-import Discretizacao from "../SVG/Discretizacao";
 
 
 
@@ -83,6 +81,7 @@ const Layout = () => {
     const ED = useSelector(state => state.botoesReducers.ED)
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
+    console.log(CARACTERISTICAS)
 
     //useState
     const [pagina,setPagina] = useState(0)
