@@ -24,8 +24,8 @@ class ParametrosConcreto:
         }
         #Cobrimento por elemento em cm
         cobrimento_por_elemento = {
-            'Viga':[2.0,2.5,3.5,4.5],
-            'Laje':[2.5,3.0,4.0,5.0],
+            'Laje':[2.0,2.5,3.5,4.5],
+            'Viga':[2.5,3.0,4.0,5.0],
             'Elemento em contato com o solo':[3.0,3.0,4.0,5.0]
         }
         

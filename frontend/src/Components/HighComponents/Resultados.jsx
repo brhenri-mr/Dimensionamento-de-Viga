@@ -82,7 +82,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro de redistribuição máxima da ductilidade estabelecidos pela NBR6118/2014 no item 14.6.4.3:',
                     (caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)',
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
-                    `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
+                    `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
                 ],
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
@@ -159,8 +159,6 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação:',
                     `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
-                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
-                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
                 ],
                 label:['Discretização','ignorar']
     
@@ -404,8 +402,6 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação:',
                     `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
-                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? 'Como o valor de barras necessárias foi um valor impar, a distribuição das camadas seria assimétrica, ocasionando em flexo torção':'',
-                    (db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0]%2 !==0 && db['Discretizacao']['Barras calculadas'][caso].slice(-1)[0] !== db['Discretizacao']['Barras por camada'][caso])? `Portanto, visando manter a simetria, adota-se \\(n = ${db['Discretizacao']['Barras totais'][caso]+1}\\ barras\\)`:''
                 ],
                 label:['Discretização','ignorar']
     

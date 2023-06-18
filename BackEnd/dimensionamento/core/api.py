@@ -480,6 +480,12 @@ def dimensionamento(request,data:Caracteristicas):
                 ys, numero_barras, barra = incremento_cg_armaduras(bitolaL,parametros.av,h,numero_de_barras=bn,barras_por_camada=nc)
                 saida['Altura Util']['ys'].append(ys)
                 saida['Discretizacao']['Barras calculadas'].append(barra)
+                
+                
+                #Barras por camada
+                _, nc = distruibuicao_camadas(1,bitolaL,bw,cnom,bitolaT,parametros.av,parametros.ah)
+                saida['Discretizacao']['Barras por camada'].append(nc)
+                
                 #Altura util
                 d = h - cnom - bitolaT -0.5*bitolaL- ys
                 saida['Altura Util']['Valor'].append(d)
@@ -488,7 +494,7 @@ def dimensionamento(request,data:Caracteristicas):
                     sair=True
                     break
                 
-                #verificao momento
+                #Verificacao se o momento esta dentro do intervalo
                 momento, momentomin, momentomax, aviso = verificacao_momentos(momento, parametros.fctksup,w0,bw,d,fcd,parametros.zeta,c,ductilidade)
                 saida['Verificacao Momento']['Momento Minimo'].append(momentomin)
                 saida['Verificacao Momento']['Momento Maximo'].append(momentomax)
@@ -496,6 +502,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Verificacao Momento']['Aviso'].append(aviso)
                 
                 if momento==-1:
+                    saida['Discretizacao']['Barras totais'].append(bn)
                     sair = True
                     break
                 
@@ -504,6 +511,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Admensionais'].append([bx,bz,bs,aviso])
                 if aviso =='Impossivel Calcular a posição da linha Neutra':
                     '''Foi impossivel Calcular a linha neutra, necessário aumentar a altura da viga'''
+                    saida['Discretizacao']['Barras totais'].append(bn)
                     sair =True
                     break
 
@@ -536,7 +544,7 @@ def dimensionamento(request,data:Caracteristicas):
                 else:
                     saida['Discretizacao']['Arredondamento de Bn'] = 'Não'
                 
-                saida['Discretizacao']['Barras por camada'].append(nc)
+                
                 saida['Discretizacao']['Barras totais'].append(numero_barras)
                 Asef = area_efeitiva(numero_barras,bitolaL)
                 
