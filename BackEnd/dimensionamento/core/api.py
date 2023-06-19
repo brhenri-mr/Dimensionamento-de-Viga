@@ -570,7 +570,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Verificacao Linha Neutra']['Admensionais'].append(['ignorar','ignorar'])
                 saida['Verificacao Linha Neutra']['Aviso'].append('ignorar')
                 break
-            
+
             verifica,bx_veri,bs_veri = verificacao_admensional(fyd,parametros.eta,parametros.zeta,d,bw,fcd,Asef,Es,parametros.ecu)
             saida['Verificacao Linha Neutra']['Admensionais'].append([bx_veri,bs_veri])
             if ductilidade:
@@ -601,7 +601,6 @@ def dimensionamento(request,data:Caracteristicas):
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal,caracteristicas['ductilidade'])
-    
     return saida
 
 

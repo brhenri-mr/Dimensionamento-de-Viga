@@ -169,13 +169,13 @@ def verificacao_admensional(fyd:float,eta:float,zeta:float,d:float,bw:int,fcd:fl
     i = 0
     while i<=1000:
         bx = fyd/(eta*zeta*d*bw*fcd)*a*bs_arbitrado
-        bs = min([Es/fyd*(1-bx)/bx*ecu,1])
-        #print(f'bs:{bx}')
-        #print(f'bs: {bs}')
+        bs = max([min([Es/fyd*(1-bx)/bx*ecu,1]),0])
+        print(f'bs:{bx}')
+        print(f'bs: {bs}')
         if bs_arbitrado == bs:
             return True,bx,bs 
         i += 1
-    return False
+    return False,bx,bs
 
 def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,barras_por_camada:int)->list[float,bool]:
     '''

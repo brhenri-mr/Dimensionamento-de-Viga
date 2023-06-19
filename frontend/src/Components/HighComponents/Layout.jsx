@@ -169,7 +169,7 @@ const Layout = () => {
         }
 
         if(logico){
-            const api = fetch('https://zoomlunar.pythonanywhere.com/api//MetRigidez', {
+            const api = fetch('https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
 
         
             method: 'POST', // or 'PUT'
@@ -217,7 +217,7 @@ const Layout = () => {
      //API Dimensionamento
      async function Dimensionamento(data,momentomax) {
 
-        await fetch('https://zoomlunar.pythonanywhere.com/api/Dimensionamento', {
+        await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
                 method: 'POST', // or 'PUT'
                 headers: {

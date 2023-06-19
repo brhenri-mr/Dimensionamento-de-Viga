@@ -21,6 +21,8 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     let verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
     let eqmomentomax = ''
     let ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
+
+
     console.log(db)
     const ignorarFrame = {
         titulo:'ignorar',
@@ -158,7 +160,9 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo: 'Discretização',
                 texto:[
                     'Substitua os valores na equação:',
-                    `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${db['Discretizacao']['Barras totais'][caso]} \\ barras \\)`,
+                    `\\(n = \\left \\lceil{\\dfrac{A_{sef} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))} \\ barras \\)`,
+                    (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso]) ? `Por questões construtivas é necessário adicionar mais uma barra`:"",
+                    (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso])? `Desse modo, adota-se \\(n=${db['Discretizacao']['Barras totais'][caso]}\\)`:"",
                 ],
                 label:['Discretização','ignorar']
     
