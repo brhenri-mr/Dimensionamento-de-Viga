@@ -8,6 +8,8 @@ const Viga = (props) => {
     let comprimentomax = 0
     let zero = true
     let comprimentominimo= 100000000
+
+    let deslocamento = (parseFloat(props.mag)>-100) ? 0:185
     
 
 
@@ -102,15 +104,16 @@ const Viga = (props) => {
                     )
             }
             else{
+                console.log("aqui")
                 return (
                     <g>
                         <rect x="50" y="147.5" rx="2" ry="2" width={props.value} height="4" className="viga">
                             <title>Viga</title>
                         </rect>
-                        <rect x="50" y={200-parseFloat(props.mag)/2} rx="2" ry="2" width={(props.value)} height="1"></rect>
-                        <text x={parseFloat(props.value)/2+30} y={240-parseFloat(props.mag)/2}>{`${(props.value/props.escala).toString().replace(".",",")} cm`}</text>
-                        <rect x="50" y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
-                        <rect x={(parseFloat(props.value)+50)} y={188.5-parseFloat(props.mag)/2} rx="2" ry="2" width={1} height="25"></rect>
+                        <rect x="50" y={200+parseFloat(deslocamento)/2} rx="2" ry="2" width={(props.value)} height="1"></rect>
+                        <text x={parseFloat(props.value)/2+30} y={240+parseFloat(deslocamento)/2-20}>{`${(props.value/props.escala).toString().replace(".",",")} cm`}</text>
+                        <rect x="50" y={188.5+parseFloat(deslocamento)/2} rx="2" ry="2" width={1} height="25"></rect>
+                        <rect x={(parseFloat(props.value)+50)} y={188.5+parseFloat(deslocamento)/2} rx="2" ry="2" width={1} height="25"></rect>
                     </g>
                     )
             }
