@@ -49,7 +49,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     }
     if (caracteristicas['ductilidade']  && db['Altura Util']['Aviso'][caso]){
        
-        eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
+        eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\lambda \\ b_w \\ {d}^2(0,1275-0,0153 \\lambda)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
     
     }
     if(db['Discretizacao']['Barras por camada'][caso]===1){
@@ -57,10 +57,10 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             { ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
                 texto:[
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ?`\\(\\lambda= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\lambda= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ? `\\(\\alpha_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\alpha_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
                     'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
                     (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
                     'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
@@ -74,7 +74,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
                 ],
-                label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barra por camada`,
@@ -91,7 +91,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     }
     else if (caracteristicas["ductilidade"] && db['Altura Util']['Aviso'][caso]){
         const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
-        const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
+        const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\lambda \\ b_w \\ {d}^2(0,1275-0,0153 \\lambda)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
         const ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
         const ignorarFrame = {
             titulo:'ignorar',
@@ -102,10 +102,10 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
                 texto:[
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ?`\\(\\lambda= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\lambda= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ? `\\(\\alpha_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\alpha_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
                     'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
                     (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
                     'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
@@ -119,7 +119,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
                 ],
-                label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -162,9 +162,9 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo: `\\(x/d = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ z/d = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,
                 texto:[
                     'Substitua os valores na equação',
-                    `\\(x/d= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
+                    `\\(x/d= \\dfrac{1}{\\lambda}-\\dfrac{1}{\\lambda} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\alpha_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
                     'Substitua os valores na equação',
-                    `\\(z/d = 1-0,5\\zeta \\ x/d = 1-0,5* ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}* ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
+                    `\\(z/d = 1-0,5y/x \\ x/d = 1-0,5* ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}* ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
                     'Substitua os valores na equação',
                     `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d}{x/d} \\epsilon_{cu} ≤ 1 \\rightarrow \\beta_s =\\dfrac{200}{${(caracteristicas['fyk']/11.5).toFixed(2).toString().replace('.',',')}} \\dfrac{1-${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}{${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}\\ ${db['Parametros']['ecu'].toString().replace('.',',')} ≤ 1 \\rightarrow \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).toString().replace('.',',')}\\)`
                 ],
@@ -224,7 +224,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo: verificacaoadm ,
                 texto:[
                     'O arredondamento da área de aço cálculada para área de aço efetiva, pode modificar a posição da linha neutra. Verifica-se a linha neutra com a equação iterativa abaixo',
-                    `\\(x/d = \\dfrac{f_{yd}}{\\eta_c \\zeta_c \\ b_w d \\ f_cd} A_s \\beta_s \\)`, 
+                    `\\(x/d = \\dfrac{f_{yd}}{\\alpha_c \\zeta_c \\ b_w d \\ f_cd} A_s \\beta_s \\)`, 
                     'Aplicando os resultados da equação a cima em',
                     `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d} \\epsilon_{cu} ≤ 1 \\)`,
                     `Convergindo para os valores de \\(\\beta_s = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][1]} e \\(x/d = \\)${db["Verificacao Linha Neutra"]['Admensionais'][0][0].toFixed(2).toString().replace('.',',')}. Como o valor de \\(x/d\\) convergiu para um número ${(verificacaoadm ==='Linha Neutra não verifica')?'maior':'menor'} que o limite ${(caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)'}, então a ${verificacaoadm}`,     
@@ -240,10 +240,10 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
                 texto:[
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ?`\\(\\lambda= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\lambda= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ? `\\(\\alpha_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\alpha_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
                     'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
                     (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
                     'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
@@ -257,7 +257,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
                 ],
-                label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -284,10 +284,10 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
                 texto:[
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ?`\\(\\lambda= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\lambda= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
                     'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    (caracteristicas['fck']>50) ? `\\(\\alpha_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\alpha_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
                     'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
                     (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
                     'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
@@ -301,7 +301,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
                 ],
-                label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -344,7 +344,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo: `Impossível Calcular a posição da linha Neutra`,
                 texto:[
                     `Utilizando a equação abaixo com os valores entrados obtém-se um número imaginário ou nulo:`,
-                    `\\(x/d= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}} }= indefinido\\)`,
+                    `\\(x/d= \\dfrac{1}{\\lambda}-\\dfrac{1}{\\lambda} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\alpha_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}} }= indefinido\\)`,
                     'Recomenda-se Aumentar o valor da seção transversal'
                 ],
                 label:['ignorar']
@@ -357,10 +357,10 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
                 texto:[
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
-                    'Parâmetro estabelecidos pela NBR6118:',
-                    (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ?`\\(\\lambda= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\lambda= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ? `\\(\\alpha_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\alpha_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
                     'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
                     (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
                     'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
@@ -374,7 +374,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
                 ],
-                label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -398,9 +398,9 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo: `\\(x/d = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ z/d = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,
                 texto:[
                     'Substitua os valores na equação',
-                    `\\(x/d= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
+                    `\\(x/d= \\dfrac{1}{\\lambda}-\\dfrac{1}{\\lambda} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\alpha_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
                     'Substitua os valores na equação',
-                    `\\(z/d = 1-0,5\\zeta \\ x/d = 1-0,5* ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}* ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
+                    `\\(z/d = 1-0,5y/x \\ x/d = 1-0,5* ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}* ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
                     'Substitua os valores na equação',
                     `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d}{x/d} \\epsilon_{cu} ≤ 1 \\rightarrow \\beta_s =\\dfrac{200}{${(caracteristicas['fyk']/11.5).toFixed(2).toString().replace('.',',')}} \\dfrac{1-${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}{${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}\\ ${db['Parametros']['ecu'].toString().replace('.',',')} ≤ 1 \\rightarrow \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).toString().replace('.',',')}\\)`
                 ],
