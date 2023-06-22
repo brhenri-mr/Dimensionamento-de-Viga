@@ -52,11 +52,44 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
     
     }
-
-   
-
-   
-    if (caracteristicas["ductilidade"] && db['Altura Util']['Aviso'][caso]){
+    if(db['Discretizacao']['Barras por camada'][caso]===1){
+        return(
+            { ConstantesNBR6118:{
+                titulo: 'Parâmetros NBR6118:2014 ',
+                texto:[
+                    'Parâmetro estabelecidos pela NBR6118:',
+                    (caracteristicas['fck']>50) ?`\\(\\zeta= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\zeta= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
+                    'Parâmetro estabelecidos pela NBR6118:',
+                    (caracteristicas['fck']>50) ? `\\(\\eta_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\eta_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
+                    (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
+                    'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
+                    `\\(a_v ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 0,5\\ d_{max} \\\\
+                    \\end{cases} \\therefore \\ a_v = ${db['Parametros']['av'].toFixed(2).toString().replace('.',',')}\\ cm \\)`,
+                    'Parametro espaçamento transversal longitudinal entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
+                    `\\(a_h ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 1,2\\ d_{max} \\\\
+                        \\end{cases} \\therefore \\ a_v = ${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')} \\ cm \\)`,
+                    'Parâmetro de redistribuição máxima da ductilidade estabelecidos pela NBR6118/2014 no item 14.6.4.3:',
+                    (caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)',
+                    'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
+                    `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
+                ],
+                label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+            },
+            Quantidade:{
+                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barra por camada`,
+                texto:[
+                    'Substitua os valores na equação',
+                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `,
+                    'Como o espaço disponível na viga é de somente uma barra por camada, o cálculo da viga com a geometria atual não pode ser realizado, visto questões construtivas',
+                    'Recomenda-se aumentar o largura da viga ou modificar as bitolas da armadura transversal ou longitudinal'
+                ],
+                label:['ignorar']
+            }
+        }
+        )
+    }
+    else if (caracteristicas["ductilidade"] && db['Altura Util']['Aviso'][caso]){
         const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
         const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\zeta \\ b_w \\ {d}^2(0,1275-0,0153 \\zeta)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
         const ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
@@ -89,7 +122,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por camada',
+                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
@@ -227,7 +260,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por camada',
+                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'].slice(-1)[0]}\\ barras \\ por \\ camada\\) `],
@@ -271,7 +304,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por camada',
+                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
@@ -310,7 +343,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `Impossível Calcular a posição da linha Neutra`,
                 texto:[
-                    `Utilizando a equação abaixo com os valores entrados obtém-se um número imaginário, que não tem valor físico:`,
+                    `Utilizando a equação abaixo com os valores entrados obtém-se um número imaginário ou nulo:`,
                     `\\(x/d= \\dfrac{1}{\\zeta}-\\dfrac{1}{\\zeta} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\eta_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta']} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}} }= indefinido\\)`,
                     'Recomenda-se Aumentar o valor da seção transversal'
                 ],
@@ -319,7 +352,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             }
         }
     }
-    else{
+    else{ // Ductilidade nao garantida
         return  {
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
@@ -344,7 +377,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['zeta','ηc','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
-                titulo:'Quantidade de Barras por cada',
+                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
@@ -360,25 +393,6 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo:`\\(d = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}\\ cm\\)`,
                 texto:['Substitua os valores na equação',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
                 label:['']
-            },
-            Momento:(ignorar)?{
-                titulo:'Necessidade de Armadura negativa',
-                texto:[
-                    `Compare o momento solicitante de devido as cargas de  \\(${db['Verificacao Momento']['Momento Carregamento'][0].toFixed(2).toString().replace('.',',')}\\ kN.cm\\) com o momento máximo`,
-                    eqmomentomax,
-                    'Como o valor do Momento Solicitante é maior que o Momento Máximo da seção, então deve-se utilizar Armadura Negativa'
-                ],
-    
-                label:['ignorar']
-                }:
-            {
-                titulo: `\\(M_{sd} = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm\\)`,
-                texto:[`Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento mínimo:`,
-                `\\(M_{mín} = 0,8 W0 f_{ckt,sup} = 0,8* ${db['Parametros']['w0'].toFixed(2).replace('.',',')}* ${db['Parametros']['fcktsup'].toFixed(2).replace('.',',')} = ${db['Verificacao Momento']['Momento Minimo'][caso].toFixed(2).replace('.',',')}\\ kN.cm\\)`,
-                `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo:`,
-                eqmomentomax,
-            ],
-            label:['Mmín','Mmáx']
             },
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `\\(x/d = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ z/d = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,

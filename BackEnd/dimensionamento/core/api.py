@@ -597,7 +597,9 @@ def dimensionamento(request,data:Caracteristicas):
     except:
         momento = abs(momento_maximo)
         sinal = -1 if momento_maximo<0 else 1
-        
+    
+    print(momento)
+    
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
     saida = secao_transversal(momento,caracteristicas['dL'],parametros,caracteristicas['h'],caracteristicas['fck']/14,caracteristicas['fck'],caracteristicas['bw'],Es,caracteristicas['fyk']/11.5,caracteristicas['dT'],caracteristicas['bw']*caracteristicas['h'],parametros.cobrimento,parametros.w0, parametros.bxmaximo,sinal,caracteristicas['ductilidade'])

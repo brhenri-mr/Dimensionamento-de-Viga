@@ -61,11 +61,12 @@ def admensionais(zeta:float,momento:float,eta:float,bw:int,d:float,fcd:float,Es:
     '''
     
     #Dados
-    if 1-(2*momento)/(eta*bw*(d**2)*fcd) <0:
+    if 1-(2*momento)/(eta*bw*(d**2)*fcd)<=0 or 1/zeta -(1/zeta)*(1-(2*momento)/(eta*bw*(d**2)*fcd))**0.5==0:
         return 0,0,0,'Impossivel Calcular a posição da linha Neutra'
     else:
         bx = 1/zeta -(1/zeta)*(1-(2*momento)/(eta*bw*(d**2)*fcd))**0.5
         bz = 1- 0.5*zeta*bx
+        print(bx)
         bs = min([Es/fyd*(1-bx)/bx*ecu,1])
         
         return bx, bz, bs, 'Tudo Certo'
