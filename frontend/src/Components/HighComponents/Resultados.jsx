@@ -24,9 +24,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     let eqmomentomax = ''
     let ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
 
-    console.log()
 
-    console.log(db)
     const ignorarFrame = {
         titulo:'ignorar',
         texto:['ignorar','ignorar'],
@@ -524,9 +522,14 @@ const Resultados = (props)=>{
         maximoesforco = (Math.abs(props.metrigidez['Maximo'][1]/100)>Math.abs(props.metrigidez['Cortante Maximo'][1]))?props.metrigidez['Maximo'][1]/100:props.metrigidez['Cortante Maximo'][1]
         escala = (maximoesforco<0) ? -1/(maximoesforco/((147.5-15-15))):1/(maximoesforco/((147.5-15-15)))
         momentomax = (Math.abs(props.metrigidez['Maximo'][1]/100)>Math.abs(props.metrigidez['Cortante Maximo'][1])) ? props.dimensionamento["Verificacao Momento"]["Sinal"]:Math.abs(props.metrigidez['Cortante Maximo'][1])/props.metrigidez['Cortante Maximo'][1]
-        if(escala>1){
+        if(escala>2){
+            console.log(escala)
+            escala =escala/2
+        }
+        else if(escala>1){
             escala = 1
         }
+
     }
     catch(error){
     }

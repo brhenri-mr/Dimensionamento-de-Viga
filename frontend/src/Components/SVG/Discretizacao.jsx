@@ -16,7 +16,6 @@ const Discretizacao = (props)=>{
     //Calculo posicao em y das armaduras
     // Sempre utilizarei como incremento em x o valor para a mais secao cheia, no caso, sempre a primeira
 
-    console.log(props.momento)
 
     if(props.momento<0){
         ytexto = (props.bitolaT+props.cnom)*escala+10
@@ -46,7 +45,6 @@ const Discretizacao = (props)=>{
     totalbarras = totalbarras + barras
    }
 
-   console.log(props.bw-props.cnom*2-props.bitolaT)
 
     return(
         <>
@@ -63,8 +61,8 @@ const Discretizacao = (props)=>{
         y={2.5+props.cnom*escala+props.bitolaT*escala/2}
         width={props.bw*escala-props.cnom*2*escala-props.bitolaT*escala} 
         height={props.h*escala-props.cnom*2*escala-props.bitolaT*escala}
-        rx="5px" 
-        ry="5px" 
+        rx={`${props.bitola}px`}
+        ry={`${props.bitola}px`}
         style={{fill:'none',strokeWidth:`${props.bitolaT*escala}`,stroke:'rgb(0,0,0)'}}>
 
          </rect>
