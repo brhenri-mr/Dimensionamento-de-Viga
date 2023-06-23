@@ -101,7 +101,7 @@ const Layout = () => {
     }})
     const estabilidade = estabilidaded(APOIOS)
     const[momentoatual, setMomentoatual] = useState(0)
-    const desenvolvimento = false
+    const desenvolvimento = true
 
 
     //validarores
@@ -170,7 +170,7 @@ const Layout = () => {
         }
 
         if(logico){
-            const api = fetch((desenvolvimento)? "http://127.0.0.1:8000/api/MetRigidez":'https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
+            const api = fetch("http://127.0.0.1:8000/api/MetRigidez", {
 
         
             method: 'POST', // or 'PUT'
@@ -193,7 +193,7 @@ const Layout = () => {
             await api
         }
         else{
-            await fetch((desenvolvimento)? "http://127.0.0.1:8000/api/MetRigidez":'https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
+            await fetch("http://127.0.0.1:8000/api/MetRigidez", {
 
         
             method: 'POST', // or 'PUT'
@@ -218,7 +218,7 @@ const Layout = () => {
      //API Dimensionamento
      async function Dimensionamento(data,momentomax) {
 
-        await fetch((desenvolvimento)?'http://127.0.0.1:8000/api/Dimensionamento':'https://zoomlunar.pythonanywhere.com/api/Dimensionamento', {
+        await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
 
                 method: 'POST', // or 'PUT'
                 headers: {

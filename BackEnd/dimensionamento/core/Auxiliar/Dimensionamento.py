@@ -192,7 +192,7 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
     while Sobra_para_proxima_camada!=0:
         #iterador
         Sobra_para_proxima_camada = Sobra_para_proxima_camada-barras_por_camada
-        
+        print(barras_por_camada)
         if Sobra_para_proxima_camada>0:
             
             if Sobra_para_proxima_camada<barras_por_camada:
@@ -231,6 +231,7 @@ def incremento_cg_armaduras(bitolaL:float,av:float,h:int,numero_de_barras:int,ba
             elif Sobra_para_proxima_camada+barras_por_camada%2 ==0:
                 barra.append(Sobra_para_proxima_camada+barras_por_camada)
                 break'''
+
 
     
     for i in range(len(barra)):

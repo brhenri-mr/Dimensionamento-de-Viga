@@ -18,10 +18,13 @@ import { actions } from "../../Actions/Combinacoes";
 
 function textotentativa(db,caso,caracteristicas,momentomaximo){
 
-    let verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
+
+
+
     let eqmomentomax = ''
     let ignorar = (db['Verificacao Momento']['Momento de Calculo'][caso]===-1)? true:false
 
+    console.log()
 
     console.log(db)
     const ignorarFrame = {
@@ -52,6 +55,46 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\lambda \\ b_w \\ {d}^2(0,1275-0,0153 \\lambda)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `
     
     }
+
+    if(db['Discretizacao']['SemEspaco']){
+        return(
+            { ConstantesNBR6118:{
+                titulo: 'Parâmetros NBR6118:2014 ',
+                texto:[
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ?`\\(\\lambda= 0,8-\\dfrac{f_{ck}[MPa]-50}{400} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,8 - \\dfrac{${caracteristicas['fck']}-50}{400} = ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}\\)`:`\\(\\lambda= 0,8\\ para \\ concreto \\ até \\ C50\\)`,
+                    'Parâmetro estabelecidos no item 17.2.2e da ABNT NBR 6118/2014:',
+                    (caracteristicas['fck']>50) ? `\\(\\alpha_c = 0,85\\dfrac{f_{ck}[MPa]-50}{200} \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,85 \\dfrac{${caracteristicas['fck']}-50}{200}= ${db['Parametros']['eta'].toString().replace('.',',')} \\)`:`\\(\\alpha_c = 0,85\\ para \\ concreto \\ até \\ C50\\) `,
+                    'Parâmetro estabelecidos pela NBR6118/2014 no item 8.2.10.1:',
+                    (caracteristicas['fck']>50) ? `\\(\\epsilon_{cu} = 0,0026+0,035{\\left(\\dfrac{90-fck[MPa]}{100}\\right)}^4 \\ para \\ concreto \\ Classe \\ maior \\ que \\ C50 = 0,0026+0,035{\\left(\\dfrac{90-${caracteristicas['fck']}}{100}\\right)}^4\\)`:`\\(\\epsilon_{cu} = 3,5‰ \\ para \\ concreto \\ até \\ C50 \\)`,
+                    'Parâmetro espaçamento transversal vertical entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
+                    `\\(a_v ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 0,5\\ d_{max} \\\\
+                    \\end{cases} \\therefore \\ a_v = ${db['Parametros']['av'].toFixed(2).toString().replace('.',',')}\\ cm \\)`,
+                    'Parametro espaçamento transversal longitudinal entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
+                    `\\(a_h ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 1,2\\ d_{max} \\\\
+                        \\end{cases} \\therefore \\ a_v = ${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')} \\ cm \\)`,
+                    'Parâmetro de redistribuição máxima da ductilidade estabelecidos pela NBR6118/2014 no item 14.6.4.3:',
+                    (caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)',
+                    'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
+                    `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
+                ],
+                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+            },
+            Quantidade:{
+                titulo:`Viga muito pequena`,
+                texto:[
+                    'Substitua os valores na equação',
+                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${0}\\ barras \\ por \\ camada\\) `,
+                    `Com a geometria fornecida, não há espaço para colocação de uma barra de ${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}  cm`,
+                    'Recomenda-se aumentar o largura da viga ou modificar as bitolas da armadura transversal ou longitudinal'
+                ],
+                label:['ignorar']
+            }
+        }
+        )
+    }
+   
+    //----------------------------------------------------------------------------------------
     if(db['Discretizacao']['Barras por camada'][caso]===1){
         return(
             { ConstantesNBR6118:{
@@ -89,6 +132,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
         }
         )
     }
+    //----------------------------------------------------------------------------------------
     else if (caracteristicas["ductilidade"] && db['Altura Util']['Aviso'][caso]){
         const verificacaoadm = (db['Verificacao Linha Neutra']['Aviso'][0]) ?'Linha neutra verificada':'Linha Neutra não verifica' //Há uma bug possivel, que a so uma valor de aviso, e nao para cadqa teste
         const eqmomentomax = (caracteristicas['fck']>50)? `\\(M_{máx} = \\lambda \\ b_w \\ {d}^2(0,1275-0,0153 \\lambda)\\dfrac{1-(fck[MPa] - 50)}{200}f_{cd} = ${db['Parametros']['zeta']}\\ ${caracteristicas['bw']}^2 \\ (0,1275-0,0153\\ ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}) \\dfrac{1-(${caracteristicas['fck']}-50)}{200} \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).toString().replace('.',',')}\\ kN.cm\\)`:`\\(M_{máx} = 0,153\\ b_w d^2 f_{cd} = 0,153\\ ${caracteristicas['bw']}\\ ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}^2 \\ ${(caracteristicas['fck']/14).toFixed(2).toString().replace('.',',')} = ${db['Verificacao Momento']['Momento Maximo'][caso].toFixed(2).replace('.',',')}\\ kN.cm \\) `

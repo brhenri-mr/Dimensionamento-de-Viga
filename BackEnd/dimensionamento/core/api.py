@@ -440,7 +440,8 @@ def dimensionamento(request,data:Caracteristicas):
             'Barras por camada':[],
             'Barras calculadas':[],
             'Barras totais':[],
-            'Arredondamento de Bn':[]
+            'Arredondamento de Bn':[],
+            'SemEspaco':False
         },
         'Verificacao Linha Neutra':
             {
@@ -477,6 +478,13 @@ def dimensionamento(request,data:Caracteristicas):
                     sair = True
                     break
                 
+                #verificando se tem espaco 
+                if nc ==0:
+                    sair = True
+                    saida['Discretizacao']['SemEspaco'] = True
+                    break
+                
+                
                 ys, numero_barras, barra = incremento_cg_armaduras(bitolaL,parametros.av,h,numero_de_barras=bn,barras_por_camada=nc)
                 saida['Altura Util']['ys'].append(ys)
                 saida['Discretizacao']['Barras calculadas'].append(barra)
@@ -501,7 +509,7 @@ def dimensionamento(request,data:Caracteristicas):
                 saida['Verificacao Momento']['Momento de Calculo'].append(momento)
                 saida['Verificacao Momento']['Aviso'].append(aviso)
                 
-                if momento==-1:
+                if momento==-1 or momento==0:
                     saida['Discretizacao']['Barras totais'].append(bn)
                     sair = True
                     break
@@ -564,8 +572,7 @@ def dimensionamento(request,data:Caracteristicas):
 
                 else:
                     saida['Area']['Aviso_arredondado'].append('ignorar')
-            
-                    
+              
             if sair:
                 saida['Verificacao Linha Neutra']['Admensionais'].append(['ignorar','ignorar'])
                 saida['Verificacao Linha Neutra']['Aviso'].append('ignorar')
@@ -597,8 +604,6 @@ def dimensionamento(request,data:Caracteristicas):
     except:
         momento = abs(momento_maximo)
         sinal = -1 if momento_maximo<0 else 1
-    
-    print(momento)
     
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000
