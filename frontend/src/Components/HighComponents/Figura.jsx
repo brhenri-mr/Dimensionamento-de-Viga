@@ -137,23 +137,27 @@ const Figura = (props) =>{
 
     let magmax = 0
     const [label,setLabel] = useState('')
-    let carregamentospossiveis = carregamentospossiveis_label(props.carregamentos,props.ed)
+
+
+    let carregamentospossiveis = (props.carregamentos.length ===0)?[[''],['']]:carregamentospossiveis_label(props.carregamentos,props.ed)
 
     let caso = 0
     let i = 0
 
+    if(props.carregamentos.length ===0){
     //Procurando o caso a ser procurado
-    for(let item of carregamentospossiveis[0]){
+        for(let item of carregamentospossiveis[0]){
 
-        if (item ===label){
-            caso = i
-            break
+            if (item ===label){
+                caso = i
+                break
+            }
+            i = 1+ i
         }
-        i = 1+ i
     }
 
 
-    let CarregamentoFiltrado = carregamentofiltrado(carregamentospossiveis[1][caso],props.carregamentos)
+    let CarregamentoFiltrado = (props.carregamentos.length ===0)?props.carregamentos:carregamentofiltrado(carregamentospossiveis[1][caso],props.carregamentos)
 
 
     const CarregamentoParaDesenho = carregamentodistribuidounico(CarregamentoFiltrado)
