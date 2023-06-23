@@ -275,7 +275,7 @@ const Layout = () => {
                             <Collapse in={estabilidade[0] ==='Estrutura Isoestática' || estabilidade[0] ==='Estrutura Hiperestática'}>
                                 <Alert>{estabilidade[0]}</Alert>
                             </Collapse>
-                            <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
+                            <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ignorar={true} ed={ED}></Figura>
                         </Item>
                     </Grid>
                 </Grid>
@@ -291,7 +291,7 @@ const Layout = () => {
                         />
                     </Grid>
                     <Grid item xs={2}>
-                        <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ></Figura>
+                        <Figura apoios={APOIOS} barra={BARRA} carregamentos={CARREGAMENTOS} ignorar={false} ed={ED} ></Figura>
                         <LayoutCadastro Apoios={CARREGAMENTOS} label={['Nome','Tipo','Classificação','Descrição','Magnitude','Posição',"Ação"]} rotulos={['name','tipo','patter','describe','mag','pos']}></LayoutCadastro>
                     </Grid>
                 </Grid>
