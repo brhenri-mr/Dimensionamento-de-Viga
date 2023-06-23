@@ -472,6 +472,12 @@ def dimensionamento(request,data:Caracteristicas):
             #enquanto o numero de barras necessarias for maior que numero de barras calculadas, refazer o calculo
             while bn>numero_barras:
                 
+                #Viga sem momento
+                if momento==0:
+                    saida['Discretizacao']['Barras totais'].append(bn)
+                    sair = True
+                    break
+                
                 #Cg das armaduras
                 contador_qualquer = contador_qualquer + 1
                 if contador_qualquer>=100:

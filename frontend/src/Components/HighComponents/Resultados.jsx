@@ -95,7 +95,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
     }
    
     //----------------------------------------------------------------------------------------
-    if(db['Discretizacao']['Barras por camada'][caso]===1){
+    else if(db['Discretizacao']['Barras por camada'][caso]===1){
         return(
             { ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',
@@ -486,7 +486,6 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 
 
 const Resultados = (props)=>{
-    
 
     const dispach = useDispatch()
     const [combinacao,setCombinacao] = useState('Envoltória')
@@ -533,8 +532,12 @@ const Resultados = (props)=>{
     }
 
     try {
-        acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
+        if(props.dimensionamento['Verificacao Momento']['Momento Carregamento'][0]===0){
 
+        }
+        else{
+            acoordeao = textotentativa(props.dimensionamento,props.dimensionamento['Altura Util']['ys'].length-1,props.caracteristicas,props.metrigidez['Maximo'])
+        }
     
     
     } catch (error) {
@@ -583,7 +586,7 @@ const Resultados = (props)=>{
                 return <AccordionSelf label={acoordeao[valor]['titulo']} text={acoordeao[valor]['texto']} labesecundario={acoordeao[valor]["label"]} dimensionamento={props.dimensionamento}></AccordionSelf>
             }
             catch{
-                return <div/>
+                return <p>O carregamento imposto não gerou momento fletor na viga, logo não há dimensionamento</p>
             }
             
         })}

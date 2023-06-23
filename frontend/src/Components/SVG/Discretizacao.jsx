@@ -63,8 +63,8 @@ const Discretizacao = (props)=>{
         y={2.5+props.cnom*escala+props.bitolaT*escala/2}
         width={props.bw*escala-props.cnom*2*escala-props.bitolaT*escala} 
         height={props.h*escala-props.cnom*2*escala-props.bitolaT*escala}
-        rx="10px" 
-        ry="10px" 
+        rx="5px" 
+        ry="5px" 
         style={{fill:'none',strokeWidth:`${props.bitolaT*escala}`,stroke:'rgb(0,0,0)'}}>
 
          </rect>
