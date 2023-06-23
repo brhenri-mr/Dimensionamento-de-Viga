@@ -6,19 +6,10 @@ import Inputs_a from "../Inputs/Inputs_a";
 import { Box } from "@mui/system"
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import { FormControl } from "@mui/material";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Collapse from '@mui/material/Collapse';
-import Alert from '@mui/material/Alert';
-import { AlertTitle } from "@mui/material";
+
 //
 
 const Geometria = (props) =>{
-
-    console.log(props.APOIOS)
 
     return (
     <>

@@ -154,7 +154,6 @@ const Figura = (props) =>{
             i = 1+ i
         }
     }
-    console.log(caso)
 
 
     let CarregamentoFiltrado = (props.carregamentos.length ===0)?props.carregamentos:carregamentofiltrado(carregamentospossiveis[1][caso],props.carregamentos)

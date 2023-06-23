@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { Alert, Collapse } from "@mui/material";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 //compoments
 import Figura from "./Figura";
 import TabPanel from "../Inputs/Tabpanel";
@@ -14,7 +16,6 @@ import Secao from "./Secao";
 import Resultados from "./Resultados";
 import Geometria from "./Geometria";
 import LayoutCadastro from "./LayoutCadastro";
-import CircularProgress from '@mui/material/CircularProgress';
 //redux
 import { useDispatch } from "react-redux";
 import { actions } from "../../Actions/Carregamento";
@@ -101,6 +102,7 @@ const Layout = () => {
         ah:0,
     }})
     const estabilidade = estabilidaded(APOIOS)
+    const [loggind, setLoggind] =useState(true)
 
     //validarores
     const cadastrocompleto = (APOIOS.length!==0 && CARREGAMENTOS.length!==0 && BARRA!==0 && CARACTERISTICAS['fck'] !==0)
@@ -110,11 +112,14 @@ const Layout = () => {
     
     //Chamar as APIs
     async function handleChange (event, newValue) {
-        
+        setValue(newValue);
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
-            await Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+            console.log(MOMENTOMAX)
+            Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
+
+            
 
             //metRigidez['Maximo'][1]
             
@@ -122,7 +127,6 @@ const Layout = () => {
             
             
         }
-        setValue(newValue);
       };
     
     //seleção da combinação
@@ -145,11 +149,12 @@ const Layout = () => {
                 })
                 .then((response) => response.json())
                 .then((data) => {
+                    setLoggind(true)
                     dispatch(actions.adicionar_comb(data))
 
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
+                    console.log('Erro nas combinações')
                 });
     }
 
@@ -182,7 +187,7 @@ const Layout = () => {
 
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.log('Erro no Metodo da rigidez')
             });
 
             await api
@@ -203,7 +208,7 @@ const Layout = () => {
 
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.log('Erro no Metodo da rigidez')
             });
         }
        
@@ -211,9 +216,10 @@ const Layout = () => {
     }
 
      //API Dimensionamento
-     async function Dimensionamento(data,momentomax) {
+     function Dimensionamento(data,momentomax) {
 
-        await fetch((desenvolvimento)? "http://127.0.0.1:8000/api/Dimensionamento":'https://zoomlunar.pythonanywhere.com/api/Dimensionamento', {
+      
+            fetch((desenvolvimento)? "http://127.0.0.1:8000/api/Dimensionamento":'https://zoomlunar.pythonanywhere.com/api/Dimensionamento', {
 
                 method: 'POST', // or 'PUT'
                 headers: {
@@ -224,11 +230,16 @@ const Layout = () => {
                 .then((response) => response.json())
                 .then((data) => {
                     setDimensionamento(data)
+                    setLoggind(false)
 
                 })
                 .catch((error) => {
-                    console.error('Error:', error);
+                    console.log('Erro no Dimensionamento')
+                    setLoggind(false)
                 });
+
+
+        
     }
     
 
@@ -244,7 +255,7 @@ const Layout = () => {
         <div>
             <Box sx={{ width: '100%'}}>
                 <Box sx={{ display: 'flex',borderBottom: 1, borderColor: 'divider',flexGrow: 1}}>
-                    <Box sx={{backgroundColor:'#D9D9D9',height: '100vh'}}>
+                    <Box sx={{backgroundColor:'#D9D9D9',height: '120vh'}}>
                         <Tabs 
                             value={value} 
                             onChange={ handleChange} 
@@ -300,9 +311,12 @@ const Layout = () => {
             </TabPanel>
             <TabPanel value={value} index={3}>
                 <Collapse in={cadastrocompleto}>
-                    <Collapse in={Object.keys(dimensionamento).length===2}>
-                        <CircularProgress />
-                    </Collapse>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={false}
+                    >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
                     <Collapse in={!(Object.keys(dimensionamento).length===2)}>
                     <Resultados apoios={APOIOS} barra={BARRA} metrigidez = {metRigidez} dimensionamento={dimensionamento} caracteristicas = {CARACTERISTICAS}/>
 
