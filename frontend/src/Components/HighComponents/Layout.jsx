@@ -84,7 +84,6 @@ const Layout = () => {
     const ED = useSelector(state => state.botoesReducers.ED)
     const COMBINACOES = useSelector(state => state.barraReducers.COMB)
     const MOMENTOMAX = useSelector(state => state.barraReducers.MOMENTOMAX)
-    console.log(CARACTERISTICAS)
 
     //useState
     const [value, setValue] = useState(0)

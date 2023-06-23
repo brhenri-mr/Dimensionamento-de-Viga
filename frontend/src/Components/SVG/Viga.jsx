@@ -104,7 +104,6 @@ const Viga = (props) => {
                     )
             }
             else{
-                console.log("aqui")
                 return (
                     <g>
                         <rect x="50" y="147.5" rx="2" ry="2" width={props.value} height="4" className="viga">

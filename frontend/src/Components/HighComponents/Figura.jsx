@@ -144,10 +144,9 @@ const Figura = (props) =>{
     let caso = 0
     let i = 0
 
-    if(props.carregamentos.length ===0){
+    if(props.carregamentos.length !==0){
     //Procurando o caso a ser procurado
         for(let item of carregamentospossiveis[0]){
-
             if (item ===label){
                 caso = i
                 break
@@ -155,9 +154,11 @@ const Figura = (props) =>{
             i = 1+ i
         }
     }
+    console.log(caso)
 
 
     let CarregamentoFiltrado = (props.carregamentos.length ===0)?props.carregamentos:carregamentofiltrado(carregamentospossiveis[1][caso],props.carregamentos)
+    
 
 
     const CarregamentoParaDesenho = carregamentodistribuidounico(CarregamentoFiltrado)
