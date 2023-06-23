@@ -321,7 +321,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             },
         }
     }
-    else if(db['Admensionais'][caso][3]=='Impossivel Calcular a posição da linha Neutra'){
+    else if(db['Admensionais'][caso][3]==='Impossivel Calcular a posição da linha Neutra'){
         return {
             ConstantesNBR6118:{
                 titulo: 'Parâmetros NBR6118:2014 ',

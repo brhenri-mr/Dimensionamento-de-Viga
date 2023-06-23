@@ -389,7 +389,6 @@ def MetRigidez(request, data:MetRigidez):
     saida['Cortante Maximo'] = maximo_momentona_secao(saida,'Cortante')
 
     momento_maximo = saida['Maximo']  if len(quantidade_comb)>1 else 0
-    print(saida['Maximo'])
     cortante_max = saida['Cortante Maximo']  if len(quantidade_comb)>1 else 0
     return saida
 

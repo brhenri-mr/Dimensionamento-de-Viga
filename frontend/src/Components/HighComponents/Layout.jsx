@@ -73,6 +73,9 @@ function estabilidaded(el){
 
 const Layout = () => {
 
+    const desenvolvimento = false
+
+
     //useSelector
     const APOIOS = useSelector(state => state.botoesReducers.APOIOS)
     const BARRA = useSelector(state => state.barraReducers.BARRA)
@@ -84,7 +87,6 @@ const Layout = () => {
     console.log(CARACTERISTICAS)
 
     //useState
-    const [pagina,setPagina] = useState(0)
     const [value, setValue] = useState(0)
     const [patter,setPatter] = useState()
     const [describe, setDescribe] = useState()
@@ -100,9 +102,6 @@ const Layout = () => {
         ah:0,
     }})
     const estabilidade = estabilidaded(APOIOS)
-    const[momentoatual, setMomentoatual] = useState(0)
-    const desenvolvimento = true
-
 
     //validarores
     const cadastrocompleto = (APOIOS.length!==0 && CARREGAMENTOS.length!==0 && BARRA!==0 && CARACTERISTICAS['fck'] !==0)
@@ -110,7 +109,6 @@ const Layout = () => {
     //dispatch
     const dispatch = useDispatch()
     
-
     //Chamar as APIs
     async function handleChange (event, newValue) {
         
@@ -125,7 +123,6 @@ const Layout = () => {
             
             
         }
-        setPagina(newValue)
         setValue(newValue);
       };
     
@@ -170,7 +167,7 @@ const Layout = () => {
         }
 
         if(logico){
-            const api = fetch("http://127.0.0.1:8000/api/MetRigidez", {
+            const api = fetch((desenvolvimento)? "http://127.0.0.1:8000/api/MetRigidez":'https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
 
         
             method: 'POST', // or 'PUT'
@@ -182,7 +179,6 @@ const Layout = () => {
             .then((response) => response.json())
             .then((data) => {
                 setMetrigidez(data)
-                setMomentoatual(metRigidez['Maximo'][1])
                 dispatch(actionbarra.salvar(metRigidez['Maximo']))
 
             })
@@ -193,7 +189,7 @@ const Layout = () => {
             await api
         }
         else{
-            await fetch("http://127.0.0.1:8000/api/MetRigidez", {
+            await fetch((desenvolvimento)? "http://127.0.0.1:8000/api/MetRigidez":'https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
 
         
             method: 'POST', // or 'PUT'
@@ -218,7 +214,7 @@ const Layout = () => {
      //API Dimensionamento
      async function Dimensionamento(data,momentomax) {
 
-        await fetch('http://127.0.0.1:8000/api/Dimensionamento', {
+        await fetch((desenvolvimento)? "http://127.0.0.1:8000/api/Dimensionamento":'https://zoomlunar.pythonanywhere.com/api/Dimensionamento', {
 
                 method: 'POST', // or 'PUT'
                 headers: {
