@@ -578,7 +578,7 @@ const Resultados = (props)=>{
                                         </Select>
                                     </FormControl>
                                     {(combinacao==="Envoltória")?'':CARREGAMENTOS.map((item,chave)=>{
-                                        return <p>{`${item['name']}:${item['comb'][parseInt(combinacao[combinacao.length-1])-1]}`}</p>
+                                        return <p style={{'fontSize':12}}>{`${item['name']}:${item['comb'][parseInt(combinacao[combinacao.length-1])-1]}`}</p>
                                     })}
                                 
                     </Box>
