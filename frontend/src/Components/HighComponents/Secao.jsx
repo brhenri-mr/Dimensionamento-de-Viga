@@ -365,7 +365,7 @@ const Secao  = (props)=> {
                                         </DialogTitle>
                                         <DialogContent>
                                         <DialogContentText id="alert-dialog-description">
-                                            Não garantir a ducitidade fará com que a seção fique frági, descrumprindo itens normativos
+                                            Não garantir a ducitidade fará com que a seção fique frágil, descrumprindo itens normativos
                                             e pondendo causar fatalidades, continuar?
                                         </DialogContentText>
                                         </DialogContent>
