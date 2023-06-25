@@ -50,7 +50,7 @@ class Combine():
             "Construção":[1.2,0],
             "Excepcional":[1,0]
         },
-        "Ações veriáveis em geral":{
+        "Ações variáveis em geral":{
             "Normal":[1.5,0],
             "Construção":[1.3,0],
             "Excepcional":[1,0]

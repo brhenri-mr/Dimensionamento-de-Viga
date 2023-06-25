@@ -28,7 +28,7 @@ const CV = [
     "Ações truncadas",
     "Efeito de temperatura",
     "Ação do vento",
-    "Ações veriáveis em geral"
+    "Ações variáveis em geral"
 ]
 
 const Descricao ={
