@@ -213,31 +213,56 @@ def MetRigidez(request, data:MetRigidez):
         temp = []
         retornar= 0
         incremento = -1
+        
+        histerese = True
+
+
+        
+
+
+        
+        
         if len(entrada[chave]['Carregamento'].keys())>0:
             '''
             i = combinação a ser pesquisada
             chave = elemento discretizado a ser pesquisado 
-            saida = dici9onario vindo do método da rigidez direita
+            saida = dicionario vindo do método da rigidez direita
             '''
+            
+            
+            
             for chave_carregamento in entrada[chave]['Carregamento'].keys():
                 incremento +=1
+                
                 if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual":
                    
                     temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
+                    histerese = False
                 else:
                     #Decisao da equacao 
-                    temp.append(cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
-                    
+                    if entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar] !=0:
+                        temp.append(cortante(entrada[chave]["Carregamento"][chave_carregamento]['tipo'],entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar],saida['Esforcos Internos'][i][chave]))
+                        histerese = False
+
+                    else:
+                        pass      
         else:
             temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
 
+
+        if histerese:
+
+            temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
+        
+        
+
+        
         for eq in temp:
             if eq=='discartar':
                 pass
             else:
                 retornar = retornar + eq
     
-        
         
         return retornar
     
@@ -343,7 +368,7 @@ def MetRigidez(request, data:MetRigidez):
 
     generico = {}
     xs =[]
-    
+
     
 
     
