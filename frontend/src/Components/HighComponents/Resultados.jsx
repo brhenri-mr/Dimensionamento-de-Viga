@@ -122,7 +122,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação',
                     `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `,
-                    'Como o espaço disponível na viga é de somente uma barra por camada, o cálculo da viga com a geometria atual não pode ser realizado, visto questões construtivas',
+                    'Como o espaço disponível na viga é de somente uma barra por camada, o cálculo da viga com a geometria atual não pode ser realizado, visto questões simetria',
                     'Recomenda-se aumentar o largura da viga ou modificar as bitolas da armadura transversal ou longitudinal'
                 ],
                 label:['ignorar']
@@ -227,7 +227,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 ,`Substitua os valores na equação e compare com o valor de área armadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
             ],
-                label:['Amín','Amáx']
+                label:['Área mínima','Área máxima']
     
             },
             
@@ -236,7 +236,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação:',
                     `\\(n = \\left \\lceil{\\dfrac{A_{s,cal} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))} \\ barras \\)`,
-                    (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso]) ? `Por questões construtivas é necessário adicionar mais uma barra`:"",
+                    (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso]) ? `Por questões simetria é necessário adicionar mais uma barra`:"",
                     (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso])? `Desse modo, adota-se \\(n=${db['Discretizacao']['Barras totais'][caso]}\\)`:"",
                 ],
                 label:['Discretização','ignorar']
@@ -259,7 +259,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 ,`Substitua os valores na equação e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
             ],
-                label:['Amín','Amáx']
+                label:['Área mínima','Área máxima']
     
             },
             VerificacaoAdmensionais:(ignorar)?ignorarFrame:{
