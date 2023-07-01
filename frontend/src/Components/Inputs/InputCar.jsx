@@ -235,11 +235,11 @@ const InputCar = (props) =>{
                         </Box>
                         <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }}}noValidate autoComplete="off" >
                             <FormControl>
-                                <InputLabel>Descrição Segundo NBR6118</InputLabel>
+                                <InputLabel>Descrição Segundo NBR</InputLabel>
                                 <Select
                                 value={describe}
                                 sx={{backgroundColor:'white'}}
-                                label='Descrição Segundo NBR6118'
+                                label='Descrição Segundo NBR'
                                 onChange={event =>{event.preventDefault();return setDescribe(event.target.value)}}
                                     >
                                     {describeop.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
@@ -286,7 +286,7 @@ const InputCar = (props) =>{
                                 disabled = {TipodeCarregamento}
                                 value={descricao}
                                 sx={{backgroundColor:'white'}}
-                                label='Descrição Segundo NBR6118'
+                                label='Descrição do Carregamento'
                                 onChange={event =>{event.preventDefault();return setDescricao(event.target.value)}}
                                     >
                                     {Object.keys(Descricao).map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}

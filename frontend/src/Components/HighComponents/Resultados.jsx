@@ -76,7 +76,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
                 ],
-                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`Viga muito pequena`,
@@ -115,7 +115,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
                 ],
-                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barra por camada`,
@@ -161,7 +161,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento'].toString().replace('.',',')}\\ cm\\)`
                 ],
-                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -198,7 +198,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo:`,
                 eqmomentomax,
             ],
-            label:['Mmín','Mmáx']
+            label:['Momento mínimo','Momento máximo']
             },
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `\\(x/d = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ z/d = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,
@@ -299,7 +299,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
                 ],
-                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -343,7 +343,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
                 ],
-                label:['\\lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
@@ -380,7 +380,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo:`,
                 eqmomentomax,
             ],
-            label:['Mmín','Mmáx']
+            label:['Momento mínimo','Momento máximo']
             },
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `Impossível Calcular a posição da linha Neutra`,
