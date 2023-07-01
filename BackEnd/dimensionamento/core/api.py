@@ -248,6 +248,7 @@ def MetRigidez(request, data:MetRigidez):
                         pass      
         else:
             temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
+            histerese = False
 
 
         if histerese:
