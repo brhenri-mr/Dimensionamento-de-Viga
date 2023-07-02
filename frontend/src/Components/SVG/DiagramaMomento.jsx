@@ -59,18 +59,17 @@ const DiagramaMomento= (props) =>{
             texto.push([props.metrigidez["Esforcos Internos"][chave]["Momento"][0],props.metrigidez["Esforcos Internos"][chave]["Trecho"][0]],'normal')
 
             //Verificando a necessidade de adicionar um ponto de maximo (se não foi igual ao ponto mais a esquerda)
-            if (maximo[1] === props.metrigidez["Esforcos Internos"][chave]["Trecho"][0]){
-
-            }
-            else{
+            if (maximo[1] === props.metrigidez["Esforcos Internos"][chave]["Trecho"][0] && maximo[1!==props.metrigidez["Esforcos Internos"][chave]["Momento"][0]]){
                 maximo.push('max')
                 texto.push(maximo)
             }
+
 
             //verificando se o elemento é o ultimo e se nao é igual ao momento maximo na secao 
             if (chave === Object.keys(props.metrigidez['Esforcos Internos'])[[Object.keys(props.metrigidez['Esforcos Internos']).length-1]] && maximo[1]!==props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1]){
                 //Ultimo elemento
                 texto.push([props.metrigidez["Esforcos Internos"][chave]["Momento"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1],props.metrigidez["Esforcos Internos"][chave]["Trecho"][props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1]],'normal')
+                
             }
 
             //limpando os iteradores
@@ -119,7 +118,7 @@ const DiagramaMomento= (props) =>{
  
                     if(valor[2]==='max'){
                         console.log('tamo por aqui')
-                            return (valor[0]<0) ? <line key={key} x1={valor[1]*props.escalabarra+25} x2={valor[1]*props.escalabarra+25} y1={147.5+30-valor[0]*props.escala} y2={147.5-valor[0]*props.escala} style={{stroke:'black',strokeDasharray:2}}></line>:<line key={key} x1={valor[1]*props.escalabarra+45} x2={valor[1]*props.escalabarra+25} y1={147.5-15-valor[0]*props.escala-15} y2={147.5-valor[0]*props.escala} style={{stroke:'black',strokeDasharray:2}}></line>
+                            return (valor[0]<0) ? <line key={key} x1={valor[1]*props.escalabarra+50} x2={valor[1]*props.escalabarra+25} y1={147.5+30-valor[0]*props.escala} y2={147.5-valor[0]*props.escala} style={{stroke:'black',strokeDasharray:2}}></line>:<line key={key} x1={valor[1]*props.escalabarra+45} x2={valor[1]*props.escalabarra+50} y1={147.5-15-valor[0]*props.escala-15} y2={147.5-valor[0]*props.escala} style={{stroke:'black',strokeDasharray:2}}></line>
                     }
     
                     })}

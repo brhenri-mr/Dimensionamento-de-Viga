@@ -84,8 +84,8 @@ const Discretizacao = (props)=>{
             ></Barras>
         })}
 
-        <line x1={(props.bw-props.cnom)*escala} x2={200} y1={ytexto-5} y2={ytexto-5}  style={{stroke:'black',strokeDasharray:2}}></line>
-        {<text x={200+5}  y={ytexto} fontSize={15}>{`${totalbarras} Ø ${props.bitola*10} mm`}</text>}
+        <line x1={(props.bw-props.cnom)*escala} x2={200+props.bw*escala/5} y1={ytexto-5} y2={ytexto-5}  style={{stroke:'black',strokeDasharray:2}}></line>
+        {<text x={200+5+props.bw*escala/5}  y={ytexto} fontSize={15}>{`${totalbarras} Ø ${props.bitola*10} mm`}</text>}
         </>
     )
 }
