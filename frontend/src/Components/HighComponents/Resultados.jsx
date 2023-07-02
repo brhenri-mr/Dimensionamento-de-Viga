@@ -363,25 +363,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:['Substitua os valores na equação',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
                 label:['']
             },
-            Momento:(ignorar)?{
-                titulo:'Necessidade de Armadura de compressão',
-                texto:[
-                    `Compare o momento solicitante de devido as cargas de  \\(${db['Verificacao Momento']['Momento Carregamento'][0].toFixed(2).toString().replace('.',',')}\\ kN.cm\\) com o momento máximo`,
-                    eqmomentomax,
-                    'Como o valor do Momento Solicitante é maior que o Momento Máximo da seção, então deve-se utilizar Armadura Negativa'
-                ],
-    
-                label:['ignorar']
-                }:
-            {
-                titulo: `\\(M_{sd} = ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')} kN.cm\\)`,
-                texto:[`Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento mínimo:`,
-                `\\(M_{mín} = 0,8 W0 f_{ckt,sup} = 0,8* ${db['Parametros']['w0'].toFixed(2).replace('.',',')}* ${db['Parametros']['fcktsup'].toFixed(2).replace('.',',')} = ${db['Verificacao Momento']['Momento Minimo'][caso].toFixed(2).replace('.',',')}\\ kN.cm\\)`,
-                `Compare o momento solicitante de devido as cargas de  \\(${momentomaximo[1]}\\ kN.cm\\) com o momento máximo:`,
-                eqmomentomax,
-            ],
-            label:['Momento mínimo','Momento máximo']
-            },
+       
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `Impossível Calcular a posição da linha Neutra`,
                 texto:[
@@ -411,12 +393,11 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                     'Parametro espaçamento transversal longitudinal entre armaduras estabelecido pela NBR6118/2014 no item 18.3.2.2 :',
                     `\\(a_h ≥ \\begin{cases} 2cm \\\\ \\phi_l\\\\ 1,2\\ d_{max} \\\\
                         \\end{cases} \\therefore \\ a_v = ${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')} \\ cm \\)`,
-                    'Parâmetro de redistribuição máxima da ductilidade estabelecidos pela NBR6118/2014 no item 14.6.4.3:',
-                    (caracteristicas['fck']>50) ? '\\(x/d =0,35\\)':'\\(x/d =0,45\\)',
+
                     'Parâmetro estabelecido pela NBR6118/2014 na tabela 7.2:',
                     `\\(c_{nom} = ${db['Parametros']['Cobrimento']}\\ cm\\)`
                 ],
-                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','x/d Limite','Cobrimento']
+                label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','Cobrimento']
             },
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,

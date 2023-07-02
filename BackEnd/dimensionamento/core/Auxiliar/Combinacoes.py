@@ -99,7 +99,7 @@ class Combine():
         var = []
         principal_var = []
         var_comb=[]
-        z= -1
+        auxiliar = ''
         
         so_carga_CP =True
         
@@ -159,16 +159,34 @@ class Combine():
             for item in principal_var:
 
                 for comb in item:
+                    '''
+                    comb = valor da variavel principal [str] 1.4*vento
+                    el[0] = Nome do carregamento colocado
+                    '''
                     if el[0] in comb and len(var)==1:
                         temp.append(f'{comb}')
 
                     else:
-                        temp.append(f'{comb}+{el[1][0]}*{el[1][2]}*{el[0]}')
-                        temp.append(f'{comb}+{el[1][1]}*{el[1][2]}*{el[0]}')
+                        
+                        if comb[0] !='0' and el[0] not in comb:
+                            temp.append(f'{comb}+{el[1][0]}*{el[1][2]}*{el[0]}')
+                            temp.append(f'{comb}+{el[1][1]}*{el[1][2]}*{el[0]}')
+                        else:
+                            pass
+                            
                 var_comb.append(temp.copy())
                 temp.clear()
 
-        
+
+        for item in principal_var:
+
+            for comb in item:
+                if comb[0]=='0':
+                    auxiliar = comb +'+'+auxiliar
+                   
+        var_comb.append([auxiliar[:-1]])
+                    
+
 
             
         if len(s) != 0:
@@ -240,6 +258,14 @@ if __name__ == '__main__':
             "mag": 15,
             "pos":(15,90)
         },
+         "Peso BANANA":{
+            "index": "01",
+            "patter": "Carregamento permanente",
+            "describe":"Peso próprio de estruturas metálicas",
+            "tipo": "Distruibuida",
+            "mag": 15,
+            "pos":(15,90)
+        },
         "Peso da Telha":{
             "index": "01",
             "patter": "1",
@@ -249,6 +275,14 @@ if __name__ == '__main__':
             "pos":(15,90)
         },
         "Vento":{
+            "index": "02",
+            "patter": "Carrregamento Variável",
+            "describe":"Ação do vento",
+            "tipo": "Distruibuido",
+            "mag": 15,
+            "pos":(15,90)
+        },
+          "QUalquer":{
             "index": "02",
             "patter": "Carrregamento Variável",
             "describe":"Ação do vento",
