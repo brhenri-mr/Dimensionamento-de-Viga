@@ -47,6 +47,9 @@ def test(request, carregamentos: Carregamentos):
     
     test = comb.ELU(modo='Normal')
     
+    for elemento in test:
+        print(elemento)
+    
     
     return comb.json()
 

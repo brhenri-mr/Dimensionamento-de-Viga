@@ -98,6 +98,7 @@ class Combine():
         perma = []
         var = []
         principal_var = []
+        var_comb=[]
         z= -1
         
         so_carga_CP =True
@@ -141,33 +142,42 @@ class Combine():
             s = temp.copy()
             temp.clear()
         
+        
 
         #Combinção variaveis
+
+
+    
         for item in var:
             principal_var.append([f'{item[1][0]}*{item[0]}'])
             principal_var.append([f'{item[1][1]}*{item[0]}'])
 
+
+
+
         for el in var:
             for item in principal_var:
-                z +=1
+
                 for comb in item:
-                    if el[0] in comb:
+                    if el[0] in comb and len(var)==1:
                         temp.append(f'{comb}')
+
                     else:
                         temp.append(f'{comb}+{el[1][0]}*{el[1][2]}*{el[0]}')
                         temp.append(f'{comb}+{el[1][1]}*{el[1][2]}*{el[0]}')
-                principal_var[z]= temp.copy()
+                var_comb.append(temp.copy())
                 temp.clear()
-            z = -1
+
         
+
             
         if len(s) != 0:
             for element in s:
-                for item in principal_var:
+                for item in var_comb:
                     for el in item:
                         temp.append(f'{element} + {el}')
         else:
-            for item in principal_var:
+            for item in var_comb:
                     for el in item:
                         temp.append(f'{el}')
             
@@ -246,14 +256,7 @@ if __name__ == '__main__':
             "mag": 15,
             "pos":(15,90)
         },
-        "Sobrecarga":{
-            "index": "03",
-            "patter": "CV",
-            "describe":"Ações veriáveis em geral",
-            "tipo": "Distruibuido",
-            "mag": 15,
-            "pos":(15,90)
-        }
+
     }
 
     ed= {
