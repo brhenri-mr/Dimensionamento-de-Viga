@@ -167,8 +167,9 @@ const Layout = () => {
             fck:CARACTERISTICAS['fck'],
             agregado:CARACTERISTICAS['agregado'],
             MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12,
-            combinacao: (logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0][COMBINACOES[0].length-1])
+            combinacao: (logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0].split(' ')[1])
         }
+        console.log(parseInt(COMBINACOES[0].split(' ')[1]))
 
         if(logico){
             const api = fetch((desenvolvimento)? "http://127.0.0.1:8000/api/MetRigidez":'https://zoomlunar.pythonanywhere.com/api/MetRigidez', {
