@@ -182,7 +182,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['']
             },
             Momento:(ignorar)?{
-                titulo:'Necessidade de Armadura negativa',
+                titulo:'Necessidade de Armadura de compressão',
                 texto:[
                     `Compare o momento solicitante de devido as cargas de  \\(${db['Verificacao Momento']['Momento Carregamento'][0].toFixed(2).toString().replace('.',',')}\\ kN.cm\\) com o momento máximo`,
                     eqmomentomax,
@@ -364,7 +364,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['']
             },
             Momento:(ignorar)?{
-                titulo:'Necessidade de Armadura negativa',
+                titulo:'Necessidade de Armadura de compressão',
                 texto:[
                     `Compare o momento solicitante de devido as cargas de  \\(${db['Verificacao Momento']['Momento Carregamento'][0].toFixed(2).toString().replace('.',',')}\\ kN.cm\\) com o momento máximo`,
                     eqmomentomax,
