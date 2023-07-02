@@ -66,7 +66,6 @@ def admensionais(zeta:float,momento:float,eta:float,bw:int,d:float,fcd:float,Es:
     else:
         bx = 1/zeta -(1/zeta)*(1-(2*momento)/(eta*bw*(d**2)*fcd))**0.5
         bz = 1- 0.5*zeta*bx
-        print(bx)
         bs = min([Es/fyd*(1-bx)/bx*ecu,1])
         
         return bx, bz, bs, 'Tudo Certo'
@@ -171,8 +170,6 @@ def verificacao_admensional(fyd:float,eta:float,zeta:float,d:float,bw:int,fcd:fl
     while i<=1000:
         bx = fyd/(eta*zeta*d*bw*fcd)*a*bs_arbitrado
         bs = max([min([Es/fyd*(1-bx)/bx*ecu,1]),0])
-        print(f'bs:{bx}')
-        print(f'bs: {bs}')
         if bs_arbitrado == bs:
             return True,bx,bs 
         i += 1

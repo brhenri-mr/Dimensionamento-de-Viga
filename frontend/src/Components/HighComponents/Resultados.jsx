@@ -82,7 +82,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo:`Viga muito pequena`,
                 texto:[
                     'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${0}\\ barras \\ por \\ camada\\) `,
+                    `\\(\\eta_\\phi = \\left  \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}} \\right \\rfloor  = \\left  \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}} \\right  \\rfloor = ${0}\\ barras \\ por \\ camada\\) `,
                     `Com a geometria fornecida, não há espaço para colocação de uma barra de ${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}  cm`,
                     'Recomenda-se aumentar o largura da viga ou modificar as bitolas da armadura transversal ou longitudinal'
                 ],
@@ -121,8 +121,8 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barra por camada`,
                 texto:[
                     'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `,
-                    'Como o espaço disponível na viga é de somente uma barra por camada, o cálculo da viga com a geometria atual não pode ser realizado, visto questões simetria',
+                    `\\(\\eta_\\phi = \\left \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}} \\right \\rfloor  = \\left \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}} \\right \\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `,
+                    'Como o espaço disponível na viga é de somente uma barra por camada, o cálculo da viga com a geometria atual não pode ser realizado, visto que geraria flexo-torção (a viga precisa ser simétrica)',
                     'Recomenda-se aumentar o largura da viga ou modificar as bitolas da armadura transversal ou longitudinal'
                 ],
                 label:['ignorar']
@@ -166,8 +166,8 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
-                    'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
+                    'Substitua os valores na equação:',
+                    `\\(\\eta_\\phi = \\left \\lfloor{\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}} \\right \\rfloor  = \\left \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\right \\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
                 label:['ignorar']
             },
             DiscretizacaoInicial:{
@@ -178,7 +178,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             },
             Altura_Util:{
                 titulo:`\\(d = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}\\ cm\\)`,
-                texto:['Substitua os valores na equação',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
+                texto:['Substitua os valores na equação:',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
                 label:['']
             },
             Momento:(ignorar)?{
@@ -203,11 +203,11 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `\\(x/d = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ z/d = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,
                 texto:[
-                    'Substitua os valores na equação',
+                    'Substitua os valores na equação:',
                     `\\(x/d= \\dfrac{1}{\\lambda}-\\dfrac{1}{\\lambda} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\alpha_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta'].toFixed(2).toString().replace('.',',')} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
-                    'Substitua os valores na equação',
+                    'Substitua os valores na equação:',
                     `\\(z/d = 1-0,5 \\lambda \\ x/d = 1-0,5* ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}* ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
-                    'Substitua os valores na equação',
+                    'Substitua os valores na equação:',
                     `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d}{x/d} \\epsilon_{cu} ≤ 1 \\rightarrow \\beta_s =\\dfrac{200}{${(caracteristicas['fyk']/11.5).toFixed(2).toString().replace('.',',')}} \\dfrac{1-${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}{${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}\\ ${db['Parametros']['ecu'].toString().replace('.',',')} ≤ 1 \\rightarrow \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).toString().replace('.',',')}\\)`
                 ],
                 label:['x/d','z/d','bs']
@@ -215,14 +215,14 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             },
             AreaAcoCalculada:(ignorar)?ignorarFrame:{
                 titulo: `\\(A_{s,calc} = ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)` ,
-                texto:['Substitua os valores na equação:',`\\(A_s = \\dfrac{M_{rdw}}{z/d\\ d} \\dfrac{1}{\\beta_s\\ f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).replace('.',',')}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} * ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} * ${(caracteristicas['fyk']/(10*1.15)).toFixed(2).toString().replace('.',',')}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
+                texto:['Substitua os valores na equação:',`\\(A_{s,calc}= \\dfrac{M_{rdw}}{z/d\\ d} \\dfrac{1}{\\beta_s\\ f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).replace('.',',')}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} * ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} * ${(caracteristicas['fyk']/(10*1.15)).toFixed(2).toString().replace('.',',')}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
                 label:['']
     
             },
             VerificacaoAreaAco:(ignorar)?ignorarFrame:{
                 titulo: `Verificação aço: ${db['Area']['Aviso'][caso]}`,
                 texto:[
-                `Substitua os valores na equação (NBR6118:2014 tabela 17.3) e compare com o valor de área de amadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm² `
+                `Substitua os valores na equação (NBR6118:2014 tabela 17.3) e compare com o valor de área de amadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm²:`
                 ,`\\(A_{mín} = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% \\ A_c  = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% ${db['Parametros']['Ac']} = ${(db['Parametros']['Ac']*area[caracteristicas['fck']]/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
                 ,`Substitua os valores na equação e compare com o valor de área armadura de ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
@@ -236,7 +236,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 texto:[
                     'Substitua os valores na equação:',
                     `\\(n = \\left \\lceil{\\dfrac{A_{s,cal} \\ 4}{\\pi \\phi_l^2}} \\right \\rceil = \\left \\lceil{\\dfrac{${db['Area']['Area Adotada'][caso].toFixed(2).toString().replace('.',',')}* 4}{\\pi * ${caracteristicas['dL'].toString().replace('.',',')}^2}}\\right \\rceil = ${Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))} \\ barras \\)`,
-                    (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso]) ? `Por questões simetria é necessário adicionar mais uma barra`:"",
+                    (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso]) ? `Para garantir os cálculos no estado de flexo simples é necessário simetria na disposição das armaduras.Portanto, é necessário adicionar mais uma barra`:"",
                     (Math.ceil((db['Area']['Area Adotada'][caso]*4)/(3.1415*caracteristicas['dL']**2))!==db['Discretizacao']['Barras totais'][caso])? `Desse modo, adota-se \\(n=${db['Discretizacao']['Barras totais'][caso]}\\)`:"",
                 ],
                 label:['Discretização','ignorar']
@@ -254,7 +254,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             VerificacaoAreaAco_dois:(ignorar)?ignorarFrame:{
                 titulo: `Verificação aço: ${db['Area']['Aviso_arredondado'][caso]}`,
                 texto:[
-                    `Substitua os valores na equação e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
+                    `Substitua os valores na equação (NBR6118:2014 tabela 17.3) e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{mín} = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% \\ A_c  = ${area[caracteristicas['fck']].toString().replace('.',',')}\\% ${db['Parametros']['Ac']} = ${(db['Parametros']['Ac']*area[caracteristicas['fck']]/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
                 ,`Substitua os valores na equação e compare com o valor de área armadura efetiva de ${db['Area']['Area Efetiva'][caso].toFixed(2).replace('.',',')} cm² `
                 ,`\\(A_{máx} = 4\\% \\ A_c = 4\\% \\ ${db['Parametros']['Ac']} =  ${(db['Parametros']['Ac']*4/100).toFixed(2).toString().replace('.',',')}\\ cm² \\)`
@@ -304,14 +304,14 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
-                    'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'].slice(-1)[0]}\\ barras \\ por \\ camada\\) `],
+                    'Substitua os valores na equação:',
+                    `\\(\\eta_\\phi = \\left  \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}} \\right \\rfloor  = \\left  \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\right \\rfloor = ${db['Discretizacao']['Barras por camada'].slice(-1)[0]}\\ barras \\ por \\ camada\\) `],
                 label:['ignorar']
             },
             DiscretizacaoInicial:{
                 titulo: `\\(y_s = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} \\ cm\\)`,
                 texto:[
-                    `Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro`,
+                    `Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro:`,
                     `\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`,
                     `Como o valor de \\(y_s\\) é maior que 10% da altura da seção, recomenda-se aumentar o valor da altura da seção transversal`,
                 
@@ -348,19 +348,19 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             Quantidade:{
                 titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
                 texto:[
-                    'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
+                    'Substitua os valores na equação:',
+                    `\\(\\eta_\\phi = \\left  \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}} \\right \\rfloor  = \\left  \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\right \\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
                 label:['ignorar']
             },
             DiscretizacaoInicial:{
                 titulo: `\\(y_s = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} \\ cm\\)`,
-                texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
+                texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro:`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
                 label:['']
     
             },
             Altura_Util:{
                 titulo:`\\(d = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}\\ cm\\)`,
-                texto:['Substitua os valores na equação',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
+                texto:['Substitua os valores na equação:',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
                 label:['']
             },
        
@@ -400,31 +400,31 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
                 label:['lambda','Alfa','Deformação última do Concreto','Espaçamento Vertical','Espaçamento Horizontal','Cobrimento']
             },
             Quantidade:{
-                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada`,
+                titulo:`${db['Discretizacao']['Barras por camada'][caso]} barras por camada:`,
                 texto:[
-                    'Substitua os valores na equação',
-                    `\\(\\eta_\\phi = \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}}\\rfloor  = \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
+                    'Substitua os valores na equação:',
+                    `\\(\\eta_\\phi = \\left  \\lfloor {\\dfrac{b_w-2c_{nom}-2\\phi_t+a_h}{\\phi_l+a_h}} \\right \\rfloor  = \\left \\lfloor {\\dfrac{${caracteristicas['bw'].toFixed(2).toString().replace('.',',')}-2*${db['Parametros']['Cobrimento'].toFixed(2).toString().replace('.',',')}-2*${caracteristicas['dT'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}{${caracteristicas['dL'].toFixed(2).toString().replace('.',',')}+${db['Parametros']['ah'].toFixed(2).toString().replace('.',',')}}}\\right \\rfloor = ${db['Discretizacao']['Barras por camada'][caso]}\\ barras \\ por \\ camada\\) `],
                 label:['ignorar']
             },
             DiscretizacaoInicial:{
                 titulo: `\\(y_s = ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} \\ cm\\)`,
-                texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
+                texto:[`Adota-se ${db['Discretizacao']['Barras totais'][caso]} barras. Substitua os valores na equação para barras de mesmo diâmetro:`,`\\(ys = \\dfrac{\\sum_{i=1}^{j} n_i \\ ys_i}{n}, onde\\  ys_i = a_v+ \\phi_l \\)`],
                 label:['']
     
             },
             Altura_Util:{
                 titulo:`\\(d = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}\\ cm\\)`,
-                texto:['Substitua os valores na equação',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
+                texto:['Substitua os valores na equação:',`\\(d = h-c_{nom}-\\phi_T-0,5 \\phi_L-ys = ${caracteristicas['h']} - ${db['Parametros']['Cobrimento']} - ${caracteristicas['dT'].toString().replace('.',',')}- 0,5* ${caracteristicas['dL'].toString().replace('.',',')} - ${db['Altura Util']['ys'][caso].toFixed(2).replace('.',',')} = ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')} cm\\)`],
                 label:['']
             },
             Admensionais:(ignorar)?ignorarFrame:{
                 titulo: `\\(x/d = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\ \\ z/d = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\ \\  \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).replace('.',',')}\\)`,
                 texto:[
-                    'Substitua os valores na equação',
+                    'Substitua os valores na equação:',
                     `\\(x/d= \\dfrac{1}{\\lambda}-\\dfrac{1}{\\lambda} \\sqrt{1-\\dfrac{2\\ M_{rdw}}{\\alpha_c b_w d^2 f_{cd}}} = \\dfrac{1}{${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}} - \\dfrac{1}{${db['Parametros']['zeta'].toString().replace('.',',')}} \\sqrt{1-\\dfrac{2 * ${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).toString().replace('.',',')}}{${db['Parametros']['eta'].toFixed(2).toString().replace('.',',')} * ${caracteristicas['bw']} * ${db['Altura Util']['Valor'][caso].toFixed(2).toString().replace('.',',')}^2 * ${(caracteristicas['fck']/14).toFixed(2).toString().replace(".",",")}}} = ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')}\\)`,
-                    'Substitua os valores na equação',
+                    'Substitua os valores na equação:',
                     `\\(z/d = 1-0,5 \\lambda \\ x/d = 1-0,5* ${db['Parametros']['zeta'].toFixed(2).toString().replace('.',',')}* ${db['Admensionais'][caso][0].toFixed(2).replace('.',',')} = ${db['Admensionais'][caso][1].toFixed(2).replace('.',',')}\\)`,
-                    'Substitua os valores na equação',
+                    'Substitua os valores na equação:',
                     `\\(\\beta_s = \\dfrac{E_s}{f_{yd}} \\dfrac{1-x/d}{x/d} \\epsilon_{cu} ≤ 1 \\rightarrow \\beta_s =\\dfrac{200}{${(caracteristicas['fyk']/11.5).toFixed(2).toString().replace('.',',')}} \\dfrac{1-${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}{${db['Admensionais'][caso][0].toFixed(2).toString().replace('.',',')}}\\ ${db['Parametros']['ecu'].toString().replace('.',',')} ≤ 1 \\rightarrow \\beta_s = ${db['Admensionais'][caso][2].toFixed(2).toString().replace('.',',')}\\)`
                 ],
                 label:['x/d','z/d','bs']
@@ -432,7 +432,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
             },
             AreaAcoCalculada:(ignorar)?ignorarFrame:{
                 titulo: `\\(A_{s,calc} = ${db['Area']['Area Necessaria'][caso].toFixed(2).replace('.',',')} \\ cm^2\\)` ,
-                texto:['Substitua os valores na equação:',`\\(A_s = \\dfrac{M_{rdw}}{z/d\\ d} \\dfrac{1}{\\beta_s\\ f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).replace('.',',')}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} * ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} * ${(caracteristicas['fyk']/(10*1.15)).toFixed(2).toString().replace('.',',')}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
+                texto:['Substitua os valores na equação:',`\\(A_{s,calc} = \\dfrac{M_{rdw}}{z/d\\ d} \\dfrac{1}{\\beta_s\\ f_yd} = \\dfrac{${db['Verificacao Momento']['Momento de Calculo'][caso].toFixed(2).replace('.',',')}}{${db['Admensionais'][caso][1].toFixed(2).replace('.',',')} * ${db['Altura Util']['Valor'][caso].toFixed(2).replace('.',',')}}\\dfrac{1}{${db['Admensionais'][caso][2].toFixed(2).replace('.',',')} * ${(caracteristicas['fyk']/(10*1.15)).toFixed(2).toString().replace('.',',')}} =  ${db['Area']['Area Necessaria'][caso].toFixed(2).toString().replace('.',',')}\\ cm^2\\)`],
                 label:['']
     
             },

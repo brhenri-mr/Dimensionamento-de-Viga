@@ -85,9 +85,7 @@ class Combine():
         self.caracteristicas = caracteristicas
         self.__combinacoes = 0
         
-        print(carregamento)
-        print(caracteristicas)
-        print('_____________')
+
 
     def ELU(self, modo:str, CP = CP, CV = CV, FATORES_DE_REDUCAO=FATORES_DE_REDUCAO) -> list:
         """
@@ -114,8 +112,6 @@ class Combine():
         #divisão de dados
         for key, el in self.carregamento.items():
             contador = contador +1
-            print(el)
-            print(contador)
             if el['patter'] == "Carregamento permanente":
                 desfav, fav = CP[el['describe']][modo]
                 perma.append([key, [desfav, fav]])

@@ -47,8 +47,6 @@ def test(request, carregamentos: Carregamentos):
     
     test = comb.ELU(modo='Normal')
     
-    for elemento in test:
-        print(elemento)
     
     
     return comb.json()
@@ -632,6 +630,8 @@ def dimensionamento(request,data:Caracteristicas):
     except:
         momento = abs(momento_maximo)
         sinal = -1 if momento_maximo<0 else 1
+    
+    print(momento)
     
     parametros = ParametrosConcreto(caracteristicas['fck'],caracteristicas['classeambiental'],'Viga',caracteristicas['dL'],caracteristicas['bw'],caracteristicas['h'],caracteristicas['agregado'])
     Es = 200_000

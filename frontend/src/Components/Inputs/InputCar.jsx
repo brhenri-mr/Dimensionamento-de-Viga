@@ -158,6 +158,8 @@ const InputCar = (props) =>{
                 Local:descricao,
                 informacao:descricaosecundaria
             }
+
+            console.log(informacoesadicionais)
     
             dispatch(actions.adicionar_informacoes(informacoesadicionais))
 
