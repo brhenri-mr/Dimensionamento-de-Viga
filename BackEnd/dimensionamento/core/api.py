@@ -234,10 +234,8 @@ def MetRigidez(request, data:MetRigidez):
             for chave_carregamento in entrada[chave]['Carregamento'].keys():
                 incremento +=1
                 
-                if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual":
-                   
-                    temp.append(cortante('Nada',1,saida['Esforcos Internos'][i][chave]))
-                    histerese = False
+                if entrada[chave]["Carregamento"][chave_carregamento]['tipo'] =="Pontual" :
+                   pass
                 else:
                     #Decisao da equacao 
                     if entrada[chave]["Carregamento"][chave_carregamento]['mag']*entrada[chave]["Carregamento"][chave_carregamento]['comb'][var_auxiliar] !=0:
