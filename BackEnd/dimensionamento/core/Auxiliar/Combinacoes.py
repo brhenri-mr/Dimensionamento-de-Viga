@@ -84,6 +84,10 @@ class Combine():
         self.carregamento = carregamento
         self.caracteristicas = caracteristicas
         self.__combinacoes = 0
+        
+        print(carregamento)
+        print(caracteristicas)
+        print('_____________')
 
     def ELU(self, modo:str, CP = CP, CV = CV, FATORES_DE_REDUCAO=FATORES_DE_REDUCAO) -> list:
         """
@@ -106,27 +110,33 @@ class Combine():
         
         
         #contador
-        contador = 0
+        contador = -1
         #divisão de dados
         for key, el in self.carregamento.items():
+            contador = contador +1
+            print(el)
+            print(contador)
             if el['patter'] == "Carregamento permanente":
                 desfav, fav = CP[el['describe']][modo]
                 perma.append([key, [desfav, fav]])
+
             elif el['patter'] == "Carrregamento Variável":
                 desfav, fav = CV[el['describe']][modo]
                 so_carga_CP = False
                 #Valores de fi
+ 
                 if el['describe'] == 'Ação do vento' or self.caracteristicas[contador]['informacao'] =='Vento':
                     coef_auxi = FATORES_DE_REDUCAO['Vento'][0]
                 elif el['describe'] == 'Temperatura' or self.caracteristicas[contador]['informacao'] =='Temperatura':
                     coef_auxi = FATORES_DE_REDUCAO['Temperatura'][0]
+
                 elif self.caracteristicas[contador]['informacao'] in FATORES_DE_REDUCAO[self.caracteristicas[contador]['Local']].keys():
                     coef_auxi = FATORES_DE_REDUCAO[self.caracteristicas[contador]['Local']][self.caracteristicas[contador]['informacao']][0]
                 else:
                     coef_auxi = [1,1,1]
                 
                 var.append([key, [desfav, fav, coef_auxi]])
-            contador =+ 1
+
 
         #Combinção permanente 
         for item in perma:
