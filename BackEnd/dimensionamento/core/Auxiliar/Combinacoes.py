@@ -177,15 +177,15 @@ class Combine():
                 var_comb.append(temp.copy())
                 temp.clear()
 
+        if len(var)>1:
+            for item in principal_var:
 
-        for item in principal_var:
-
-            for comb in item:
-                if comb[0]=='0':
-                    auxiliar = comb +'+'+auxiliar
-                   
-        var_comb.append([auxiliar[:-1]])
+                for comb in item:
+                    if comb[0]=='0':
+                        auxiliar = comb +'+'+auxiliar
                     
+            var_comb.append([auxiliar[:-1]])
+                        
 
 
             
