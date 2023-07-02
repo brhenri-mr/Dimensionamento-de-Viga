@@ -192,7 +192,9 @@ def MetRigidez(request, data:MetRigidez):
         el: elementos discretizados
         """
         x = sym.Symbol("x")
+
         temp = sym.integrate(eq_cortante,x)
+
         return temp 
     
     def constante(eq,el,tipo):
@@ -201,7 +203,10 @@ def MetRigidez(request, data:MetRigidez):
         """
         x = sym.Symbol("x")
         try:
-            constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0 
+
+            constante = (1 if tipo=='Cortante' else -1)*el[tipo][0] - (eq.subs({x:el["Trecho"][0]/100}) if eq != 0 else 0)
+                
+                
             return (eq+constante) 
         except:
             return eq
@@ -215,12 +220,6 @@ def MetRigidez(request, data:MetRigidez):
         incremento = -1
         
         histerese = True
-
-
-        
-
-
-        
         
         if len(entrada[chave]['Carregamento'].keys())>0:
             '''
@@ -228,9 +227,7 @@ def MetRigidez(request, data:MetRigidez):
             chave = elemento discretizado a ser pesquisado 
             saida = dicionario vindo do método da rigidez direita
             '''
-            
-            
-            
+
             for chave_carregamento in entrada[chave]['Carregamento'].keys():
                 incremento +=1
                 
@@ -370,7 +367,6 @@ def MetRigidez(request, data:MetRigidez):
     generico = {}
     xs =[]
 
-    
 
     
     
