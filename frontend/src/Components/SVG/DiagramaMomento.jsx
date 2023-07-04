@@ -25,7 +25,6 @@ const DiagramaMomento= (props) =>{
             //rodando momento e posicao simultaneamente
             for(let i=0;i<=props.metrigidez['Esforcos Internos'][chave]['Momento'].length-1 ;i++){
                 const momento = props.metrigidez["Esforcos Internos"][chave]["Momento"]
-                console.log(momento)
                 const trecho  = props.metrigidez["Esforcos Internos"][chave]["Trecho"]
 
                 //garantindo o primeiro ponto na altura da viga, para poder ter um solido
