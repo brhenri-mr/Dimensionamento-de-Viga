@@ -114,10 +114,10 @@ const DiagramaMomento= (props) =>{
                     }
                     else{
                         if(valor[2]==='max'){
-                            return (valor[0]<0) ?(<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5+30-valor[0]*props.escala}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>):<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5-15-valor[0]*props.escala-15}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>
+                            return (valor[0]<0) ?(<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5-15-valor[0]*props.escala}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>):<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5-valor[0]*props.escala-15}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>
                         }
                         else{
-                            return (valor[0]<0) ?<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5+20-valor[0]*props.escala}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>:<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5-valor[0]*props.escala-15}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>
+                            return (valor[0]<0) ?<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5+10-valor[0]*props.escala}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>:<text fontSize='13' key={key} x={valor[1]*props.escalabarra+25} y={147.5-valor[0]*props.escala-15}>{`${(-valor[0]).toString().replace('.',',')} kN.m`}</text>
                         }
         
                     }
