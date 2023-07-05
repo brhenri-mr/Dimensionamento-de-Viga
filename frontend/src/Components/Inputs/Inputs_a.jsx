@@ -76,7 +76,6 @@ const Inputs_a = (props) => {
         else if ('1234567890.,'.includes(variavel[variavel.length-1])){
             return false
         }
-        
 
 
 
@@ -111,7 +110,9 @@ const Inputs_a = (props) => {
                 sx={{backgroundColor:'white'} }
                 helperText = {erro(pos)?'insira somente numeros positivos':''}
                 onChange={event =>{event.preventDefault();return setPos(event.target.value)}} />
-                <Button onClick={erro(pos)? ()=>{return 1}:onClickAdd}>Add</Button>
+                <Box sx={{'& > :not(style)': { m: 1, width: '42.5ch' }}}noValidate autoComplete="off">
+                <Button variant="contained" onClick={erro(pos)? ()=>{return 1}:onClickAdd}>Add</Button>
+                </Box>
             </FormControl>
         </>
         )

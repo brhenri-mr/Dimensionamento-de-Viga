@@ -340,7 +340,10 @@ const InputCar = (props) =>{
                                 onChange={(event) => {event.preventDefault();setFinalpos(event.target.value)}}></TextField>
                             </FormControl>
                         </Box>
-                        <Button onClick={onclickevent}>Add</Button>
+                        <Box sx={{paddingLeft:1, paddingTop:1}}>
+                            <Button variant="contained" onClick={onclickevent}>Add</Button>
+                        </Box>
+                        
                         </item>
                     </Grid>
                 </Paper>

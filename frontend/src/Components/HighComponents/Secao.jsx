@@ -290,9 +290,7 @@ const Secao  = (props)=> {
                                             </Select> 
                                         </FormControl>
                                         </Box>
-                                        <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
-                                            <Button onClick={caracteristcas}>Adicionar</Button>
-                                        </Box>
+        
                                 </item>
                             </Grid>
                         </Grid>
@@ -376,6 +374,9 @@ const Secao  = (props)=> {
                                         </Button>
                                         </DialogActions>
                                     </Dialog>
+                                    <Box component="form" sx={{'& > :not(style)': { m: 1, width: '39ch' }, }}noValidate autoComplete="off">
+                                        <Button variant="contained" onClick={caracteristcas}>Adicionar</Button>
+                                    </Box>
 
          
                                   
