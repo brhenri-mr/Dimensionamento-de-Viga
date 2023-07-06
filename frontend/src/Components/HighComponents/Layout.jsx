@@ -115,9 +115,8 @@ const Layout = () => {
         setValue(newValue);
         if (newValue===3 && cadastrocompleto){
             await Combinacoes(CARREGAMENTOS,ED)
+            console.log(CARREGAMENTOS)
             await MetRigidez(CARREGAMENTOS,APOIOS,true)
-            console.log(MOMENTOMAX)
-            Dimensionamento(CARACTERISTICAS,MOMENTOMAX)
 
             
 
@@ -167,7 +166,7 @@ const Layout = () => {
             fck:CARACTERISTICAS['fck'],
             agregado:CARACTERISTICAS['agregado'],
             MomentodeInercia:parseFloat(CARACTERISTICAS['bw'])*parseFloat(CARACTERISTICAS['h'])**3/12,
-            combinacao: (logico)? 0:(COMBINACOES[0] ==='Envoltória')? 0:parseInt(COMBINACOES[0].split(' ')[1])
+            combinacao: (logico)? 0:(COMBINACOES[0] ==='Envoltória - Máximos Absolutos')? 0:parseInt(COMBINACOES[0].split(' ')[1])
         }
         console.log(parseInt(COMBINACOES[0].split(' ')[1]))
 
@@ -183,8 +182,10 @@ const Layout = () => {
             })
             .then((response) => response.json())
             .then((data) => {
+                console.log('PRINTANDO A DATA')
+                console.log(data)
                 setMetrigidez(data)
-                dispatch(actionbarra.salvar(metRigidez['Maximo']))
+                Dimensionamento(CARACTERISTICAS,data['Maximo'][1])
 
             })
             .catch((error) => {

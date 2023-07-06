@@ -467,7 +467,7 @@ function textotentativa(db,caso,caracteristicas,momentomaximo){
 const Resultados = (props)=>{
 
     const dispach = useDispatch()
-    const [combinacao,setCombinacao] = useState('Envoltória')
+    const [combinacao,setCombinacao] = useState('Envoltória - Máximos Absolutos')
 
     const handlechange = (event) =>{
         event.preventDefault()
@@ -490,7 +490,7 @@ const Resultados = (props)=>{
     catch (error){
     }
 
-    listacombinacoes.push('Envoltória')
+    listacombinacoes.push('Envoltória - Máximos Absolutos')
 
 
     const escalabarra = (Math.abs(300/props.barra)>1)?1:Math.abs(300/props.barra)
@@ -558,7 +558,7 @@ const Resultados = (props)=>{
                                         {listacombinacoes.map((item,index)=>{return<MenuItem key={index} value={item}>{item}</MenuItem>})}
                                         </Select>
                                     </FormControl>
-                                    {(combinacao==="Envoltória")?'':CARREGAMENTOS.map((item,chave)=>{
+                                    {(combinacao==="Envoltória - Máximos Absolutos")?'':CARREGAMENTOS.map((item,chave)=>{
                                         console.log()
                                         return <p style={{'fontSize':12}}>{`${item['name']}:${item['comb'][parseInt(combinacao.split(' ')[1])-1]}`}</p>
                                     })}
